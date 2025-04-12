@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+@source "../../server/views";
+
+@variant dark (&:where([data-theme="dark"] *));
