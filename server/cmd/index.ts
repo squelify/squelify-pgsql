@@ -20,6 +20,7 @@ const main = defineCommand({
     'db:reset': () => import('./commands/db-reset').then((r) => r.default),
     'db:seed': () => import('./commands/db-seed').then((r) => r.default),
     'db:status': () => import('./commands/db-status').then((r) => r.default),
+    'db:export': () => import('./commands/db-export').then((r) => r.default),
     'make:app-key': () => import('./commands/make-app-key').then((r) => r.default),
     'make:migration': () => import('./commands/make-migration').then((r) => r.default),
     'make:seeder': () => import('./commands/make-seeder').then((r) => r.default),

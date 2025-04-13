@@ -44,7 +44,7 @@ export default defineConfig({
      * This can be useful to exclude packages that are not needed in the production build,
      * or to exclude packages that are causing issues during the build process.
      */
-    exclude: ['react/jsx-runtime'],
+    exclude: ['react/jsx-runtime', '@electric-sql/pglite'],
   },
   customLogger: !isTest ? logger : undefined,
 })
