@@ -53,7 +53,7 @@ export default function App() {
 
   return (
     <ErrorBoundary FallbackComponent={GlobalErrorBoundary} onError={onErrorHandle}>
-      <BrowserRouter basename="/">
+      <BrowserRouter basename="/admin">
         <DataProvider>
           <UnheadProvider head={head}>
             <AppRouter />

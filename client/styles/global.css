@@ -2,7 +2,7 @@
 @import "./motion.css";
 @import "./theme.css";
 
-@source "../../server/views";
+@source "../../server/**/*.ts";
 
 @variant dark (&:where([data-theme="dark"] *));
 
