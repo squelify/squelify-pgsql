@@ -9,7 +9,7 @@ interface DatabaseMigration {
 export async function getMigrationItems(): Promise<DatabaseMigration[]> {
   return [
     {
-      name: '202412000_initialize_schema',
+      name: '202504000_initialize_schema',
       migration: await import('./migrations/202504000_initialize_schema'),
     },
   ]
