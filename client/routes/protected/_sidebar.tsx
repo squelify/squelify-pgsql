@@ -1,41 +1,87 @@
 import * as Lucide from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router'
-import { Sidebar, SidebarContent, SidebarFooter } from '#/components/sidebar'
+import { Kbd } from '#/components/kbd'
+import Link from '#/components/link'
+import { Sidebar, SidebarContent, SidebarFooter, SidebarMenuBadge } from '#/components/sidebar'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail } from '#/components/sidebar'
 import { SidebarGroupAction, SidebarGroupContent } from '#/components/sidebar'
 import { SidebarGroup, SidebarGroupLabel } from '#/components/sidebar'
 import { toast } from '#/components/toast'
 
-export default function AppSidebar() {
+interface AppSidebarProps {
+  openCommand: (open: boolean) => void
+}
+
+export default function AppSidebar({ openCommand }: AppSidebarProps) {
   const location = useLocation()
   const navigate = useNavigate()
 
-  // Navigation items
-  const navigationItems = [
+  // Navigation items grouped by category
+  const navigationGroups = [
     {
-      title: 'Home',
-      url: '/',
-      icon: Lucide.Home,
+      label: null,
+      items: [
+        {
+          title: 'Overview',
+          url: '/',
+          icon: Lucide.LayoutDashboard,
+        },
+      ],
     },
     {
-      title: 'Inbox',
-      url: '#inbox',
-      icon: Lucide.Inbox,
+      label: 'Database',
+      items: [
+        {
+          title: 'Table Editor',
+          url: '/database/table-editor',
+          icon: Lucide.Table2,
+        },
+        {
+          title: 'SQL Console',
+          url: '/database/sql-console',
+          icon: Lucide.SquareChartGantt,
+        },
+        {
+          title: 'Schema Diagram',
+          url: '/database/schema-diagram',
+          icon: Lucide.Proportions,
+        },
+      ],
     },
     {
-      title: 'Calendar',
-      url: '#calendar',
-      icon: Lucide.Calendar,
+      label: 'Content',
+      items: [
+        {
+          title: 'Collections',
+          url: '/content/collections',
+          icon: Lucide.Layers,
+        },
+        {
+          title: 'Media Library',
+          url: '/content/media',
+          icon: Lucide.Image,
+        },
+      ],
     },
     {
-      title: 'Search',
-      url: '#search',
-      icon: Lucide.Search,
-    },
-    {
-      title: 'Settings',
-      url: '#settings',
-      icon: Lucide.Settings,
+      label: 'Authentication',
+      items: [
+        {
+          title: 'Users',
+          url: '/auth/users',
+          icon: Lucide.Users,
+        },
+        {
+          title: 'Roles',
+          url: '/auth/roles',
+          icon: Lucide.Shield,
+        },
+        {
+          title: 'Permissions',
+          url: '/auth/permissions',
+          icon: Lucide.Lock,
+        },
+      ],
     },
   ]
 
@@ -49,33 +95,49 @@ export default function AppSidebar() {
   return (
     <Sidebar className="pt-14" collapsible="icon">
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel className="sr-only">Application</SidebarGroupLabel>
-          <SidebarGroupAction>
-            <Lucide.Plus /> <span className="sr-only">Add Project</span>
-          </SidebarGroupAction>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navigationItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild data-active={item.url === location.pathname}>
-                    <a href={item.url}>
-                      <item.icon className="size-4" />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {navigationGroups.map((group) => (
+          <SidebarGroup key={group.label}>
+            {group.label && <SidebarGroupLabel>{group.label}</SidebarGroupLabel>}
+            <SidebarGroupAction className="sr-only">
+              <Lucide.Plus />
+              <span className="sr-only">Add {group.label || 'Item'}</span>
+            </SidebarGroupAction>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {group.items.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild data-active={item.url === location.pathname}>
+                      <Link href={item.url}>
+                        <item.icon className="size-4" />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
       <SidebarFooter>
         <SidebarGroupContent>
           <SidebarMenu>
             <SidebarMenuItem>
+              <SidebarMenuButton onClick={() => openCommand(true)}>
+                <Lucide.Command className="size-4" />
+                <span>Open Command</span>
+                <SidebarMenuBadge>
+                  <Kbd keys={['command']}>K</Kbd>
+                </SidebarMenuBadge>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroupContent>
+        <SidebarGroupContent className="border-t pt-2">
+          <SidebarMenu>
+            <SidebarMenuItem>
               <SidebarMenuButton onClick={handleLogout}>
-                <Lucide.LogOut className="mr-2 size-4" />
+                <Lucide.LogOut className="size-4" />
                 <span>Logout</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
