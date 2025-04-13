@@ -1,6 +1,6 @@
 import * as Lucide from 'lucide-react'
-import { useTheme } from 'next-themes'
 import { Toaster as Sonner, toast } from 'sonner'
+import { useTheme } from '#/context/hooks/use-theme'
 import { toastStyles } from './toast.css'
 
 type ToasterProps = React.ComponentProps<typeof Sonner>

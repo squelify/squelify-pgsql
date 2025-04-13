@@ -33,6 +33,7 @@ export default defineNitroConfig({
       _console.info('Creating application data directory')
       await Promise.all([
         makeDirectory(resolve('storage/backup'), { mode: 0o755 }),
+        makeDirectory(resolve('storage/functions'), { mode: 0o755 }),
         makeDirectory(resolve('storage/migrations'), { mode: 0o755 }),
         makeDirectory(resolve('storage/uploads'), { mode: 0o755 }),
         makeDirectory(resolve('storage/wwwroot'), { mode: 0o755 }),

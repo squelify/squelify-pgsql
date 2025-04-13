@@ -6,7 +6,7 @@ import prettyBytes from 'pretty-bytes'
 import { env } from 'std-env'
 import type { Context } from '~/http/context'
 
-interface HealthCheckResponse {
+interface SysInfoResponse {
   status: string
   timestamp: string
   uptime: string
@@ -27,12 +27,12 @@ interface HealthCheckResponse {
   }
 }
 
-interface HealthCheckParams {
+interface SysInfoParams {
   ctx: Context
   signal: AbortSignal | undefined
 }
 
-export async function healthCheckHandler(params: HealthCheckParams): Promise<HealthCheckResponse> {
+export async function sysInfoHandler(params: SysInfoParams): Promise<SysInfoResponse> {
   const memoryUsage = process.memoryUsage()
   const db = params.ctx.h3Event.context.db
 

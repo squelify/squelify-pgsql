@@ -4,6 +4,7 @@ import * as React from 'react'
 import ReactDOM from 'react-dom/client'
 import { appConfig } from '~~/app.config'
 import pkg from '~~/package.json' with { type: 'json' }
+import ThemeProvider from '#/providers/theme-provider'
 import MainApp from './app'
 
 if (import.meta.env.PROD) {
@@ -29,6 +30,8 @@ if (!rootElement) {
 // @ref: https://react.dev/reference/react/StrictMode
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <MainApp />
+    <ThemeProvider>
+      <MainApp />
+    </ThemeProvider>
   </React.StrictMode>
 )

@@ -1,8 +1,8 @@
 import { publicProcedure, trpcRouter } from '~/http/trpc'
-import { healthCheckHandler } from './handlers/health.handler'
+import { sysInfoHandler } from './handlers/sysinfo.handler'
 
 const appRouter = trpcRouter({
-  health: publicProcedure.query(healthCheckHandler),
+  sysinfo: publicProcedure.query(sysInfoHandler),
 })
 
 export type AppRouter = typeof appRouter

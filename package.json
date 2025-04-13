@@ -69,7 +69,6 @@
         "lucide-react": "^0.487.0",
         "make-dir": "^5.0.0",
         "nanostores": "^1.0.1",
-        "next-themes": "^0.4.6",
         "ohash": "^2.0.11",
         "postgres": "^3.4.5",
         "pretty-bytes": "^6.1.1",

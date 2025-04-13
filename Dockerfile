@@ -44,7 +44,7 @@ FROM base AS pruner
 COPY --from=builder /srv/build /srv
 
 # Create the data directory and set permissions.
-RUN mkdir -p /srv/storage/{backup,migrations,pgdata,uploads,wwwroot}
+RUN mkdir -p /srv/storage/{backup,functions,migrations,pgdata,uploads,wwwroot}
 RUN chmod -R 0775 /srv/storage
 
 # -----------------------------------------------------------------------------
