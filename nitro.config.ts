@@ -31,7 +31,12 @@ export default defineNitroConfig({
   hooks: {
     'rollup:before': async (nitro) => {
       _console.info('Creating application data directory')
-      await makeDirectory(resolve('storage'), { mode: 0o755 })
+      await Promise.all([
+        makeDirectory(resolve('storage/backup'), { mode: 0o755 }),
+        makeDirectory(resolve('storage/migrations'), { mode: 0o755 }),
+        makeDirectory(resolve('storage/uploads'), { mode: 0o755 }),
+        makeDirectory(resolve('storage/wwwroot'), { mode: 0o755 }),
+      ])
 
       if (nitro.options.dev) {
         _console.info('Spawning Vite development server')

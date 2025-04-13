@@ -10,8 +10,8 @@ const appConfig = {
     url: env.DATABASE_URL || 'sqlite:storage/local.db',
   },
   meta: {
-    title: 'Nitro Application',
-    description: 'Build fast and modern web applications with Nitro',
+    title: 'Squelify',
+    description: 'A modern headless CMS and backend-as-a-service platform',
   },
 }
 

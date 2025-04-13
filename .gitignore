@@ -29,7 +29,6 @@ _data/
 build/
 dist/
 temp/
-tmp/
 .data
 .cache
 .nitro
@@ -37,7 +36,6 @@ tmp/
 .wrangler
 .wireit
 .cache
-.temp
 .tmp
 
 # Vite & Vitest config
