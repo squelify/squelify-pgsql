@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router'
 import { CommandDialog, CommandEmpty, CommandGroup } from '#/components/command/command'
 import { CommandInput, CommandItem, CommandList } from '#/components/command/command'
 import { CommandSeparator, CommandShortcut } from '#/components/command/command'
+import { ScrollArea } from '#/components/scroll-area'
 import { toast } from '#/components/toast'
 import { useTheme } from '#/context/hooks/use-theme'
 
@@ -250,20 +251,22 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
       <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found</CommandEmpty>
-        {commandGroups.map((group) => (
-          <div key={group.id}>
-            <CommandGroup heading={group.heading}>
-              {group.items.map((item) => (
-                <CommandItem key={item.id} onSelect={item.onSelect} keywords={item.keywords}>
-                  <item.icon className="mr-2 size-4" strokeWidth={2} />
-                  <span>{item.label}</span>
-                  {item.shortcut && <CommandShortcut>{item.shortcut}</CommandShortcut>}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-            {group.showSeparator && <CommandSeparator />}
-          </div>
-        ))}
+        <ScrollArea>
+          {commandGroups.map((group) => (
+            <div key={group.id}>
+              <CommandGroup heading={group.heading}>
+                {group.items.map((item) => (
+                  <CommandItem key={item.id} onSelect={item.onSelect} keywords={item.keywords}>
+                    <item.icon className="mr-2 size-4" strokeWidth={2} />
+                    <span>{item.label}</span>
+                    {item.shortcut && <CommandShortcut>{item.shortcut}</CommandShortcut>}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+              {group.showSeparator && <CommandSeparator />}
+            </div>
+          ))}
+        </ScrollArea>
       </CommandList>
     </CommandDialog>
   )
