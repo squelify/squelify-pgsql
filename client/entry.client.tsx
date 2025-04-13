@@ -2,7 +2,8 @@ import './styles/global.css'
 import * as React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
-import MainApp from '#/app'
+import { Toaster } from '#/components/toast'
+import MainApp from './app'
 
 // The root element for the app.
 const rootElement = document.getElementById('app')
@@ -19,6 +20,7 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <BrowserRouter basename="/">
       <MainApp />
+      <Toaster position="bottom-right" />
     </BrowserRouter>
   </React.StrictMode>
 )
