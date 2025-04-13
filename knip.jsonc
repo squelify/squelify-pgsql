@@ -1,0 +1,18 @@
+{
+    "$schema": "https://cdn.jsdelivr.net/npm/knip@5/schema-jsonc.json",
+    "entry": ["client/entry.client.tsx"],
+    "exclude": ["binaries", "dependencies"],
+    "project": [
+        "client/**/*.{ts,tsx}",
+        "server/utils/**/*.{ts,tsx}",
+        "!client/components/base-ui/**/*",
+        "!server/database/migrations/**/*",
+        "!{client,server}/**/*.d.ts"
+    ],
+    "paths": {
+        "#imports": ["./.nitro/types/nitro-imports"],
+        "#/*": ["./client/*"],
+        "~/*": ["./server/*"],
+        "~~/*": ["./*"]
+    }
+}
