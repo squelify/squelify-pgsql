@@ -24,3 +24,27 @@ export function getClientInfo(event: H3Event) {
 
   return { clientIpAddress, clientIdentifier, userAgent, userAgentHash }
 }
+
+interface ApiResponse<T = unknown> {
+  status: number
+  success: boolean
+  message: string | null
+  data?: T
+  error?: {
+    issues?: Array<{ field: string; message: string }>
+    stack?: string
+  }
+}
+
+export function createErrorResponse(
+  event: H3Event,
+  message: string,
+  status: number,
+  error?: {
+    issues?: Array<{ field: string; message: string }>
+    stack?: string
+  }
+): ApiResponse {
+  setResponseStatus(event, status)
+  return { status, success: false, message, error }
+}

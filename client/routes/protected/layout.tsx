@@ -1,3 +1,4 @@
+import { useHead } from '@unhead/react'
 import * as Lucide from 'lucide-react'
 import { useState } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router'
@@ -26,6 +27,8 @@ const navigationItems = [
 ]
 
 export default function ProtectedLayout() {
+  useHead({ titleTemplate: '%s - Squelify' })
+
   const location = useLocation()
   const navigate = useNavigate()
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)

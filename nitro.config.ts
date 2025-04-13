@@ -2,7 +2,7 @@ import { resolve } from 'node:path'
 import { createConsola } from 'consola'
 import { makeDirectory } from 'make-dir'
 import { isDevelopment, isProduction } from 'std-env'
-import appConfig from './app.config'
+import { appConfig } from './app.config'
 
 const _console = createConsola({ defaults: { tag: 'nitro' } })
 

@@ -1,3 +1,4 @@
+import { useSeoMeta } from '@unhead/react'
 import { consola } from 'consola'
 import * as Lucide from 'lucide-react'
 import { useRef, useState, useTransition } from 'react'
@@ -12,6 +13,8 @@ import { toast } from '#/components/toast'
 import { forgotPasswordApi, isValidEmail } from './use-forgot-password'
 
 export default function Page() {
+  useSeoMeta({ title: 'Forgot Password' })
+
   const [isPending, startTransition] = useTransition()
   const emailRef = useRef<HTMLInputElement>(null)
   const [formError, setFormError] = useState<string | null>(null)

@@ -1,3 +1,4 @@
+import { useSeoMeta } from '@unhead/react'
 import { consola } from 'consola'
 import * as Lucide from 'lucide-react'
 import { useEffect, useRef, useState, useTransition } from 'react'
@@ -13,6 +14,8 @@ import { resetPasswordApi, validatePassword, validateResetTokenApi } from './use
 import { extractTokenFromUrl, isValidUUID, validateToken } from './use-validator'
 
 export default function Page() {
+  useSeoMeta({ title: 'Reset Password' })
+
   const [isPending, startTransition] = useTransition()
   const passwordRef = useRef<HTMLInputElement>(null)
   const confirmPasswordRef = useRef<HTMLInputElement>(null)

@@ -1,3 +1,4 @@
+import { useSeoMeta } from '@unhead/react'
 import { consola } from 'consola'
 import { useRef, useState, useTransition } from 'react'
 import { useNavigate } from 'react-router'
@@ -12,6 +13,8 @@ import { toast } from '#/components/toast'
 import { getRedirectPath, loginApi, storeUserData } from './use-login'
 
 export default function Page() {
+  useSeoMeta({ title: 'Sign In' })
+
   const navigate = useNavigate()
   const [isPending, startTransition] = useTransition()
   const emailRef = useRef<HTMLInputElement>(null)

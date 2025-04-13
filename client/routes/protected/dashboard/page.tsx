@@ -1,3 +1,4 @@
+import { useSeoMeta } from '@unhead/react'
 import * as Lucide from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { clx } from 'twistail-utils'
@@ -5,6 +6,8 @@ import { clx } from 'twistail-utils'
 type Theme = 'light' | 'dark' | 'system'
 
 export default function Page() {
+  useSeoMeta({ title: 'Dashoard' })
+
   const [count, setCount] = useState(0)
   const [theme, setTheme] = useState<Theme>(() => {
     // Get theme from localStorage, otherwise use 'system'

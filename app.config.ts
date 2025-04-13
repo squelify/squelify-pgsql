@@ -17,4 +17,4 @@ const appConfig = {
 
 export type AppConfig = typeof appConfig
 
-export default appConfig
+export { appConfig }
