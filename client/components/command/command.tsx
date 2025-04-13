@@ -12,13 +12,19 @@ const Command = React.forwardRef<
   return <CommandPrimitive ref={forwardedRef} className={styles.root({ className })} {...props} />
 })
 
-const CommandDialog = ({ children, ...props }: DialogProps) => {
+interface CommandDialogProps extends DialogProps {
+  filter?: (value: string, search: string, keywords?: string[]) => number
+}
+
+const CommandDialog = ({ children, filter, ...props }: CommandDialogProps) => {
   const styles = commandStyles()
   return (
-    <Dialog modal={true} {...props}>
+    <Dialog {...props}>
       <DialogTitle className="sr-only">Open Command Dialog</DialogTitle>
       <DialogContent className={styles.dialogContent()}>
-        <Command className={styles.dialogCommand()}>{children}</Command>
+        <Command className={styles.dialogCommand()} filter={filter}>
+          {children}
+        </Command>
       </DialogContent>
     </Dialog>
   )

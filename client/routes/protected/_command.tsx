@@ -32,6 +32,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           id: 'overview',
           icon: Lucide.LayoutDashboard,
           label: 'Overview',
+          keywords: ['dashboard', 'home', 'main', 'landing'],
           onSelect: () => {
             navigate('/')
             setOpen(false)
@@ -49,6 +50,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           id: 'table-editor',
           icon: Lucide.Table2,
           label: 'Table Editor',
+          keywords: ['database', 'tables', 'schema', 'edit', 'structure'],
           onSelect: () => {
             navigate('/database/table-editor')
             setOpen(false)
@@ -59,6 +61,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           id: 'sql-console',
           icon: Lucide.SquareChartGantt,
           label: 'SQL Console',
+          keywords: ['database', 'query', 'sql', 'console', 'command'],
           onSelect: () => {
             navigate('/database/sql-console')
             setOpen(false)
@@ -69,6 +72,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           id: 'schema-diagram',
           icon: Lucide.Proportions,
           label: 'Schema Diagram',
+          keywords: ['database', 'schema', 'diagram', 'erd', 'structure', 'visual'],
           onSelect: () => {
             navigate('/database/schema-diagram')
             setOpen(false)
@@ -86,6 +90,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           id: 'collections',
           icon: Lucide.Layers,
           label: 'Collections',
+          keywords: ['content', 'collections', 'data', 'entries'],
           onSelect: () => {
             navigate('/content/collections')
             setOpen(false)
@@ -96,6 +101,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           id: 'media-library',
           icon: Lucide.Image,
           label: 'Media Library',
+          keywords: ['content', 'media', 'images', 'files', 'assets', 'upload'],
           onSelect: () => {
             navigate('/content/media')
             setOpen(false)
@@ -113,6 +119,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           id: 'users',
           icon: Lucide.Users,
           label: 'Users',
+          keywords: ['auth', 'users', 'accounts', 'people', 'authentication'],
           onSelect: () => {
             navigate('/auth/users')
             setOpen(false)
@@ -123,6 +130,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           id: 'roles',
           icon: Lucide.Shield,
           label: 'Roles',
+          keywords: ['auth', 'roles', 'permissions', 'access', 'authentication'],
           onSelect: () => {
             navigate('/auth/roles')
             setOpen(false)
@@ -133,6 +141,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           id: 'permissions',
           icon: Lucide.Lock,
           label: 'Permissions',
+          keywords: ['auth', 'permissions', 'access', 'security', 'authentication'],
           onSelect: () => {
             navigate('/auth/permissions')
             setOpen(false)
@@ -150,6 +159,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           id: 'toggle-theme',
           icon: theme === 'dark' ? Lucide.Sun : Lucide.Moon,
           label: `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Theme`,
+          keywords: ['theme', 'dark', 'light', 'mode', 'appearance', 'display'],
           onSelect: () => {
             setTheme(theme === 'dark' ? 'light' : 'dark')
             setOpen(false)
@@ -160,6 +170,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           id: 'help',
           icon: Lucide.HelpCircle,
           label: 'Help & Documentation',
+          keywords: ['help', 'docs', 'documentation', 'support', 'guide'],
           onSelect: () => {
             window.open('https://squelify.com/docs', '_blank')
             setOpen(false)
@@ -177,6 +188,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           id: 'profile',
           icon: Lucide.UserCircle,
           label: 'Profile Settings',
+          keywords: ['account', 'profile', 'settings', 'user', 'personal'],
           onSelect: () => {
             navigate('/profile')
             setOpen(false)
@@ -187,6 +199,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           id: 'logout',
           icon: Lucide.LogOut,
           label: 'Logout',
+          keywords: ['account', 'logout', 'sign out', 'exit', 'quit'],
           onSelect: handleLogout,
           shortcut: '⌘+L',
         },
@@ -195,8 +208,45 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
     },
   ]
 
+  // Implementation of fuzzy search algorithm
+  const fuzzyFilter = (value: string, search: string, keywords?: string[]): number => {
+    // If search is empty, show all items
+    if (!search.trim()) return 1
+
+    // Convert to lowercase for case-insensitive search
+    const searchLower = search.toLowerCase()
+    const valueLower = value.toLowerCase()
+
+    // Exact match gets highest score
+    if (valueLower === searchLower) return 2
+
+    // If value contains search as a substring, give high score
+    if (valueLower.includes(searchLower)) return 1.5
+
+    // Check if all search characters exist in value in sequence
+    let searchIndex = 0
+    let valueIndex = 0
+
+    while (searchIndex < searchLower.length && valueIndex < valueLower.length) {
+      if (searchLower[searchIndex] === valueLower[valueIndex]) {
+        searchIndex++
+      }
+      valueIndex++
+    }
+
+    // If all search characters were found in sequence
+    if (searchIndex === searchLower.length) return 1
+
+    // Check keywords if available
+    if (keywords?.some((keyword) => keyword.toLowerCase().includes(searchLower))) {
+      return 0.5
+    }
+
+    return 0
+  }
+
   return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
+    <CommandDialog open={open} modal={true} onOpenChange={setOpen} filter={fuzzyFilter}>
       <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found</CommandEmpty>
@@ -204,7 +254,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           <div key={group.id}>
             <CommandGroup heading={group.heading}>
               {group.items.map((item) => (
-                <CommandItem key={item.id} onSelect={item.onSelect}>
+                <CommandItem key={item.id} onSelect={item.onSelect} keywords={item.keywords}>
                   <item.icon className="mr-2 size-4" strokeWidth={2} />
                   <span>{item.label}</span>
                   {item.shortcut && <CommandShortcut>{item.shortcut}</CommandShortcut>}
