@@ -2,8 +2,8 @@ import { TRPCError } from '@trpc/server'
 import type { ResolveHTTPRequestOptionsContextFn } from '@trpc/server/http'
 import { resolveResponse } from '@trpc/server/http'
 import { readBody, toWebRequest } from 'h3'
-import { createContext } from '~/trpc/context'
-import { type AppRouter, appRouter } from '~/trpc/router'
+import { createContext } from '~/http/context'
+import { type AppRouter, appRouter } from '~/http/router'
 
 export default defineEventHandler(async (event) => {
   // Get everything after /trpc/ only if it exists

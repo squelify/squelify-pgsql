@@ -4,7 +4,7 @@ import status from 'http-status'
 import { sql } from 'kysely'
 import prettyBytes from 'pretty-bytes'
 import { env } from 'std-env'
-import type { Context } from '~/trpc/context'
+import type { Context } from '~/http/context'
 
 interface HealthCheckResponse {
   status: string

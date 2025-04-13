@@ -1,4 +1,4 @@
-import { publicProcedure, trpcRouter } from '~/trpc/trpc'
+import { publicProcedure, trpcRouter } from '~/http/trpc'
 import { healthCheckHandler } from './handlers/health.handler'
 
 const appRouter = trpcRouter({

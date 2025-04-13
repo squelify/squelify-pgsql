@@ -4,7 +4,7 @@ import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client'
 import { httpSubscriptionLink, splitLink } from '@trpc/client'
 import * as React from 'react'
 import superjson from 'superjson'
-import type { AppRouter } from '~/trpc/router'
+import type { AppRouter } from '~/http/router'
 import useFetch from '#/context/hooks/use-fetch'
 import { TRPCProvider } from '#/utils/trpc'
 

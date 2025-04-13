@@ -3,7 +3,7 @@ import { TRPCError, initTRPC } from '@trpc/server'
 import { env } from 'std-env'
 import superjson from 'superjson'
 import { ZodError } from 'zod'
-import type { Context, Meta } from '~/trpc/context'
+import type { Context, Meta } from '~/http/context'
 import { getRequestHeader } from '#imports'
 
 const t = initTRPC
