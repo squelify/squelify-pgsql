@@ -142,6 +142,7 @@ For detailed licensing information, see the [LICENSE](./LICENSE.md) file.
 [gitbutler-licensing]: https://blog.gitbutler.com/opening-up-gitbutler/
 [github-sponsors]: https://github.com/sponsors/squelify
 [nitro]: https://nitro.unjs.io
+[pglite]: https://pglite.dev/
 [pocketbase]: https://pocketbase.io
 [postgresql]: https://www.postgresql.org/
 [riipandi-x]: https://x.com/intent/follow?screen_name=riipandi
