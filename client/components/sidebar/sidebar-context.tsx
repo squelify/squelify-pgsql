@@ -1,9 +1,11 @@
+import { useStore } from '@nanostores/react'
 import * as React from 'react'
 import { Tooltip } from '#/components/tooltip'
+import { type SidebarState, saveUiState, uiStore } from '#/context/stores/ui.store'
 import { sidebarStyles } from './sidebar.css'
 
 type SidebarContextProps = {
-  state: 'expanded' | 'collapsed'
+  state: SidebarState
   open: boolean
   setOpen: (open: boolean) => void
   openMobile: boolean
@@ -14,7 +16,7 @@ type SidebarContextProps = {
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
 
-export function useSidebar() {
+function useSidebar() {
   const context = React.useContext(SidebarContext)
   if (!context) {
     throw new Error('useSidebar must be used within a SidebarProvider.')
@@ -23,75 +25,85 @@ export function useSidebar() {
 }
 
 // Detect if the current viewport is mobile based on breakpoint
-export function useIsMobile(breakpoint = 768) {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = React.useState(false)
 
   React.useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${breakpoint - 1}px)`)
-    const onChange = () => {
-      setIsMobile(window.innerWidth < breakpoint)
-    }
+    const onChange = () => setIsMobile(mql.matches)
+    onChange() // Set initial value
     mql.addEventListener('change', onChange)
-    setIsMobile(window.innerWidth < breakpoint)
     return () => mql.removeEventListener('change', onChange)
   }, [breakpoint])
 
-  return !!isMobile
+  return isMobile
 }
 
 type SidebarProviderProps = React.ComponentProps<'div'> & {
-  defaultOpen?: boolean
   open?: boolean
   onOpenChange?: (open: boolean) => void
   shortcutKey?: string
-  cookieName?: string
-  cookieMaxAge?: number
 }
 
-export const SidebarProvider = React.forwardRef<HTMLDivElement, SidebarProviderProps>(
+const SidebarProvider = React.forwardRef<HTMLDivElement, SidebarProviderProps>(
   (
-    {
-      defaultOpen = true,
-      open: openProp,
-      onOpenChange: setOpenProp,
-      shortcutKey = 'e',
-      cookieName = 'sidebar_state',
-      cookieMaxAge = 60 * 60 * 24 * 7 /* 7 days */,
-      className,
-      style,
-      children,
-      ...props
-    },
+    { open: controlledOpen, onOpenChange, shortcutKey = 'e', className, children, ...props },
     forwardedRef
   ) => {
+    const uiState = useStore(uiStore)
     const isMobile = useIsMobile()
     const [openMobile, setOpenMobile] = React.useState(false)
     const styles = sidebarStyles()
 
-    // This is the internal state of the sidebar.
-    // We use openProp and setOpenProp for control from outside the component.
-    const [_open, _setOpen] = React.useState(defaultOpen)
-    const open = openProp ?? _open
+    // Determine if component is controlled or uncontrolled
+    const isControlled = controlledOpen !== undefined
+
+    // For uncontrolled mode, use UI store value
+    const [uncontrolledOpen, setUncontrolledOpen] = React.useState(uiState.sidebar === 'expanded')
+
+    // Use controlled value if provided, otherwise use uncontrolled
+    const open = isControlled ? controlledOpen : uncontrolledOpen
+
+    // Update UI store and state when sidebar is toggled
     const setOpen = React.useCallback(
-      (value: boolean | ((value: boolean) => boolean)) => {
-        const openState = typeof value === 'function' ? value(open) : value
-        if (setOpenProp) {
-          setOpenProp(openState)
-        } else {
-          _setOpen(openState)
+      (value: boolean | ((prev: boolean) => boolean)) => {
+        const newOpen = typeof value === 'function' ? value(open) : value
+        const newState: SidebarState = newOpen ? 'expanded' : 'collapsed'
+
+        // Update UI store
+        saveUiState({ sidebar: newState })
+
+        // Update local state if uncontrolled
+        if (!isControlled) {
+          setUncontrolledOpen(newOpen)
         }
-        // This sets the cookie to keep the sidebar state.
-        document.cookie = `${cookieName}=${openState}; path=/; max-age=${cookieMaxAge};`
+
+        // Call external handler if provided
+        onOpenChange?.(newOpen)
       },
-      [setOpenProp, open, cookieName, cookieMaxAge]
+      [open, isControlled, onOpenChange]
     )
 
-    // Helper to toggle the sidebar.
-    const toggleSidebar = React.useCallback(() => {
-      return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open)
-    }, [isMobile, setOpen])
+    // Sync with UI store when it changes (only for uncontrolled mode)
+    React.useEffect(() => {
+      if (!isControlled) {
+        const storeOpen = uiState.sidebar === 'expanded'
+        if (uncontrolledOpen !== storeOpen) {
+          setUncontrolledOpen(storeOpen)
+        }
+      }
+    }, [uiState.sidebar, uncontrolledOpen, isControlled])
 
-    // Adds a keyboard shortcut to toggle the sidebar.
+    // Toggle sidebar based on device type
+    const toggleSidebar = React.useCallback(() => {
+      if (isMobile) {
+        setOpenMobile((prev) => !prev)
+      } else {
+        setOpen(!open)
+      }
+    }, [isMobile, open, setOpen])
+
+    // Keyboard shortcut
     React.useEffect(() => {
       const handleKeyDown = (event: KeyboardEvent) => {
         if (event.key === shortcutKey && (event.metaKey || event.ctrlKey)) {
@@ -104,10 +116,10 @@ export const SidebarProvider = React.forwardRef<HTMLDivElement, SidebarProviderP
       return () => window.removeEventListener('keydown', handleKeyDown)
     }, [toggleSidebar, shortcutKey])
 
-    // We add a state so that we can do data-state="expanded" or "collapsed".
-    // This makes it easier to style the sidebar with Tailwind classes.
-    const state = open ? 'expanded' : 'collapsed'
+    // Current sidebar state for styling
+    const state: SidebarState = open ? 'expanded' : 'collapsed'
 
+    // Memoize context value to prevent unnecessary re-renders
     const contextValue = React.useMemo<SidebarContextProps>(
       () => ({
         state,
@@ -134,3 +146,5 @@ export const SidebarProvider = React.forwardRef<HTMLDivElement, SidebarProviderP
 )
 
 SidebarProvider.displayName = 'SidebarProvider'
+
+export { SidebarProvider, useSidebar, useIsMobile }

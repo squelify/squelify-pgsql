@@ -13,8 +13,8 @@ interface AppCommandProps {
 }
 
 export default function AppCommand({ open, setOpen }: AppCommandProps) {
+  const { setTheme, resolvedTheme } = useTheme()
   const navigate = useNavigate()
-  const { theme, setTheme } = useTheme()
 
   const handleLogout = () => {
     localStorage.removeItem('squelify_user')
@@ -187,11 +187,11 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
       items: [
         {
           id: 'toggle-theme',
-          icon: theme === 'dark' ? Lucide.Sun : Lucide.Moon,
-          label: `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Theme`,
+          icon: resolvedTheme === 'dark' ? Lucide.Sun : Lucide.Moon,
+          label: `Switch to ${resolvedTheme === 'dark' ? 'Light' : 'Dark'} Theme`,
           keywords: ['theme', 'dark', 'light', 'mode', 'appearance', 'display'],
           onSelect: () => {
-            setTheme(theme === 'dark' ? 'light' : 'dark')
+            setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
             setOpen(false)
           },
           shortcut: '⌘+T',

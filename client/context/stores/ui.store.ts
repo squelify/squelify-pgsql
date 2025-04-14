@@ -2,10 +2,11 @@ import { persistentMap } from '@nanostores/persistent'
 import pkg from '~~/package.json' with { type: 'json' }
 import { storeDecode, storeEncode } from '#/utils/helper'
 
-export type Theme = 'dark' | 'light' | 'system'
+type Theme = 'dark' | 'light' | 'system'
+type SidebarState = 'expanded' | 'collapsed'
 
 type UIStore = {
-  sidebar: 'expanded' | 'collapsed'
+  sidebar: SidebarState
   theme: Theme
 }
 
@@ -13,7 +14,7 @@ type UIStore = {
  * The default values for the UI store, which includes the initial state of the sidebar.
  */
 const defaultUIStoreValues: UIStore = {
-  sidebar: 'expanded',
+  sidebar: 'collapsed',
   theme: 'system',
 }
 
@@ -44,4 +45,4 @@ function resetUiState() {
 }
 
 export { uiStore, defaultUIStoreValues, saveUiState, resetUiState }
-export type { UIStore }
+export type { Theme, UIStore, SidebarState }

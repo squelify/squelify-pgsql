@@ -24,7 +24,7 @@ export default function AppLayout() {
   }, [])
 
   return (
-    <SidebarProvider className="flex h-screen flex-col overflow-hidden" defaultOpen={false}>
+    <SidebarProvider className="flex h-screen flex-col overflow-hidden">
       <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4">
         <SidebarTrigger className="md:hidden" />
         <div className="hidden items-center gap-2 pr-1 md:flex">
