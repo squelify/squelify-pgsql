@@ -78,7 +78,7 @@ export const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenu
     }
 
     return (
-      <Tooltip>
+      <Tooltip delayDuration={100}>
         <TooltipTrigger asChild>{button}</TooltipTrigger>
         <TooltipContent
           side="right"

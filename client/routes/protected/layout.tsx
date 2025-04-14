@@ -27,7 +27,7 @@ export default function AppLayout() {
     <SidebarProvider className="flex h-screen flex-col overflow-hidden" defaultOpen={false}>
       <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4">
         <SidebarTrigger className="md:hidden" />
-        <div className="flex items-center gap-2 pr-1">
+        <div className="hidden items-center gap-2 pr-1 md:flex">
           <img src={AppLogo} alt="Squelify Logo" className="h-6 w-6 text-primary" />
           <span className="hidden font-bold text-lg md:inline-block">Squelify</span>
         </div>
@@ -37,7 +37,9 @@ export default function AppLayout() {
       <div className="flex flex-1 overflow-hidden">
         <AppSidebar openCommand={setOpenCommand} />
         <SidebarInset className="flex-1 overflow-y-auto">
-          <Outlet />
+          <div className="h-max md:h-full">
+            <Outlet />
+          </div>
         </SidebarInset>
       </div>
       <AppCommand open={openCommand} setOpen={setOpenCommand} />

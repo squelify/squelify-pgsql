@@ -103,7 +103,7 @@ export const SidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       {...props}
     >
-      <Lucide.PanelLeft strokeWidth={2} />
+      <Lucide.AlignJustify strokeWidth={2} />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )

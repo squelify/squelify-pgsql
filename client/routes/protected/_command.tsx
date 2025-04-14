@@ -153,6 +153,35 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
       showSeparator: true,
     },
     {
+      id: 'system',
+      heading: 'System',
+      items: [
+        {
+          id: 'system-settings',
+          icon: Lucide.Settings,
+          label: 'System Settings',
+          keywords: ['settings', 'preferences', 'options', 'system'],
+          onSelect: () => {
+            navigate('/settings')
+            setOpen(false)
+          },
+          shortcut: '/settings',
+        },
+        {
+          id: 'audit-log',
+          icon: Lucide.FileClock,
+          label: 'Audit Log',
+          keywords: ['audit', 'log', 'history', 'activity', 'system'],
+          onSelect: () => {
+            navigate('/audit-log')
+            setOpen(false)
+          },
+          shortcut: '⌘+H',
+        },
+      ],
+      showSeparator: true,
+    },
+    {
       id: 'miscellaneous',
       heading: 'Miscellaneous',
       items: [

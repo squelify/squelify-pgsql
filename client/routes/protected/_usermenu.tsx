@@ -30,8 +30,8 @@ export default function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Avatar>
+        <Button variant="ghost" size="icon" className="size-8 rounded-full">
+          <Avatar className="size-7">
             <AvatarImage
               src={`https://avatar.vercel.sh/${user?.name || 'user'}`}
               alt={user?.name || 'User'}
@@ -40,7 +40,7 @@ export default function UserMenu() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" sideOffset={12}>
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-1">
             <p className="font-medium text-sm">{user?.name || 'User'}</p>
@@ -51,14 +51,14 @@ export default function UserMenu() {
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <Link href="/profile" className="flex items-center">
-              <Lucide.User className="mr-2 h-4 w-4" />
-              Profile
+              <Lucide.CircleUserRound className="mr-2 h-4 w-4" />
+              <span>User Profile</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Link href="/settings" className="flex items-center">
-              <Lucide.Settings className="mr-2 h-4 w-4" />
-              Settings
+              <Lucide.Settings2 className="mr-2 h-4 w-4" />
+              <span>Preferences</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>

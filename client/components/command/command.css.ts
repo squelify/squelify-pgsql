@@ -16,7 +16,7 @@ const commandStyles = tv({
     input: [
       'flex h-11 w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
     ],
-    list: 'max-h-[320px] overflow-y-auto overflow-x-hidden rounded-b-lg p-1',
+    list: 'max-h-[400px] overflow-y-auto overflow-x-hidden rounded-b-lg p-1',
     empty: 'py-6 text-center text-muted-foreground text-sm',
     group: [
       'overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5',

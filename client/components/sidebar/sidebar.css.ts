@@ -53,7 +53,7 @@ const sidebarStyles = tv({
       'group-data-[variant=floating]:rounded-md group-data-[variant=floating]:border',
       'group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow-xs',
     ],
-    trigger: 'size-7',
+    trigger: 'size-8 [&>svg]:size-5 [&>svg]:text-muted-foreground',
     rail: [
       '-translate-x-1/2 absolute inset-y-0 z-20 hidden w-4 transition-all sm:flex',
       'ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border',

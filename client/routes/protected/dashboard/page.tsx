@@ -7,8 +7,8 @@ export default function Page() {
   useSeoMeta({ title: 'Dashoard' })
 
   return (
-    <div className="flex min-h-full w-full flex-col items-start justify-start p-4 md:p-8">
-      <div className="container mx-auto h-full">
+    <div className="flex size-full flex-col items-start justify-start p-4 md:p-8">
+      <div className="container mx-auto">
         <Heading level="h1" className="sr-only">
           Dashboard
         </Heading>
