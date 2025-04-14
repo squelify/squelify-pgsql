@@ -33,16 +33,16 @@ export default function AppSidebar({ openCommand }: AppSidebarProps) {
     {
       label: 'Database',
       items: [
-        { title: 'Table  Editor', url: '/database/table-editor', icon: Lucide.Table2 },
-        { title: 'SQL Console', url: '/database/sql-console', icon: Lucide.SquareChartGantt },
-        { title: 'Schema Diagram', url: '/database/schema-diagram', icon: Lucide.Proportions },
+        { title: 'Table  Editor', url: '/table-editor', icon: Lucide.Table2 },
+        { title: 'SQL Console', url: '/sql-console', icon: Lucide.SquareChartGantt },
+        { title: 'Schema Diagram', url: '/schema-diagram', icon: Lucide.Proportions },
       ],
     },
     {
       label: 'Content',
       items: [
-        { title: 'Collections', url: '/content/collections', icon: Lucide.Layers },
-        { title: 'Media Library', url: '/content/media', icon: Lucide.Image },
+        { title: 'Collections', url: '/collections', icon: Lucide.Layers },
+        { title: 'Media Library', url: '/media-library', icon: Lucide.Image },
       ],
     },
     {

@@ -56,7 +56,7 @@ export default function UserMenu() {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href="/settings" className="flex items-center">
+            <Link href="/account" className="flex items-center">
               <Lucide.Settings2 className="mr-2 h-4 w-4" />
               <span>Preferences</span>
             </Link>
