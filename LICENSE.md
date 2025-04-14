@@ -6,7 +6,7 @@ FSL-1.0-Apache-2.0
 
 ## Notice
 
-Copyright 2024 Aris Ripandi
+Copyright 2025 Aris Ripandi
 
 ## Terms and Conditions
 

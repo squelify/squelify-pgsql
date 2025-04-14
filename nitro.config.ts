@@ -25,6 +25,12 @@ export default defineNitroConfig({
     publicDir: resolve('build/client'),
   },
 
+  // Application metadata and preview command
+  framework: { name: appConfig.identifier, version: appConfig.version },
+  commands: {
+    preview: 'NODE_PATH=server/node_modules node --import dotenv/config server/index.mjs',
+  },
+
   handlers: [{ handler: '~/http/middleware/core.ts', middleware: true }],
   errorHandler: '~/http/error',
 

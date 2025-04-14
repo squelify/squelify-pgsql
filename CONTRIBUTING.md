@@ -103,7 +103,7 @@ format `YYYYMMXXX_description.sql`:
 
 #### Example:
 ```sql
---- Path: sqdata/migrations/202411001_create_posts_table.sql
+--- Path: sqdata/migrations/202504001_create_posts_table.sql
 
 CREATE TABLE IF NOT EXISTS posts (
   id TEXT PRIMARY KEY,
