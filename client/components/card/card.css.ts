@@ -10,7 +10,7 @@ const cardStyles = tv({
     title: 'font-semibold text-foreground text-lg leading-none tracking-tight',
     description: 'text-muted-foreground text-sm',
     content: 'p-6',
-    footer: 'flex flex-col-reverse p-6 sm:flex-row sm:justify-end sm:space-x-2',
+    footer: 'flex flex-col-reverse justify-center p-6 sm:flex-row sm:space-x-2',
     divider: 'mx-6 my-0 border-border border-t',
   },
   variants: {

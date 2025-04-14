@@ -4,5 +4,9 @@ import { Outlet } from 'react-router'
 export default function AuthLayout() {
   useHead({ titleTemplate: '%s - Squelify' })
 
-  return <Outlet />
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-secondary p-6">
+      <Outlet />
+    </div>
+  )
 }

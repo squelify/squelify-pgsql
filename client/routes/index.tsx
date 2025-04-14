@@ -10,6 +10,7 @@ const UserProfile = React.lazy(() => import('#/routes/protected/profile/page'))
 const UserAccount = React.lazy(() => import('#/routes/protected/account/page'))
 const Settings = React.lazy(() => import('#/routes/protected/settings/page'))
 const AuditLog = React.lazy(() => import('#/routes/protected/audit-log/page'))
+const Setup = React.lazy(() => import('#/routes/setup/page'))
 
 const Database = {
   SchemaDiagram: React.lazy(() => import('#/routes/protected/schema-diagram/page')),
@@ -66,11 +67,8 @@ const routes: RouteObject[] = [
     ],
     errorElement: <InternalError />,
   },
-  {
-    path: '*',
-    element: <NotFound />,
-    errorElement: <InternalError />,
-  },
+  { path: '/setup', element: <Setup />, errorElement: <InternalError /> },
+  { path: '*', element: <NotFound />, errorElement: <InternalError /> },
 ]
 
 // The main component for the application.

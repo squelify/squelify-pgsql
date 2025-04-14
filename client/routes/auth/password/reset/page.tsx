@@ -12,7 +12,7 @@ import Link from '#/components/link'
 import { toast } from '#/components/toast'
 
 import { resetPasswordApi, validatePassword, validateResetTokenApi } from './use-reset-password'
-import { isValidUUID, validateToken } from './use-validator'
+import { isValidUUID, validateToken } from './use-reset-password'
 
 export default function Page() {
   useSeoMeta({ title: 'Reset Password' })
@@ -217,7 +217,7 @@ export default function Page() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background to-background/80 p-6">
+    <>
       <div className="w-full max-w-sm">
         {formError && (
           <div className="mb-4 rounded-md bg-destructive/10 p-3 text-destructive text-sm">
@@ -285,6 +285,6 @@ export default function Page() {
           </div>
         )}
       </div>
-    </div>
+    </>
   )
 }

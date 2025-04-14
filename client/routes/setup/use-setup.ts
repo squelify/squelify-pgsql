@@ -1,5 +1,5 @@
-// Types for reset password response
-export interface ResetPasswordResponse {
+// Types for setup response
+export interface SetupResponse {
   success: boolean
   message: string
 }
@@ -7,79 +7,83 @@ export interface ResetPasswordResponse {
 // Types for token validation response
 export interface TokenValidationResponse {
   isValid: boolean
-  email?: string
+  isInstalled: boolean
   message?: string
 }
 
+// Types for admin user creation
+export interface AdminUserData {
+  username: string
+  email: string
+  firstName: string
+  lastName: string
+  password: string
+  newsletter: boolean
+}
+
 // Simulate token validation API call
-export const validateResetTokenApi = async (token: string): Promise<TokenValidationResponse> => {
+export const validateSetupTokenApi = async (token: string): Promise<TokenValidationResponse> => {
   // Simulate network delay
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
-  // Demo valid tokens (in a real app, these would be stored in a database with expiry times)
-  const validTokens = {
-    // Admin token
-    '123e4567-e89b-12d3-a456-426614174000': {
-      email: 'admin@example.com',
-      expires: new Date(Date.now() + 3600000), // 1 hour from now
-    },
-    // User token
-    '123e4567-e89b-12d3-a456-426614174001': {
-      email: 'user@example.com',
-      expires: new Date(Date.now() + 3600000), // 1 hour from now
-    },
-    // Expired token
-    '123e4567-e89b-12d3-a456-426614174002': {
-      email: 'expired@example.com',
-      expires: new Date(Date.now() - 3600000), // 1 hour ago
-    },
-  }
+  // Demo valid setup token (in a real app, this would be stored securely)
+  const validSetupToken = '123e4567-e89b-12d3-a456-426614174099'
 
-  const tokenData = validTokens[token as keyof typeof validTokens]
-
-  if (!tokenData) {
+  // Check if token is valid
+  if (token !== validSetupToken) {
     return {
       isValid: false,
-      message: 'Invalid or expired reset token. Please request a new password reset link.',
+      isInstalled: false,
+      message: 'Invalid setup token. Please use the correct setup link.',
     }
   }
 
-  if (tokenData.expires < new Date()) {
+  // Simulate checking if app is already installed (has admin user)
+  const isInstalled = false // In real app, this would check the database
+
+  if (isInstalled) {
     return {
-      isValid: false,
-      message: 'This password reset link has expired. Please request a new one.',
+      isValid: true,
+      isInstalled: true,
+      message: 'Application is already set up. Please log in with your admin credentials.',
     }
   }
 
   return {
     isValid: true,
-    email: tokenData.email,
+    isInstalled: false,
   }
 }
 
-// Simulate reset password API call
-export const resetPasswordApi = async (
+// Simulate admin user creation API call
+export const createAdminUserApi = async (
   token: string,
-  _password: string
-): Promise<ResetPasswordResponse> => {
+  _userData: AdminUserData
+): Promise<SetupResponse> => {
   // Simulate network delay
   await new Promise((resolve) => setTimeout(resolve, 1500))
 
   // First validate the token
-  const tokenValidation = await validateResetTokenApi(token)
+  const tokenValidation = await validateSetupTokenApi(token)
 
   if (!tokenValidation.isValid) {
     return {
       success: false,
-      message: tokenValidation.message || 'Invalid reset token',
+      message: tokenValidation.message || 'Invalid setup token',
     }
   }
 
-  // In a real app, this would update the password in the database
+  if (tokenValidation.isInstalled) {
+    return {
+      success: false,
+      message: 'Application is already set up. Please log in with your admin credentials.',
+    }
+  }
+
+  // In a real app, this would create the admin user in the database
   return {
     success: true,
-    message:
-      'Your password has been successfully reset. You can now log in with your new password.',
+    message: 'Setup completed successfully. You can now log in with your admin credentials.',
   }
 }
 
@@ -142,14 +146,33 @@ export const validatePassword = (
   return { isValid: true }
 }
 
+// Email validation
+export const validateEmail = (
+  email: string
+): {
+  isValid: boolean
+  errorMessage?: string
+} => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  if (!emailRegex.test(email)) {
+    return {
+      isValid: false,
+      errorMessage: 'Please enter a valid email address',
+    }
+  }
+
+  return { isValid: true }
+}
+
 // Function to validate UUID format
 export const isValidUUID = (uuid: string): boolean => {
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
   return uuidRegex.test(uuid)
 }
 
-// Function to validate token from URL
-export const validateToken = (
+// Function to validate setup token from URL
+export const validateSetupToken = (
   token?: string | null
 ): {
   isValid: boolean
@@ -159,7 +182,7 @@ export const validateToken = (
   if (!token) {
     return {
       isValid: false,
-      errorMessage: 'Reset token is missing. Please use the link from your email.',
+      errorMessage: 'Setup token is missing. Please use the correct setup link.',
     }
   }
 
@@ -167,7 +190,7 @@ export const validateToken = (
   if (!isValidUUID(token)) {
     return {
       isValid: false,
-      errorMessage: 'Invalid reset token format. Please use the link from your email.',
+      errorMessage: 'Invalid setup token format. Please use the correct setup link.',
     }
   }
 

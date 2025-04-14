@@ -66,7 +66,7 @@ export default function Page() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background to-background/80 p-6">
+    <>
       <div className="w-full max-w-sm">
         {formError && (
           <div className="mb-4 rounded-md bg-destructive/10 p-3 text-destructive text-sm">
@@ -130,6 +130,6 @@ export default function Page() {
           </CardFooter>
         </Card>
       </div>
-    </div>
+    </>
   )
 }
