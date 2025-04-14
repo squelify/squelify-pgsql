@@ -5,16 +5,18 @@ import { z } from 'zod'
 // User schema with validation rules
 export const UserSchema = z.object({
   id: z.custom<Generated<string>>(),
-  firstName: z.string().min(2, 'First name must be at least 2 characters'),
+  firstName: z.string().min(2, { error: 'First name must be at least 2 characters' }),
   lastName: z.string().nullable(),
-  email: z.string().email({ message: 'Invalid email address' }),
+  email: z.email({ error: 'Invalid email address' }),
   username: z
     .string()
-    .min(4, 'Username must be at least 4 characters')
-    .max(50, 'Username must be a maximum of 50 characters')
-    .regex(/^[a-z0-9_]+$/, 'Usernames may only contain lowercase letters, numbers and underscores')
+    .min(4, { error: 'Username must be at least 4 characters' })
+    .max(50, { error: 'Username must be a maximum of 50 characters' })
+    .regex(/^[a-z0-9_]+$/, {
+      error: 'Usernames may only contain lowercase letters, numbers and underscores',
+    })
     .nullable(),
-  avatarUrl: z.string().url('Invalid avatar URL').nullable(),
+  avatarUrl: z.url({ error: 'Invalid avatar URL' }).nullable(),
   phoneNumber: z.string().nullable(),
   phoneNumberVerifiedAt: z.custom<ColumnType<Date, string | null>>().nullable(),
   emailVerifiedAt: z.custom<ColumnType<Date, string | null>>().nullable(),

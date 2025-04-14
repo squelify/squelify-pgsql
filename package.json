@@ -49,8 +49,8 @@
         "@nanostores/persistent": "^1.0.0",
         "@nanostores/react": "^1.0.0",
         "@noble/hashes": "^1.7.1",
-        "@tanstack/react-query": "^5.74.0",
-        "@tanstack/react-query-devtools": "^5.74.0",
+        "@tanstack/react-query": "^5.74.3",
+        "@tanstack/react-query-devtools": "^5.74.3",
         "@trpc/client": "^11.1.0",
         "@trpc/server": "^11.1.0",
         "@trpc/tanstack-react-query": "^11.1.0",
@@ -69,13 +69,13 @@
         "lucide-react": "^0.488.0",
         "make-dir": "^5.0.0",
         "nanostores": "^1.0.1",
-        "nuqs": "^2.4.1",
+        "nuqs": "^2.4.2",
         "ohash": "^2.0.11",
         "postgres": "^3.4.5",
         "pretty-bytes": "^6.1.1",
         "radix-ui": "^1.2.0",
         "react": "^19.1.0",
-        "react-day-picker": "^9.6.6",
+        "react-day-picker": "^9.6.7",
         "react-dom": "^19.1.0",
         "react-error-boundary": "^5.0.0",
         "react-router": "^7.5.0",
@@ -85,7 +85,7 @@
         "superjson": "^2.2.2",
         "twistail-utils": "^0.11.0",
         "ua-parser-js": "^2.0.3",
-        "zod": "^3.24.2"
+        "zod": "next"
     },
     "devDependencies": {
         "@biomejs/biome": "^1.9.4",
@@ -97,7 +97,7 @@
         "citty": "^0.1.6",
         "dotenv": "^16.5.0",
         "git-cliff": "^2.8.0",
-        "knip": "^5.50.2",
+        "knip": "^5.50.3",
         "lefthook": "^1.11.9",
         "nitropack": "^2.11.9",
         "npm-check-updates": "^17.1.18",
@@ -110,7 +110,7 @@
         "vite": "^6.2.6",
         "vite-tsconfig-paths": "^5.1.4"
     },
-    "packageManager": "pnpm@10.8.0",
+    "packageManager": "pnpm@10.8.1",
     "pnpm": {
         "onlyBuiltDependencies": ["@biomejs/biome", "@parcel/watcher", "esbuild"]
     }

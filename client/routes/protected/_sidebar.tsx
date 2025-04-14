@@ -119,7 +119,7 @@ export default function AppSidebar({ openCommand }: AppSidebarProps) {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
-            <SidebarMenuItem>
+            <SidebarMenuItem className="hidden sm:block">
               <SidebarMenuButton tooltip="Open Command" onClick={() => openCommand(true)}>
                 <Lucide.Command className="size-4" />
                 <span>Open Command</span>
