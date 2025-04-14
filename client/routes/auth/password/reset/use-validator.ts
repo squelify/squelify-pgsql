@@ -29,10 +29,3 @@ export const validateToken = (
 
   return { isValid: true }
 }
-
-// Function to extract token from URL
-export const extractTokenFromUrl = (): string | null => {
-  // Get the current URL search params
-  const searchParams = new URLSearchParams(window.location.search)
-  return searchParams.get('token')
-}

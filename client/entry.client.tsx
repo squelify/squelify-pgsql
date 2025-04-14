@@ -1,6 +1,7 @@
 import './styles/global.css'
 import { UnheadProvider, createHead } from '@unhead/react/client'
 import consola from 'consola'
+import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
 import React, { type ErrorInfo } from 'react'
 import ReactDOM from 'react-dom/client'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -39,12 +40,14 @@ function MainApp() {
   return (
     <ErrorBoundary FallbackComponent={GlobalErrorBoundary} onError={onErrorHandle}>
       <BrowserRouter basename="/admin">
-        <DataProvider>
-          <UnheadProvider head={head}>
-            <AppRouter />
-          </UnheadProvider>
-          <Toaster position="bottom-right" />
-        </DataProvider>
+        <NuqsAdapter>
+          <DataProvider>
+            <UnheadProvider head={head}>
+              <AppRouter />
+            </UnheadProvider>
+            <Toaster position="bottom-right" />
+          </DataProvider>
+        </NuqsAdapter>
       </BrowserRouter>
     </ErrorBoundary>
   )

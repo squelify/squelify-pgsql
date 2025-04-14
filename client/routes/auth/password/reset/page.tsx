@@ -1,6 +1,7 @@
 import { useSeoMeta } from '@unhead/react'
 import { consola } from 'consola'
 import * as Lucide from 'lucide-react'
+import { useQueryState } from 'nuqs'
 import { useEffect, useRef, useState, useTransition } from 'react'
 import { Card, CardContent, CardDescription } from '#/components/card'
 import { CardFooter, CardHeader, CardTitle } from '#/components/card'
@@ -11,7 +12,7 @@ import Link from '#/components/link'
 import { toast } from '#/components/toast'
 
 import { resetPasswordApi, validatePassword, validateResetTokenApi } from './use-reset-password'
-import { extractTokenFromUrl, isValidUUID, validateToken } from './use-validator'
+import { isValidUUID, validateToken } from './use-validator'
 
 export default function Page() {
   useSeoMeta({ title: 'Reset Password' })
@@ -19,8 +20,8 @@ export default function Page() {
   const [isPending, startTransition] = useTransition()
   const passwordRef = useRef<HTMLInputElement>(null)
   const confirmPasswordRef = useRef<HTMLInputElement>(null)
+  const [token, setToken] = useQueryState('token')
 
-  const [token, setToken] = useState<string | null>(null)
   const [email, setEmail] = useState<string | null>(null)
   const [formError, setFormError] = useState<string | null>(null)
   const [isSuccess, setIsSuccess] = useState(false)
@@ -29,11 +30,8 @@ export default function Page() {
 
   // Validate token on component mount
   useEffect(() => {
-    const resetToken = extractTokenFromUrl()
-    setToken(resetToken)
-
     // Validate token format
-    const tokenValidation = validateToken(resetToken)
+    const tokenValidation = validateToken(token)
 
     if (!tokenValidation.isValid) {
       setIsTokenValid(false)
@@ -44,8 +42,8 @@ export default function Page() {
     // Validate token with API
     startTransition(async () => {
       try {
-        if (resetToken) {
-          const result = await validateResetTokenApi(resetToken)
+        if (token) {
+          const result = await validateResetTokenApi(token)
 
           if (result.isValid && result.email) {
             setIsTokenValid(true)
@@ -61,7 +59,7 @@ export default function Page() {
         consola.error('Token validation error:', error)
       }
     })
-  }, [])
+  }, [token])
 
   // Form submission handler
   async function handleResetPassword(event: React.FormEvent<HTMLFormElement>) {
@@ -251,15 +249,38 @@ export default function Page() {
         {!isTokenValid && !isSuccess && (
           <div className="mt-4 text-center text-muted-foreground text-xs">
             <p>Demo valid tokens:</p>
-            <code className="mt-1 block rounded bg-muted p-1">
+            <code
+              className="mt-1 block cursor-pointer rounded bg-muted p-1 hover:text-primary-foreground"
+              onClick={() => setToken('123e4567-e89b-12d3-a456-426614174000')}
+            >
               ?token=123e4567-e89b-12d3-a456-426614174000
             </code>
-            <code className="mt-1 block rounded bg-muted p-1">
+            <code
+              className="mt-1 block cursor-pointer rounded bg-muted p-1 hover:text-primary-foreground"
+              onClick={() => setToken('123e4567-e89b-12d3-a456-426614174001')}
+            >
               ?token=123e4567-e89b-12d3-a456-426614174001
             </code>
             <p className="mt-2">Demo expired token:</p>
-            <code className="mt-1 block rounded bg-muted p-1">
+            <code
+              className="mt-1 block cursor-pointer rounded bg-muted p-1 hover:text-primary-foreground"
+              onClick={() => setToken('123e4567-e89b-12d3-a456-426614174002')}
+            >
               ?token=123e4567-e89b-12d3-a456-426614174002
+            </code>
+            <p className="mt-2">Demo invalid token:</p>
+            <code
+              className="mt-1 block cursor-pointer rounded bg-muted p-1 hover:text-primary-foreground"
+              onClick={() => setToken('123e4567-e89b-12d3-a456-426614174003')}
+            >
+              ?token=123e4567-e89b-12d3-a456-426614174003
+            </code>
+            <p className="mt-2">Demo empty token:</p>
+            <code
+              className="mt-1 block cursor-pointer rounded bg-muted p-1 hover:text-primary-foreground"
+              onClick={() => setToken(null)}
+            >
+              ?token=
             </code>
           </div>
         )}
