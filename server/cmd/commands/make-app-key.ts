@@ -1,6 +1,7 @@
 import { defineCommand } from 'citty'
 import consola from 'consola'
-import { generateRandomStr } from '~/utils/string'
+import { randomUUID } from 'uncrypto'
+import { Options, newAPIKey } from 'uuidkey'
 
 export default defineCommand({
   meta: {
@@ -21,14 +22,15 @@ export default defineCommand({
   },
   run({ args }) {
     try {
-      const secureKey = generateRandomStr({ size: 64 })
+      const generatedKey = newAPIKey('SKEY', randomUUID(), Options.With160BitEntropy)
+      const keyStr = generatedKey.toString().toLowerCase()
 
       if (args.plain) {
-        consola.log(secureKey)
+        consola.log(keyStr)
         return
       }
 
-      consola.log(`JWT_SECRET_KEY=${secureKey}`)
+      consola.log(`JWT_SECRET_KEY=${keyStr}`)
     } catch (error) {
       consola.error(error instanceof Error ? error.message : 'Unknown error occurred')
       process.exit(1)
