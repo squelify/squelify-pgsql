@@ -82,7 +82,7 @@ export function NotFound() {
                 onClick={() => navigate('/')}
               >
                 <Lucide.Home className="mr-2 size-4" />
-                <span>Back to Home</span>
+                <span>Go Back</span>
               </button>
             </div>
           </div>

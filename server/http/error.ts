@@ -1,4 +1,4 @@
-import { process } from 'std-env'
+import { env } from 'std-env'
 import type { AppConfig } from '~~/app.config'
 
 interface ErrorInfo {
@@ -216,7 +216,7 @@ export default defineNitroErrorHandler((error, event) => {
           error.statusCode === 404
             ? 'Resource not found'
             : error.message || 'Internal Server Error',
-        ...(process.dev && {
+        ...(env.APP_LOG_LEVEL === 'debug' && {
           issues: error.stack
             ?.split('\n')
             .map((line) => line.trim())
@@ -238,7 +238,7 @@ export default defineNitroErrorHandler((error, event) => {
   const content =
     errorInfo.code === 404
       ? render404Content(event.path)
-      : renderErrorContent(errorInfo, process.dev === true)
+      : renderErrorContent(errorInfo, env.APP_LOG_LEVEL === 'debug')
 
   // Render the complete HTML using the template
   const htmlBody = renderTemplate({

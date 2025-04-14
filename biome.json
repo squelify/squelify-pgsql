@@ -85,6 +85,7 @@
                             "info",
                             "warn",
                             "debug",
+                            "table",
                             "time",
                             "timeEnd",
                             "timeLog"
