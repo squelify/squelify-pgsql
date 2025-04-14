@@ -25,6 +25,7 @@
 
 import { writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import process from 'node:process'
 import { defineCommand, showUsage } from 'citty'
 import consola from 'consola'
 import { makeDirectory } from 'make-dir'

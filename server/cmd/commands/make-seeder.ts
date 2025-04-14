@@ -1,5 +1,6 @@
 import { mkdir, readdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import process from 'node:process'
 import { defineCommand, showUsage } from 'citty'
 import consola from 'consola'
 

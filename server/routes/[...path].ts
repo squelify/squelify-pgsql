@@ -1,5 +1,5 @@
 import { renderSPAClient } from '~/http/handlers/spa.handler'
-import { renderStaticPage } from '~/http/handlers/static.handler'
+import { handleStaticWeb } from '~/http/handlers/static.handler'
 
 export default defineEventHandler((event) => {
   const matchedUrl = getRequestURL(event).pathname
@@ -25,5 +25,5 @@ export default defineEventHandler((event) => {
   }
 
   // Otherwise, return default response or serve static pages
-  return renderStaticPage(event)
+  return handleStaticWeb(event)
 })

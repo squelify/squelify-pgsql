@@ -1,4 +1,5 @@
 import { join } from 'node:path'
+import process from 'node:process'
 import { styleText } from 'node:util'
 import { Kysely, Migrator, NO_MIGRATIONS } from 'kysely'
 import { env } from 'std-env'
