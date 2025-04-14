@@ -6,16 +6,18 @@ type Theme = 'dark' | 'light' | 'system'
 type SidebarState = 'expanded' | 'collapsed'
 
 type UIStore = {
-  sidebar: SidebarState
   theme: Theme
+  sidebar: SidebarState
+  splitpane: {}
 }
 
 /**
  * The default values for the UI store, which includes the initial state of the sidebar.
  */
 const defaultUIStoreValues: UIStore = {
-  sidebar: 'collapsed',
   theme: 'system',
+  sidebar: 'collapsed',
+  splitpane: {},
 }
 
 /**
