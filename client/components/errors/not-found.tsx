@@ -70,7 +70,7 @@ export function NotFound() {
                 <button
                   type="button"
                   onClick={() => navigate(-1)}
-                  className="inline-flex flex-1 items-center justify-center rounded-md border border-zinc-200 bg-white px-4 py-2 text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                  className="inline-flex flex-1 cursor-pointer items-center justify-center rounded-md border border-zinc-200 bg-white px-4 py-2 text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
                 >
                   <Lucide.ArrowLeft className="mr-2 size-4" />
                   <span>Go Back</span>
@@ -78,7 +78,7 @@ export function NotFound() {
               )}
               <button
                 type="button"
-                className="inline-flex flex-1 items-center justify-center rounded-md bg-amber-500 px-4 py-2 text-white transition-colors hover:bg-amber-600 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+                className="inline-flex flex-1 cursor-pointer items-center justify-center rounded-md bg-amber-500 px-4 py-2 text-white transition-colors hover:bg-amber-600 dark:bg-zinc-700 dark:hover:bg-zinc-600"
                 onClick={() => navigate('/')}
               >
                 <Lucide.Home className="mr-2 size-4" />

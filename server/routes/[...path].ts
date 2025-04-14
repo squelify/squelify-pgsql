@@ -19,8 +19,8 @@ export default defineEventHandler((event) => {
     )
   }
 
-  // Handle SPA routes with prefix `/admin`
-  if (matchedUrl.startsWith('/admin')) {
+  // Handle SPA routes with prefix `admin`
+  if (matchedUrl === '/admin' || matchedUrl.startsWith('/admin/')) {
     return renderSPAClient(event)
   }
 
