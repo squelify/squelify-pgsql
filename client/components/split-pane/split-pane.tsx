@@ -8,82 +8,126 @@ import { Slot } from 'radix-ui'
 import * as React from 'react'
 import { type SplitPaneStyles, splitPaneStyles } from './split-pane.css'
 
-type SeparatorProps = React.ComponentPropsWithoutRef<'hr'> & {
+// Throttle function to limit update frequency
+const throttle = (func: Function, limit: number) => {
+  let inThrottle: boolean
+  let lastFunc: ReturnType<typeof setTimeout>
+  let lastRan: number
+
+  return function (this: any, ...args: any[]) {
+    if (!inThrottle) {
+      func.apply(this, args)
+      lastRan = Date.now()
+      inThrottle = true
+    } else {
+      clearTimeout(lastFunc)
+      lastFunc = setTimeout(
+        () => {
+          if (Date.now() - lastRan >= limit) {
+            func.apply(this, args)
+            lastRan = Date.now()
+          }
+        },
+        limit - (Date.now() - lastRan)
+      )
+    }
+  }
+}
+
+export type SeparatorProps = React.ComponentPropsWithoutRef<'hr'> & {
   orientation?: 'horizontal' | 'vertical'
   isDragging?: boolean
 }
 
-type SplitPaneState = {
+export type SplitPaneState = {
   /**
-   * border position
+   * Current position of the separator
    */
   position: number
   /**
-   * position at end of drag
+   * Position at end of drag
    */
   endPosition: number
   /**
-   * whether the border is dragging
+   * Whether the separator is being dragged
    */
   isDragging: boolean
   /**
-   * props for drag bar
+   * Props for the separator element
    */
   separatorProps: SeparatorProps
   /**
-   * set border position
+   * Function to set the position
    */
   setPosition: React.Dispatch<React.SetStateAction<number>>
 }
 
-type UseSplitPaneProps = {
+export type ResizeCallbackArgs = {
   /**
-   * direction of resizing: horizontal (left-right) or vertical (up-down)
+   * Position at the time of callback
+   */
+  position: number
+}
+
+export type UseSplitPaneProps = {
+  /**
+   * Direction of resizing: horizontal (left-right) or vertical (up-down)
    */
   orientation: 'horizontal' | 'vertical'
   /**
-   * ref of the container element
+   * Reference to the container element
    */
   containerRef?: React.RefObject<HTMLElement | null>
   /**
-   * if true, cannot resize
+   * If true, resizing is disabled
    */
   disabled?: boolean
   /**
-   * initial border position
+   * Initial position of the separator
    */
   initial?: number
   /**
-   * minimum border position
+   * Minimum allowed position
    */
   min?: number
   /**
-   * maximum border position
+   * Maximum allowed position
    */
   max?: number
   /**
-   * calculate border position from other side
+   * Calculate position from opposite side
    */
   reverse?: boolean
   /**
-   * resizing step with keyboard
+   * Step size for keyboard navigation
    */
   step?: number
+  /**
+   * Step size when Shift key is pressed
+   */
   shiftStep?: number
   /**
-   * callback when border position changes start
+   * Throttle time in ms for smooth resizing
    */
-  onResizeStart?: (args: { position: number }) => void
+  throttleTime?: number
   /**
-   * callback when border position changes end
+   * Unique ID for persisting position in localStorage
    */
-  onResizeEnd?: (args: { position: number }) => void
+  id?: string
+  /**
+   * Callback when resizing starts
+   */
+  onResizeStart?: (args: ResizeCallbackArgs) => void
+  /**
+   * Callback when resizing ends
+   */
+  onResizeEnd?: (args: ResizeCallbackArgs) => void
 }
 
-type SplitPaneProps = UseSplitPaneProps &
+export type SplitPaneProps = UseSplitPaneProps &
   SplitPaneStyles & {
     /**
-     * callback children
+     * Render function for children
      */
     children: (props: SplitPaneState) => React.JSX.Element
     /**
@@ -99,6 +143,29 @@ const KEYS_DOWN = ['ArrowDown', 'Down']
 const KEYS_HORIZONTAL = [...KEYS_LEFT, ...KEYS_RIGHT]
 const KEYS_VERTICAL = [...KEYS_UP, ...KEYS_DOWN]
 const KEYS_POSITIVE = [...KEYS_RIGHT, ...KEYS_DOWN]
+const STORAGE_PREFIX = 'splitpane-position-'
+
+// Helper function to safely interact with localStorage
+const storage = {
+  get: (key: string, fallback: number): number => {
+    if (typeof window === 'undefined') return fallback
+    try {
+      const value = window.localStorage.getItem(`${STORAGE_PREFIX}${key}`)
+      return value ? Number.parseFloat(value) : fallback
+    } catch (e) {
+      console.warn('Failed to retrieve from localStorage:', e)
+      return fallback
+    }
+  },
+  set: (key: string, value: number): void => {
+    if (typeof window === 'undefined') return
+    try {
+      window.localStorage.setItem(`${STORAGE_PREFIX}${key}`, value.toString())
+    } catch (e) {
+      console.warn('Failed to save to localStorage:', e)
+    }
+  },
+}
 
 const useSplitPane = ({
   orientation,
@@ -109,18 +176,33 @@ const useSplitPane = ({
   reverse,
   step = 10,
   shiftStep = 50,
+  throttleTime = 16, // ~60fps
+  id,
   onResizeStart,
   onResizeEnd,
   containerRef,
 }: UseSplitPaneProps): SplitPaneState => {
-  const initialPosition = Math.min(Math.max(initial, min), max)
+  // Get initial position from localStorage if id is provided
+  const savedInitial = React.useMemo(() => {
+    if (!id) return initial
+    return storage.get(id, initial)
+  }, [id, initial])
+
   const isResizing = React.useRef(false)
+  const initialPosition = Math.min(Math.max(savedInitial, min), max)
+  const positionRef = React.useRef(initialPosition)
 
   const [isDragging, setIsDragging] = React.useState(false)
   const [position, setPosition] = React.useState(initialPosition)
   const [endPosition, setEndPosition] = React.useState(initialPosition)
 
-  const positionRef = React.useRef(initialPosition)
+  // Create throttled position setter - memoized once
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Empty dependency array as we don't want to recreate this on throttleTime changes
+  const throttledSetPosition = React.useMemo(() => {
+    return throttle((newPosition: number) => {
+      setPosition(newPosition)
+    }, throttleTime)
+  }, [])
 
   const ariaProps = React.useMemo<SeparatorProps>(
     () => ({
@@ -137,14 +219,13 @@ const useSplitPane = ({
 
   const handlePointermove = React.useCallback(
     (e: PointerEvent) => {
-      // exit if not resizing
+      // Exit if not resizing
       if (!isResizing.current) return
 
-      // exit if disabled
       if (disabled) return
 
       e.stopPropagation()
-      e.preventDefault() // prevent text selection
+      e.preventDefault() // Prevent text selection
 
       let currentPosition = (() => {
         if (orientation === 'horizontal') {
@@ -164,10 +245,10 @@ const useSplitPane = ({
       })()
 
       currentPosition = Math.min(Math.max(currentPosition, min), max)
-      setPosition(currentPosition)
+      throttledSetPosition(currentPosition)
       positionRef.current = currentPosition
     },
-    [orientation, disabled, max, min, reverse, containerRef]
+    [orientation, disabled, max, min, reverse, containerRef, throttledSetPosition]
   )
 
   const handlePointerup = React.useCallback(
@@ -177,12 +258,23 @@ const useSplitPane = ({
       e.stopPropagation()
       isResizing.current = false
       setIsDragging(false)
-      setEndPosition(positionRef.current)
+
+      // Save final position
+      const finalPosition = positionRef.current
+      setEndPosition(finalPosition)
+      setPosition(finalPosition)
+
+      // Persist position to localStorage if id is provided
+      if (id) {
+        storage.set(id, finalPosition)
+      }
+
       document.removeEventListener('pointermove', handlePointermove)
       document.removeEventListener('pointerup', handlePointerup)
-      if (onResizeEnd) onResizeEnd({ position: positionRef.current })
+
+      if (onResizeEnd) onResizeEnd({ position: finalPosition })
     },
-    [disabled, handlePointermove, onResizeEnd]
+    [disabled, handlePointermove, onResizeEnd, id]
   )
 
   const handlePointerdown = React.useCallback<React.PointerEventHandler>(
@@ -206,6 +298,9 @@ const useSplitPane = ({
       if (e.key === 'Enter') {
         setPosition(initial)
         positionRef.current = initial
+        if (id) {
+          storage.set(id, initial)
+        }
         return
       }
       if (
@@ -221,19 +316,22 @@ const useSplitPane = ({
       const reversed = reverse ? -1 : 1
       const dir = KEYS_POSITIVE.includes(e.key) ? reversed : -1 * reversed
 
-      const newPosition = position + changeStep * dir
+      let newPosition = position + changeStep * dir
       if (newPosition < min) {
-        setPosition(min)
-        positionRef.current = min
+        newPosition = min
       } else if (newPosition > max) {
-        setPosition(max)
-        positionRef.current = max
-      } else {
-        setPosition(newPosition)
-        positionRef.current = newPosition
+        newPosition = max
       }
 
-      if (onResizeEnd) onResizeEnd({ position: positionRef.current })
+      setPosition(newPosition)
+      positionRef.current = newPosition
+
+      // Persist position to localStorage if id is provided
+      if (id) {
+        storage.set(id, newPosition)
+      }
+
+      if (onResizeEnd) onResizeEnd({ position: newPosition })
     },
     [
       disabled,
@@ -247,6 +345,7 @@ const useSplitPane = ({
       max,
       onResizeEnd,
       initial,
+      id,
     ]
   )
 
@@ -254,7 +353,12 @@ const useSplitPane = ({
     if (disabled) return
     setPosition(initial)
     positionRef.current = initial
-  }, [disabled, initial])
+
+    // Persist position to localStorage if id is provided
+    if (id) {
+      storage.set(id, initial)
+    }
+  }, [disabled, initial, id])
 
   return {
     position,
@@ -326,6 +430,10 @@ const SplitPane = ({
   min = 0,
   max = Number.POSITIVE_INFINITY,
   reverse,
+  step = 10,
+  shiftStep = 50,
+  throttleTime = 16,
+  id,
   onResizeStart,
   onResizeEnd,
   children,
@@ -340,6 +448,10 @@ const SplitPane = ({
     min,
     max,
     reverse,
+    step,
+    shiftStep,
+    throttleTime,
+    id,
     onResizeStart,
     onResizeEnd,
     containerRef,

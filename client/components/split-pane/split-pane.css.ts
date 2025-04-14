@@ -8,7 +8,7 @@ const splitPaneStyles = tv({
       'transition-colors duration-150',
       'focus:outline-none focus:ring-2 focus:ring-primary',
     ],
-    panel: 'h-full overflow-auto',
+    panel: 'h-full overflow-auto transition-[width,height] duration-100 ease-out',
     firstPanel: '',
     lastPanel: 'flex-1',
   },
@@ -17,18 +17,21 @@ const splitPaneStyles = tv({
       horizontal: {
         root: 'flex-row',
         separator: 'h-full w-0.5 cursor-col-resize',
+        panel: 'transition-width',
       },
       vertical: {
         root: 'flex-col',
         separator: 'h-0.5 w-full cursor-row-resize',
+        panel: 'transition-height',
       },
     },
     isDragging: {
       true: {
         separator: 'bg-accent/60',
+        panel: 'transition-none',
       },
       false: {
-        separator: 'bg-border/50 hover:bg-border/50 active:bg-border/80',
+        separator: 'bg-border/30 hover:bg-border/50 active:bg-border/80',
       },
     },
   },
