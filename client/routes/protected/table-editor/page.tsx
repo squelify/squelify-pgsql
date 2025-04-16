@@ -5,7 +5,6 @@ import { LeftPanel } from './panel-left'
 import { RightPanel } from './panel-right'
 
 // Default panel size constants
-const DEFAULT_LEFT_PANEL_WIDTH = 250
 const STORAGE_PREFIX = 'splitpane-position-'
 
 // Helper function to update localStorage directly
@@ -19,6 +18,8 @@ const updateStoredPanelSize = (id: string, size: number): void => {
 
 export default function Page() {
   useSeoMeta({ title: 'Table Editor' })
+
+  const DEFAULT_LEFT_PANEL_WIDTH = 250
 
   // State to store the last panel size before hiding
   const [lastLeftPanelWidth, setLastLeftPanelWidth] = React.useState(DEFAULT_LEFT_PANEL_WIDTH)

@@ -57,7 +57,7 @@ export default function AppSidebar({ openCommand }: AppSidebarProps) {
   ]
 
   // Secondary navigation items
-  const footerNavigation = [
+  const secondaryNavigation = [
     { title: 'Audit Log', url: '/audit-log', icon: Lucide.FileClock },
     { title: 'System Settings', url: '/settings', icon: Lucide.Bolt },
   ]
@@ -105,10 +105,14 @@ export default function AppSidebar({ openCommand }: AppSidebarProps) {
         <SidebarGroupLabel className="sr-only">System</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
-            {footerNavigation.map((item) => (
+            {secondaryNavigation.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
-                  data-active={item.url === location.pathname}
+                  data-active={
+                    item.url === '/settings'
+                      ? location.pathname.startsWith('/settings')
+                      : item.url === location.pathname
+                  }
                   tooltip={item.title}
                   asChild
                 >

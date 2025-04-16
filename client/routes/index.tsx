@@ -8,9 +8,14 @@ const ProtectedLayout = React.lazy(() => import('#/routes/protected/layout'))
 const Dashboard = React.lazy(() => import('#/routes/protected/dashboard/page'))
 const UserProfile = React.lazy(() => import('#/routes/protected/profile/page'))
 const UserAccount = React.lazy(() => import('#/routes/protected/account/page'))
-const Settings = React.lazy(() => import('#/routes/protected/settings/page'))
+const SettingLayout = React.lazy(() => import('#/routes/protected/settings/layout'))
 const AuditLog = React.lazy(() => import('#/routes/protected/audit-log/page'))
 const Setup = React.lazy(() => import('#/routes/setup/page'))
+
+const Settings = {
+  General: React.lazy(() => import('#/routes/protected/settings/general/page')),
+  Email: React.lazy(() => import('#/routes/protected/settings/email/page')),
+}
 
 const Database = {
   SchemaDiagram: React.lazy(() => import('#/routes/protected/schema-diagram/page')),
@@ -62,7 +67,16 @@ const routes: RouteObject[] = [
       { path: '/auth/roles', element: <Authentication.Roles /> },
       { path: '/auth/permissions', element: <Authentication.Permissions /> },
       { path: '/auth/api-keys', element: <Authentication.ApiKeys /> },
-      { path: '/settings', element: <Settings /> },
+      {
+        path: 'settings',
+        element: <SettingLayout />,
+        children: [
+          { path: '', element: <Navigate to="/settings/general" replace /> },
+          { path: 'general', element: <Settings.General /> },
+          { path: 'email', element: <Settings.Email /> },
+        ],
+        errorElement: <InternalError />,
+      },
       { path: '/audit-log', element: <AuditLog /> },
     ],
     errorElement: <InternalError />,

@@ -38,7 +38,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
             navigate('/')
             setOpen(false)
           },
-          shortcut: '/',
+          shortcut: 'g h', // go home
         },
       ],
       showSeparator: true,
@@ -53,10 +53,10 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           label: 'Table Editor',
           keywords: ['database', 'tables', 'schema', 'edit', 'structure'],
           onSelect: () => {
-            navigate('/database/table-editor')
+            navigate('/table-editor')
             setOpen(false)
           },
-          shortcut: '/db/table',
+          shortcut: 'g t', // go tables
         },
         {
           id: 'sql-console',
@@ -64,10 +64,10 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           label: 'SQL Console',
           keywords: ['database', 'query', 'sql', 'console', 'command'],
           onSelect: () => {
-            navigate('/database/sql-console')
+            navigate('/sql-console')
             setOpen(false)
           },
-          shortcut: '/db/sql',
+          shortcut: 'g s', // go sql
         },
         {
           id: 'schema-diagram',
@@ -75,10 +75,10 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           label: 'Schema Diagram',
           keywords: ['database', 'schema', 'diagram', 'erd', 'structure', 'visual'],
           onSelect: () => {
-            navigate('/database/schema-diagram')
+            navigate('/schema-diagram')
             setOpen(false)
           },
-          shortcut: '/db/schema',
+          shortcut: 'g d', // go diagram
         },
       ],
       showSeparator: true,
@@ -93,10 +93,10 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           label: 'Collections',
           keywords: ['content', 'collections', 'data', 'entries'],
           onSelect: () => {
-            navigate('/content/collections')
+            navigate('/collections')
             setOpen(false)
           },
-          shortcut: '/content',
+          shortcut: 'g c', // go collections
         },
         {
           id: 'media-library',
@@ -104,10 +104,10 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           label: 'Media Library',
           keywords: ['content', 'media', 'images', 'files', 'assets', 'upload'],
           onSelect: () => {
-            navigate('/content/media')
+            navigate('/media-library')
             setOpen(false)
           },
-          shortcut: '/media',
+          shortcut: 'g m', // go media
         },
       ],
       showSeparator: true,
@@ -125,7 +125,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
             navigate('/auth/users')
             setOpen(false)
           },
-          shortcut: '/users',
+          shortcut: 'g u', // go users
         },
         {
           id: 'roles',
@@ -136,7 +136,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
             navigate('/auth/roles')
             setOpen(false)
           },
-          shortcut: '/roles',
+          shortcut: 'g r', // go roles
         },
         {
           id: 'permissions',
@@ -147,7 +147,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
             navigate('/auth/permissions')
             setOpen(false)
           },
-          shortcut: '/perms',
+          shortcut: 'g p', // go permissions
         },
       ],
       showSeparator: true,
@@ -165,7 +165,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
             navigate('/settings')
             setOpen(false)
           },
-          shortcut: '/settings',
+          shortcut: 'g o', // go options/settings
         },
         {
           id: 'audit-log',
@@ -176,7 +176,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
             navigate('/audit-log')
             setOpen(false)
           },
-          shortcut: '⌘+H',
+          shortcut: 'g a', // go audit
         },
       ],
       showSeparator: true,
@@ -194,7 +194,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
             setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
             setOpen(false)
           },
-          shortcut: '⌘+T',
+          shortcut: 't t', // toggle theme
         },
         {
           id: 'help',
@@ -205,7 +205,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
             window.open('https://squelify.com/docs', '_blank')
             setOpen(false)
           },
-          shortcut: '⌘+H',
+          shortcut: 'h', // help
         },
       ],
       showSeparator: true,
@@ -223,7 +223,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
             navigate('/profile')
             setOpen(false)
           },
-          shortcut: '/profile',
+          shortcut: 'p', // profile
         },
         {
           id: 'logout',
@@ -231,7 +231,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           label: 'Logout',
           keywords: ['account', 'logout', 'sign out', 'exit', 'quit'],
           onSelect: handleLogout,
-          shortcut: '⌘+L',
+          shortcut: 'l', // logout
         },
       ],
       showSeparator: false,
