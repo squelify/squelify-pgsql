@@ -5,8 +5,8 @@ export default function Page() {
   useSeoMeta({ title: 'User Profile' })
 
   return (
-    <div className="mx-auto flex min-h-full w-full items-center justify-center py-44 sm:py-56 md:py-0">
-      <div className="md:-mt-16 flex h-full min-h-[96%] max-w-2xl flex-col items-center justify-center p-4 text-center">
+    <div className="flex h-auto w-full items-center justify-center py-46">
+      <div className="flex h-full min-h-[96%] max-w-2xl flex-col items-center justify-center p-4 text-center">
         <div className="mb-8">
           <Lucide.CircleUserRound className="size-20 text-muted-foreground transition-colors duration-200 hover:text-primary" />
         </div>

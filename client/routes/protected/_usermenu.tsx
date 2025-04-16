@@ -5,7 +5,6 @@ import { Button } from '#/components/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup } from '#/components/dropdown-menu'
 import { DropdownMenuItem, DropdownMenuLabel } from '#/components/dropdown-menu'
 import { DropdownMenuSeparator, DropdownMenuTrigger } from '#/components/dropdown-menu'
-import Link from '#/components/link'
 import { toast } from '#/components/toast'
 
 export default function UserMenu() {
@@ -49,17 +48,19 @@ export default function UserMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <Link href="/profile" className="flex items-center">
-              <Lucide.CircleUserRound className="mr-2 h-4 w-4" />
-              <span>User Profile</span>
-            </Link>
+          <DropdownMenuItem
+            onClick={() => navigate('/settings/profile')}
+            className="flex items-center"
+          >
+            <Lucide.CircleUserRound className="mr-2 h-4 w-4" />
+            <span>User Profile</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link href="/account" className="flex items-center">
-              <Lucide.Settings2 className="mr-2 h-4 w-4" />
-              <span>Preferences</span>
-            </Link>
+          <DropdownMenuItem
+            onClick={() => navigate('/settings/preferences')}
+            className="flex items-center"
+          >
+            <Lucide.Settings2 className="mr-2 h-4 w-4" />
+            <span>Preferences</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

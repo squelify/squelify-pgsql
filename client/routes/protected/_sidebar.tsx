@@ -43,6 +43,7 @@ export default function AppSidebar({ openCommand }: AppSidebarProps) {
       items: [
         { title: 'Collections', url: '/collections', icon: Lucide.Layers },
         { title: 'Media Library', url: '/media-library', icon: Lucide.Image },
+        { title: 'Functions', url: '/functions', icon: Lucide.FunctionSquare },
       ],
     },
     {
@@ -59,7 +60,7 @@ export default function AppSidebar({ openCommand }: AppSidebarProps) {
   // Secondary navigation items
   const secondaryNavigation = [
     { title: 'Audit Log', url: '/audit-log', icon: Lucide.FileClock },
-    { title: 'System Settings', url: '/settings', icon: Lucide.Bolt },
+    { title: 'System Settings', url: '/settings', icon: Lucide.Settings },
   ]
 
   return (

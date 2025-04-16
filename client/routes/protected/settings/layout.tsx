@@ -2,6 +2,7 @@ import * as Lucide from 'lucide-react'
 import { useState } from 'react'
 import { Outlet, useLocation } from 'react-router'
 import { clx } from 'twistail-utils'
+import pkg from '~~/package.json' with { type: 'json' }
 import { Button } from '#/components/button'
 import Link from '#/components/link'
 
@@ -9,15 +10,40 @@ export default function SettingsLayout() {
   const location = useLocation()
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
-  const settingsTabs = [
-    { path: '/settings/general', label: 'General', icon: Lucide.Settings },
-    { path: '/settings/email', label: 'Email', icon: Lucide.Mail },
-    { path: '#', label: 'Security', icon: Lucide.ShieldCheck },
-    { path: '#', label: 'Appearance', icon: Lucide.Palette },
-    { path: '#', label: 'Integrations', icon: Lucide.Plug },
+  const settingsMenu = [
+    {
+      title: 'System Settings',
+      items: [
+        { path: '/settings/application', label: 'Application', icon: Lucide.AppWindow },
+        { path: '/settings/authentication', label: 'Authentication', icon: Lucide.LockKeyhole },
+        { path: '/settings/storage', label: 'Storage & Media', icon: Lucide.ImageUp },
+        { path: '/settings/email', label: 'SMTP Mailer', icon: Lucide.Mail },
+        { path: '/settings/integrations', label: 'Integrations', icon: Lucide.Plug },
+        { path: '/settings/scheduler', label: 'Scheduler', icon: Lucide.TimerReset },
+        { path: '/settings/webhooks', label: 'Webhooks', icon: Lucide.Webhook },
+      ],
+    },
+    {
+      title: 'Sync & Backup',
+      items: [
+        { path: '/settings/backup', label: 'Backup Collections', icon: Lucide.Archive },
+        { path: '/settings/restore', label: 'Restore Collections', icon: Lucide.ArchiveRestore },
+      ],
+    },
+    {
+      title: 'Account Settings',
+      items: [
+        { path: '/settings/profile', label: 'Profile', icon: Lucide.User },
+        { path: '/settings/security', label: 'Security', icon: Lucide.ShieldEllipsis },
+        { path: '/settings/preferences', label: 'Preferences', icon: Lucide.Settings2 },
+        { path: '/settings/activity-log', label: 'Activity Log', icon: Lucide.Activity },
+      ],
+    },
   ]
 
-  const activeTab = settingsTabs.find((tab) => tab.path === location.pathname) || settingsTabs[0]
+  // Flatten all tabs for finding active tab
+  const allTabs = settingsMenu.flatMap((group) => group.items)
+  const activeTab = allTabs.find((tab) => tab.path === location.pathname) || allTabs[0]
 
   return (
     <div className="flex size-full flex-col md:flex-row">
@@ -41,28 +67,52 @@ export default function SettingsLayout() {
           mobileNavOpen ? 'block' : 'hidden md:block'
         )}
       >
-        <div className="p-4">
-          <h2 className="mb-4 hidden font-semibold text-lg text-sidebar-foreground md:block">
-            System Settings
-          </h2>
-          <nav className="grid gap-1">
-            {settingsTabs.map((tab) => (
-              <Link
-                key={tab.path}
-                href={tab.path}
-                onClick={() => setMobileNavOpen(false)}
-                className={clx(
-                  'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
-                  location.pathname === tab.path
-                    ? 'bg-sidebar-primary/50 font-medium text-sidebar-foreground'
-                    : 'text-sidebar-foreground/70 hover:bg-sidebar-hover hover:text-sidebar-foreground'
-                )}
-              >
-                <tab.icon className="size-4" />
-                <span>{tab.label}</span>
-              </Link>
+        <div className="flex h-full flex-col p-4">
+          <nav className="grid gap-8">
+            {settingsMenu.map((group) => (
+              <div key={group.title}>
+                <h3 className="mb-2 font-medium text-sidebar-foreground/60 text-xs uppercase tracking-wider">
+                  {group.title}
+                </h3>
+                <div className="grid gap-1">
+                  {group.items.map((tab) => (
+                    <Link
+                      key={tab.path}
+                      href={tab.path}
+                      onClick={() => setMobileNavOpen(false)}
+                      className={clx(
+                        'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
+                        location.pathname === tab.path
+                          ? 'bg-sidebar-primary/50 font-medium text-sidebar-foreground'
+                          : 'text-sidebar-foreground/70 hover:bg-sidebar-hover hover:text-sidebar-foreground'
+                      )}
+                    >
+                      <tab.icon className="size-4" />
+                      <span>{tab.label}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             ))}
           </nav>
+
+          {/* Version Information */}
+          <div className="mt-auto text-sidebar-foreground/50 text-xs">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1">
+                <Lucide.Info className="size-3" />
+                <span>v{pkg.version}</span>
+              </div>
+              <Link
+                href={pkg.homepage}
+                className="flex items-center gap-1 transition-colors hover:text-sidebar-foreground"
+                newTab
+              >
+                <Lucide.Github className="size-3" />
+                <span>GitHub</span>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
 

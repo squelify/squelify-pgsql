@@ -6,15 +6,24 @@ import { InternalError, NotFound } from '#/components/errors'
 const AuthLayout = React.lazy(() => import('#/routes/auth/layout'))
 const ProtectedLayout = React.lazy(() => import('#/routes/protected/layout'))
 const Dashboard = React.lazy(() => import('#/routes/protected/dashboard/page'))
-const UserProfile = React.lazy(() => import('#/routes/protected/profile/page'))
-const UserAccount = React.lazy(() => import('#/routes/protected/account/page'))
 const SettingLayout = React.lazy(() => import('#/routes/protected/settings/layout'))
 const AuditLog = React.lazy(() => import('#/routes/protected/audit-log/page'))
 const Setup = React.lazy(() => import('#/routes/setup/page'))
 
 const Settings = {
-  General: React.lazy(() => import('#/routes/protected/settings/general/page')),
+  Application: React.lazy(() => import('#/routes/protected/settings/application/page')),
+  Authentication: React.lazy(() => import('#/routes/protected/settings/authentication/page')),
+  Storage: React.lazy(() => import('#/routes/protected/settings/storage/page')),
   Email: React.lazy(() => import('#/routes/protected/settings/email/page')),
+  Integrations: React.lazy(() => import('#/routes/protected/settings/integrations/page')),
+  Scheduler: React.lazy(() => import('#/routes/protected/settings/scheduler/page')),
+  Webhooks: React.lazy(() => import('#/routes/protected/settings/webhooks/page')),
+  Backup: React.lazy(() => import('#/routes/protected/settings/backup/page')),
+  Restore: React.lazy(() => import('#/routes/protected/settings/restore/page')),
+  Profile: React.lazy(() => import('#/routes/protected/settings/profile/page')),
+  Security: React.lazy(() => import('#/routes/protected/settings/security/page')),
+  Preferences: React.lazy(() => import('#/routes/protected/settings/preferences/page')),
+  ActivityLog: React.lazy(() => import('#/routes/protected/settings/activity-log/page')),
 }
 
 const Database = {
@@ -26,6 +35,7 @@ const Database = {
 const Content = {
   Collections: React.lazy(() => import('#/routes/protected/collections/page')),
   MediaLibrary: React.lazy(() => import('#/routes/protected/media-library/page')),
+  Functions: React.lazy(() => import('#/routes/protected/functions/page')),
 }
 
 const Authentication = {
@@ -55,13 +65,12 @@ const routes: RouteObject[] = [
     element: <ProtectedLayout />,
     children: [
       { path: '/', element: <Dashboard /> },
-      { path: '/profile', element: <UserProfile /> },
-      { path: '/account', element: <UserAccount /> },
       { path: '/schema-diagram', element: <Database.SchemaDiagram /> },
       { path: '/sql-console', element: <Database.SqlConsole /> },
       { path: '/table-editor', element: <Database.TableEditor /> },
       { path: '/collections', element: <Content.Collections /> },
       { path: '/media-library', element: <Content.MediaLibrary /> },
+      { path: '/functions', element: <Content.Functions /> },
       { path: '/auth', element: <Navigate to="/auth/users" replace /> },
       { path: '/auth/users', element: <Authentication.Users /> },
       { path: '/auth/roles', element: <Authentication.Roles /> },
@@ -71,9 +80,20 @@ const routes: RouteObject[] = [
         path: 'settings',
         element: <SettingLayout />,
         children: [
-          { path: '', element: <Navigate to="/settings/general" replace /> },
-          { path: 'general', element: <Settings.General /> },
+          { path: '', element: <Navigate to="/settings/application" replace /> },
+          { path: 'application', element: <Settings.Application /> },
+          { path: 'authentication', element: <Settings.Authentication /> },
+          { path: 'storage', element: <Settings.Storage /> },
           { path: 'email', element: <Settings.Email /> },
+          { path: 'integrations', element: <Settings.Integrations /> },
+          { path: 'scheduler', element: <Settings.Scheduler /> },
+          { path: 'webhooks', element: <Settings.Webhooks /> },
+          { path: 'backup', element: <Settings.Backup /> },
+          { path: 'restore', element: <Settings.Restore /> },
+          { path: 'profile', element: <Settings.Profile /> },
+          { path: 'security', element: <Settings.Security /> },
+          { path: 'preferences', element: <Settings.Preferences /> },
+          { path: 'activity-log', element: <Settings.ActivityLog /> },
         ],
         errorElement: <InternalError />,
       },

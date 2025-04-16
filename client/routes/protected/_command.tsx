@@ -109,6 +109,17 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           },
           shortcut: 'g m', // go media
         },
+        {
+          id: 'functions',
+          icon: Lucide.FunctionSquare,
+          label: 'Functions',
+          keywords: ['content', 'functions', 'serverless', 'code', 'logic'],
+          onSelect: () => {
+            navigate('/functions')
+            setOpen(false)
+          },
+          shortcut: 'g f', // go functions
+        },
       ],
       showSeparator: true,
     },
@@ -129,7 +140,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
         },
         {
           id: 'roles',
-          icon: Lucide.Shield,
+          icon: Lucide.ShieldEllipsis,
           label: 'Roles',
           keywords: ['auth', 'roles', 'permissions', 'access', 'authentication'],
           onSelect: () => {
@@ -149,6 +160,17 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           },
           shortcut: 'g p', // go permissions
         },
+        {
+          id: 'api-keys',
+          icon: Lucide.GlobeLock,
+          label: 'API Keys',
+          keywords: ['auth', 'api', 'keys', 'tokens', 'access', 'security'],
+          onSelect: () => {
+            navigate('/auth/api-keys')
+            setOpen(false)
+          },
+          shortcut: 'g k', // go keys
+        },
       ],
       showSeparator: true,
     },
@@ -156,6 +178,17 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
       id: 'system',
       heading: 'System',
       items: [
+        {
+          id: 'audit-log',
+          icon: Lucide.FileClock,
+          label: 'Audit Log',
+          keywords: ['audit', 'log', 'history', 'activity', 'system'],
+          onSelect: () => {
+            navigate('/audit-log')
+            setOpen(false)
+          },
+          shortcut: 'g a', // go audit
+        },
         {
           id: 'system-settings',
           icon: Lucide.Settings,
@@ -167,16 +200,169 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
           },
           shortcut: 'g o', // go options/settings
         },
+      ],
+      showSeparator: true,
+    },
+    {
+      id: 'settings',
+      heading: 'Settings',
+      items: [
         {
-          id: 'audit-log',
-          icon: Lucide.FileClock,
-          label: 'Audit Log',
-          keywords: ['audit', 'log', 'history', 'activity', 'system'],
+          id: 'application-settings',
+          icon: Lucide.AppWindow,
+          label: 'Application Settings',
+          keywords: ['settings', 'application', 'config', 'system'],
           onSelect: () => {
-            navigate('/audit-log')
+            navigate('/settings/application')
             setOpen(false)
           },
-          shortcut: 'g a', // go audit
+          shortcut: 's a', // settings application
+        },
+        {
+          id: 'authentication-settings',
+          icon: Lucide.LockKeyhole,
+          label: 'Authentication Settings',
+          keywords: ['settings', 'authentication', 'login', 'security'],
+          onSelect: () => {
+            navigate('/settings/authentication')
+            setOpen(false)
+          },
+          shortcut: 's u', // settings auth
+        },
+        {
+          id: 'storage-settings',
+          icon: Lucide.ImageUp,
+          label: 'Storage & Media',
+          keywords: ['settings', 'storage', 'media', 'files', 'upload'],
+          onSelect: () => {
+            navigate('/settings/storage')
+            setOpen(false)
+          },
+          shortcut: 's s', // settings storage
+        },
+        {
+          id: 'email-settings',
+          icon: Lucide.Mail,
+          label: 'SMTP Mailer',
+          keywords: ['settings', 'email', 'smtp', 'mail', 'notifications'],
+          onSelect: () => {
+            navigate('/settings/email')
+            setOpen(false)
+          },
+          shortcut: 's e', // settings email
+        },
+        {
+          id: 'integrations-settings',
+          icon: Lucide.Plug,
+          label: 'Integrations',
+          keywords: ['settings', 'integrations', 'connect', 'external', 'services'],
+          onSelect: () => {
+            navigate('/settings/integrations')
+            setOpen(false)
+          },
+          shortcut: 's i', // settings integrations
+        },
+        {
+          id: 'scheduler-settings',
+          icon: Lucide.TimerReset,
+          label: 'Scheduler',
+          keywords: ['settings', 'scheduler', 'cron', 'jobs', 'tasks'],
+          onSelect: () => {
+            navigate('/settings/scheduler')
+            setOpen(false)
+          },
+          shortcut: 's c', // settings cron
+        },
+        {
+          id: 'webhooks-settings',
+          icon: Lucide.Webhook,
+          label: 'Webhooks',
+          keywords: ['settings', 'webhooks', 'events', 'triggers', 'notifications'],
+          onSelect: () => {
+            navigate('/settings/webhooks')
+            setOpen(false)
+          },
+          shortcut: 's w', // settings webhooks
+        },
+      ],
+      showSeparator: true,
+    },
+    {
+      id: 'backup',
+      heading: 'Sync & Backup',
+      items: [
+        {
+          id: 'backup-collections',
+          icon: Lucide.Archive,
+          label: 'Backup Collections',
+          keywords: ['backup', 'export', 'save', 'collections', 'data'],
+          onSelect: () => {
+            navigate('/settings/backup')
+            setOpen(false)
+          },
+          shortcut: 'b c', // backup collections
+        },
+        {
+          id: 'restore-collections',
+          icon: Lucide.ArchiveRestore,
+          label: 'Restore Collections',
+          keywords: ['restore', 'import', 'load', 'collections', 'data'],
+          onSelect: () => {
+            navigate('/settings/restore')
+            setOpen(false)
+          },
+          shortcut: 'r c', // restore collections
+        },
+      ],
+      showSeparator: true,
+    },
+    {
+      id: 'account-settings',
+      heading: 'Account Settings',
+      items: [
+        {
+          id: 'profile-settings',
+          icon: Lucide.User,
+          label: 'Profile Settings',
+          keywords: ['profile', 'account', 'user', 'personal'],
+          onSelect: () => {
+            navigate('/settings/profile')
+            setOpen(false)
+          },
+          shortcut: 'a p', // account profile
+        },
+        {
+          id: 'security-settings',
+          icon: Lucide.ShieldEllipsis,
+          label: 'Security Settings',
+          keywords: ['security', 'password', 'mfa', 'authentication'],
+          onSelect: () => {
+            navigate('/settings/security')
+            setOpen(false)
+          },
+          shortcut: 'a s', // account security
+        },
+        {
+          id: 'preferences-settings',
+          icon: Lucide.Settings2,
+          label: 'Preferences',
+          keywords: ['preferences', 'options', 'personalization', 'customize'],
+          onSelect: () => {
+            navigate('/settings/preferences')
+            setOpen(false)
+          },
+          shortcut: 'a o', // account options
+        },
+        {
+          id: 'activity-log',
+          icon: Lucide.Activity,
+          label: 'Activity Log',
+          keywords: ['activity', 'log', 'history', 'actions', 'personal'],
+          onSelect: () => {
+            navigate('/settings/activity-log')
+            setOpen(false)
+          },
+          shortcut: 'a l', // account log
         },
       ],
       showSeparator: true,
@@ -214,17 +400,6 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
       id: 'account',
       heading: 'Account',
       items: [
-        {
-          id: 'profile',
-          icon: Lucide.UserCircle,
-          label: 'Profile Settings',
-          keywords: ['account', 'profile', 'settings', 'user', 'personal'],
-          onSelect: () => {
-            navigate('/profile')
-            setOpen(false)
-          },
-          shortcut: 'p', // profile
-        },
         {
           id: 'logout',
           icon: Lucide.LogOut,
@@ -277,7 +452,7 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
 
   return (
     <CommandDialog open={open} modal={true} onOpenChange={setOpen} filter={fuzzyFilter}>
-      <CommandInput placeholder="Type a command or search..." />
+      <CommandInput placeholder="Jump to page or run an action..." />
       <CommandList>
         <CommandEmpty>No results found</CommandEmpty>
         <ScrollArea>
