@@ -14,9 +14,39 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: ^3.787.0
         version: 3.787.0
+      '@codemirror/autocomplete':
+        specifier: ^6.18.6
+        version: 6.18.6
+      '@codemirror/commands':
+        specifier: ^6.8.1
+        version: 6.8.1
+      '@codemirror/lang-html':
+        specifier: ^6.4.9
+        version: 6.4.9
+      '@codemirror/lang-json':
+        specifier: ^6.0.1
+        version: 6.0.1
+      '@codemirror/lang-sql':
+        specifier: ^6.8.0
+        version: 6.8.0
+      '@codemirror/language':
+        specifier: ^6.11.0
+        version: 6.11.0
+      '@codemirror/search':
+        specifier: ^6.5.10
+        version: 6.5.10
+      '@codemirror/state':
+        specifier: ^6.5.2
+        version: 6.5.2
+      '@codemirror/view':
+        specifier: ^6.36.5
+        version: 6.36.5
       '@electric-sql/pglite':
         specifier: ^0.2.17
         version: 0.2.17
+      '@lezer/highlight':
+        specifier: ^1.2.1
+        version: 1.2.1
       '@nanostores/persistent':
         specifier: ^1.0.0
         version: 1.0.0(nanostores@1.0.1)
@@ -26,6 +56,9 @@ importers:
       '@noble/hashes':
         specifier: ^1.7.2
         version: 1.7.2
+      '@replit/codemirror-indentation-markers':
+        specifier: ^6.5.3
+        version: 6.5.3(@codemirror/language@6.11.0)(@codemirror/state@6.5.2)(@codemirror/view@6.36.5)
       '@tanstack/react-query':
         specifier: ^5.74.3
         version: 5.74.3(react@19.1.0)
@@ -42,11 +75,14 @@ importers:
         specifier: ^11.1.0
         version: 11.1.0(@tanstack/react-query@5.74.3(react@19.1.0))(@trpc/client@11.1.0(@trpc/server@11.1.0(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.1.0(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
       '@unhead/react':
-        specifier: ^2.0.5
-        version: 2.0.5(react@19.1.0)
+        specifier: ^2.0.7
+        version: 2.0.7(react@19.1.0)
       cmdk:
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@19.1.2(@types/react@19.1.2))(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      codemirror:
+        specifier: ^6.0.1
+        version: 6.0.1
       consola:
         specifier: ^3.4.2
         version: 3.4.2
@@ -81,8 +117,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.1
       nuqs:
-        specifier: ^2.4.2
-        version: 2.4.2(react-router@7.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
+        specifier: ^2.4.3
+        version: 2.4.3(react-router@7.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       ohash:
         specifier: ^2.0.11
         version: 2.0.11
@@ -534,6 +570,9 @@ packages:
 
   '@codemirror/lang-json@6.0.1':
     resolution: {integrity: sha512-+T1flHdgpqDDlJZ2Lkil/rLiRy684WMLc74xUnjJH48GQdfJo/pudlTRreZmKwzP8/tGdKf83wlbAdOCzlJOGQ==}
+
+  '@codemirror/lang-sql@6.8.0':
+    resolution: {integrity: sha512-aGLmY4OwGqN3TdSx3h6QeA1NrvaYtF7kkoWR/+W7/JzB0gQtJ+VJxewlnE3+VImhA4WVlhmkJr109PefOOhjLg==}
 
   '@codemirror/lang-xml@6.1.0':
     resolution: {integrity: sha512-3z0blhicHLfwi2UgkZYRPioSgVTo9PV5GP5ducFH6FaHy0IAJRg+ixj5gTR1gnT/glAIC8xv4w2VL1LoZfs+Jg==}
@@ -1636,6 +1675,13 @@ packages:
       '@codemirror/state': ^6.0.0
       '@codemirror/view': ^6.0.0
 
+  '@replit/codemirror-indentation-markers@6.5.3':
+    resolution: {integrity: sha512-hL5Sfvw3C1vgg7GolLe/uxX5T3tmgOA3ZzqlMv47zjU1ON51pzNWiVbS22oh6crYhtVhv8b3gdXwoYp++2ilHw==}
+    peerDependencies:
+      '@codemirror/language': ^6.0.0
+      '@codemirror/state': ^6.0.0
+      '@codemirror/view': ^6.0.0
+
   '@rollup/plugin-alias@5.1.1':
     resolution: {integrity: sha512-PR9zDb+rOzkRb2VD+EuKB7UC41vU5DIwZ5qqCpk0KJudcWAyi8rvYOhS7+L5aZCspw1stTViLgN5v6FF1p5cgQ==}
     engines: {node: '>=14.0.0'}
@@ -2303,8 +2349,8 @@ packages:
   '@unhead/dom@1.11.20':
     resolution: {integrity: sha512-jgfGYdOH+xHJF/j8gudjsYu3oIjFyXhCWcgKaw3vQnT616gSqyqnGQGOItL+BQtQZACKNISwIfx5PuOtztMKLA==}
 
-  '@unhead/react@2.0.5':
-    resolution: {integrity: sha512-+UR6VyRriM0ghJAmQB+mOgY+GDCuxK51yr/jMkfyw1hp6867tv47QFYvb7lLtCV/25N+yveokmWK3UoVbvUkhA==}
+  '@unhead/react@2.0.7':
+    resolution: {integrity: sha512-CAb+5zGYBMrjp2vXgap/BynRTlDr257PEmFyYG7HQioUhmGDlCVFi6hTvu6HM/bFMQmXo0VRfy/QbrfUFbDsDw==}
     peerDependencies:
       react: '>=18'
 
@@ -4032,8 +4078,8 @@ packages:
     resolution: {integrity: sha512-ppwTtiJZq0O/ai0z7yfudtBpWIoxM8yE6nHi1X47eFR2EWORqfbu6CnPlNsjeN683eT0qG6H/Pyf9fCcvjnnnQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  nuqs@2.4.2:
-    resolution: {integrity: sha512-E+HE3HhCI9XzRhqHzsmevSLqV6VgwXZQr9jS1YzzqlgeDLr4fMR6XI5gqIZKgfjfNFl6hh/oYrgjmNrs4x7dEw==}
+  nuqs@2.4.3:
+    resolution: {integrity: sha512-BgtlYpvRwLYiJuWzxt34q2bXu/AIS66sLU1QePIMr2LWkb+XH0vKXdbLSgn9t6p7QKzwI7f38rX3Wl9llTXQ8Q==}
     peerDependencies:
       '@remix-run/react': '>=2'
       next: '>=14.2.0'
@@ -4748,8 +4794,8 @@ packages:
   unhead@1.11.20:
     resolution: {integrity: sha512-3AsNQC0pjwlLqEYHLjtichGWankK8yqmocReITecmpB1H0aOabeESueyy+8X1gyJx4ftZVwo9hqQ4O3fPWffCA==}
 
-  unhead@2.0.5:
-    resolution: {integrity: sha512-bG4wyp+KuW+ivQYtTQvnvtMM55ziIrQ9Yq1/VAm099buBgH0CoBWgu39jkSUoE4oZ4Qki8SsnMbq2gL0h3/sUA==}
+  unhead@2.0.7:
+    resolution: {integrity: sha512-vQNxgd7AgJBNozKiuaX10jIzZHGGN3l1lvfwCjIantHUGDqN782WiVULhI8QleEEQGeS5x07ygz9vFWWqjJe5A==}
 
   unicorn-magic@0.3.0:
     resolution: {integrity: sha512-+QBBXBCvifc56fsbuxZQ6Sic3wqqc3WWaqxs58gvJrcOuN83HGTCwz3oS5phzU9LthRNE9VrJCFCLUgHeeFnfA==}
@@ -5774,6 +5820,15 @@ snapshots:
     dependencies:
       '@codemirror/language': 6.11.0
       '@lezer/json': 1.0.3
+
+  '@codemirror/lang-sql@6.8.0':
+    dependencies:
+      '@codemirror/autocomplete': 6.18.6
+      '@codemirror/language': 6.11.0
+      '@codemirror/state': 6.5.2
+      '@lezer/common': 1.2.3
+      '@lezer/highlight': 1.2.1
+      '@lezer/lr': 1.4.2
 
   '@codemirror/lang-xml@6.1.0':
     dependencies:
@@ -6904,6 +6959,12 @@ snapshots:
       '@codemirror/state': 6.5.2
       '@codemirror/view': 6.36.5
 
+  '@replit/codemirror-indentation-markers@6.5.3(@codemirror/language@6.11.0)(@codemirror/state@6.5.2)(@codemirror/view@6.36.5)':
+    dependencies:
+      '@codemirror/language': 6.11.0
+      '@codemirror/state': 6.5.2
+      '@codemirror/view': 6.36.5
+
   '@rollup/plugin-alias@5.1.1(rollup@4.40.0)':
     optionalDependencies:
       rollup: 4.40.0
@@ -7808,10 +7869,10 @@ snapshots:
       '@unhead/schema': 1.11.20
       '@unhead/shared': 1.11.20
 
-  '@unhead/react@2.0.5(react@19.1.0)':
+  '@unhead/react@2.0.7(react@19.1.0)':
     dependencies:
       react: 19.1.0
-      unhead: 2.0.5
+      unhead: 2.0.7
 
   '@unhead/schema@1.11.20':
     dependencies:
@@ -9779,7 +9840,7 @@ snapshots:
     dependencies:
       path-key: 4.0.0
 
-  nuqs@2.4.2(react-router@7.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0):
+  nuqs@2.4.3(react-router@7.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0):
     dependencies:
       mitt: 3.0.1
       react: 19.1.0
@@ -10550,7 +10611,7 @@ snapshots:
       '@unhead/shared': 1.11.20
       hookable: 5.5.3
 
-  unhead@2.0.5:
+  unhead@2.0.7:
     dependencies:
       hookable: 5.5.3
 

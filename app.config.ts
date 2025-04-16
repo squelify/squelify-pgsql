@@ -6,8 +6,8 @@ const appConfig = {
   version: pkg.version,
   baseURL: env.APP_BASE_URL || 'http://localhost:3000',
   database: {
-    client: 'sqlite',
-    url: env.DATABASE_URL || 'sqlite:storage/local.db',
+    client: 'postgres',
+    url: env.DATABASE_URL,
   },
   meta: {
     title: 'Squelify',

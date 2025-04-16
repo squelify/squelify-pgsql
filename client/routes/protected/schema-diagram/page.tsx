@@ -17,7 +17,7 @@ const updateStoredPanelSize = (id: string, size: number): void => {
 }
 
 export default function Page() {
-  useSeoMeta({ title: 'Table Editor' })
+  useSeoMeta({ title: 'Schema Diagram' })
 
   const DEFAULT_LEFT_PANEL_WIDTH = 250
 
