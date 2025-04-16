@@ -10,14 +10,12 @@ import { useSqlTabs } from './use-sql-tabs'
 
 interface PanelTopProps {
   toggleLeftPanel: () => void
-  toggleBottomPanel: () => void
   isLeftPanelVisible: boolean
   isBottomPanelVisible: boolean
 }
 
 export function PanelTop({
   toggleLeftPanel,
-  toggleBottomPanel,
   isLeftPanelVisible,
   isBottomPanelVisible,
 }: PanelTopProps) {
@@ -194,26 +192,6 @@ export function PanelTop({
             </TabsList>
           </Tabs>
         </div>
-
-        <Button
-          size="icon"
-          variant="outline"
-          className="mb-1 ml-1.5 size-7"
-          onClick={toggleBottomPanel}
-          title={isBottomPanelVisible ? 'Hide Bottom Panel' : 'Show Bottom Panel'}
-        >
-          {isBottomPanelVisible ? (
-            <>
-              <Lucide.PanelBottomClose className="size-4" />
-              <span className="sr-only">Hide Bottom Panel</span>
-            </>
-          ) : (
-            <>
-              <Lucide.PanelBottomOpen className="size-4" />
-              <span className="sr-only">Show Bottom Panel</span>
-            </>
-          )}
-        </Button>
       </div>
 
       {/* Content Area with Tabs*/}

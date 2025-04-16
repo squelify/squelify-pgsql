@@ -31,7 +31,7 @@ const splitPaneStyles = tv({
         panel: 'transition-none',
       },
       false: {
-        separator: 'bg-border/30 hover:bg-border/50 active:bg-border/80',
+        separator: 'bg-border/60 hover:bg-border/50 active:bg-border',
       },
     },
   },

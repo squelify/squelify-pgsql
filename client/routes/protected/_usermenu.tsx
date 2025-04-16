@@ -52,20 +52,20 @@ export default function UserMenu() {
             onClick={() => navigate('/settings/profile')}
             className="flex items-center"
           >
-            <Lucide.CircleUserRound className="mr-2 h-4 w-4" />
+            <Lucide.CircleUserRound className="mr-2 size-4" />
             <span>User Profile</span>
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => navigate('/settings/preferences')}
             className="flex items-center"
           >
-            <Lucide.Settings2 className="mr-2 h-4 w-4" />
+            <Lucide.Settings2 className="mr-2 size-4" />
             <span>Preferences</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout} className="flex items-center">
-          <Lucide.LogOut className="mr-2 h-4 w-4" />
+          <Lucide.LogOut className="mr-2 size-4" />
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -77,7 +77,7 @@ export default function Notifications() {
         <Button variant="ghost" className="relative size-8">
           <Lucide.BellRing className="size-4 shrink-0 opacity-50" />
           {unreadCount > 0 && (
-            <span className="-top-1 -right-1 absolute flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-xs">
+            <span className="-top-1 -right-1 absolute flex size-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-xs">
               {unreadCount}
             </span>
           )}

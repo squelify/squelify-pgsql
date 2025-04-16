@@ -1,7 +1,11 @@
-import * as Lucide from 'lucide-react'
+import type { EditableGridCell, GridColumn, Item } from '@glideapps/glide-data-grid'
+import { GridCellKind } from '@glideapps/glide-data-grid'
+import { consola } from 'consola'
 import * as React from 'react'
 import { clx } from 'twistail-utils'
+import DataGrid from '#/components/datagrid'
 import { SplitPane } from '#/components/split-pane'
+import { generateEmail, generateName, generatePhone, getRandomElement } from '#/utils/dummy'
 
 interface PanelBottomProps {
   height: number
@@ -9,29 +13,73 @@ interface PanelBottomProps {
   separatorProps: React.HTMLAttributes<HTMLDivElement>
 }
 
+type DummyItem = {
+  name: string
+  company: string
+  email: string
+  phone: string
+}
+
+const TOTAL_ROWS = 100
+
+const COMPANIES = ['Acme Corp', 'TechStart', 'GlobalSys', 'DataFlow', 'CloudNet', 'SecureIT']
+
+// Grid columns may also provide icon, overlayIcon, menu, style, and theme overrides
+const columns: GridColumn[] = [
+  { id: 'name', title: 'Name', width: 150 },
+  { id: 'company', title: 'Company', width: 150 },
+  { id: 'email', title: 'Email', width: 150 },
+  { id: 'phone', title: 'Phone', width: 150 },
+]
+
+const generateDummyData = (count: number): DummyItem[] => {
+  return Array.from({ length: count }, () => {
+    const name = generateName()
+    return {
+      name,
+      company: getRandomElement(COMPANIES),
+      email: generateEmail(name),
+      phone: generatePhone(),
+    }
+  })
+}
+
+const data = generateDummyData(TOTAL_ROWS)
+
 export function PanelBottom({ height, isDragging, separatorProps }: PanelBottomProps) {
+  const onCellEdited = React.useCallback((cell: Item, newValue: EditableGridCell) => {
+    if (newValue.kind !== GridCellKind.Text) {
+      // we only have text cells, might as well just die here.
+      return
+    }
+    const indexes: (keyof DummyItem)[] = ['name', 'company', 'email', 'phone']
+    const [col, row] = cell
+    const key = indexes[col]
+    data[row][key] = newValue.data
+  }, [])
+
   return (
     <>
-      {/* Bottom Panel Separator */}
       <SplitPane.Separator {...separatorProps} isDragging={isDragging} orientation="vertical" />
-
-      {/* Bottom Panel Content */}
       <div
-        className={clx('shrink-0 bg-background', isDragging && 'transition-none')}
+        className={clx(
+          'custom-datagrid z-[9999] mt-0 h-[calc(100%-36px)] shrink-0 border-t bg-sidebar/80',
+          isDragging && 'transition-none'
+        )}
         style={{ height: `${height}px` }}
+        id="portal"
       >
-        <div className="h-full overflow-y-auto p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-semibold text-xl">Bottom Panel</h2>
-            <Lucide.PanelBottom size={18} className="text-muted-foreground" />
-          </div>
-          <div className="h-[calc(100%-3rem)] rounded-lg bg-slate-100 p-4 shadow dark:bg-slate-700">
-            <p className="text-slate-600 dark:text-slate-300">
-              Bottom content area. You can resize this panel by dragging the separator above. This
-              panel can be fully collapsed or expanded.
-            </p>
-          </div>
-        </div>
+        <DataGrid
+          data={data}
+          columns={columns}
+          enableCopyPaste
+          enableRowMarkers
+          enableMultiSelect
+          onCellEdited={onCellEdited}
+          onSelectionChange={(selection) => {
+            consola.log('Selection:', selection)
+          }}
+        />
       </div>
     </>
   )
