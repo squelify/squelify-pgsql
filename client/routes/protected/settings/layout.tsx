@@ -16,7 +16,7 @@ export default function SettingsLayout() {
       items: [
         { path: '/settings/application', label: 'Application', icon: Lucide.AppWindow },
         { path: '/settings/authentication', label: 'Authentication', icon: Lucide.LockKeyhole },
-        { path: '/settings/storage', label: 'Storage & Media', icon: Lucide.ImageUp },
+        { path: '/settings/media', label: 'Storage & Media', icon: Lucide.ImageUp },
         { path: '/settings/email', label: 'SMTP Mailer', icon: Lucide.Mail },
         { path: '/settings/integrations', label: 'Integrations', icon: Lucide.Plug },
         { path: '/settings/scheduler', label: 'Scheduler', icon: Lucide.TimerReset },
@@ -37,6 +37,13 @@ export default function SettingsLayout() {
         { path: '/settings/security', label: 'Security', icon: Lucide.ShieldEllipsis },
         { path: '/settings/preferences', label: 'Preferences', icon: Lucide.Settings2 },
         { path: '/settings/activity-log', label: 'Activity Log', icon: Lucide.Activity },
+      ],
+    },
+    {
+      title: 'Administrator',
+      items: [
+        { path: '/settings/administrator', label: 'Manage Users', icon: Lucide.UsersRound },
+        { path: '/settings/admin-roles', label: 'Manage Roles', icon: Lucide.ShieldUser },
       ],
     },
   ]
@@ -84,7 +91,7 @@ export default function SettingsLayout() {
                         'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
                         location.pathname === tab.path
                           ? 'bg-sidebar-primary/50 font-medium text-sidebar-foreground'
-                          : 'text-sidebar-foreground/70 hover:bg-sidebar-hover hover:text-sidebar-foreground'
+                          : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'
                       )}
                     >
                       <tab.icon className="size-4" />
@@ -97,7 +104,7 @@ export default function SettingsLayout() {
           </nav>
 
           {/* Version Information */}
-          <div className="mt-auto text-sidebar-foreground/50 text-xs">
+          <div className="mt-auto pt-4 text-sidebar-foreground/50 text-xs">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
                 <Lucide.Info className="size-3" />

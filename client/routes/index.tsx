@@ -13,7 +13,7 @@ const Setup = React.lazy(() => import('#/routes/setup/page'))
 const Settings = {
   Application: React.lazy(() => import('#/routes/protected/settings/application/page')),
   Authentication: React.lazy(() => import('#/routes/protected/settings/authentication/page')),
-  Storage: React.lazy(() => import('#/routes/protected/settings/storage/page')),
+  Media: React.lazy(() => import('#/routes/protected/settings/media/page')),
   Email: React.lazy(() => import('#/routes/protected/settings/email/page')),
   Integrations: React.lazy(() => import('#/routes/protected/settings/integrations/page')),
   Scheduler: React.lazy(() => import('#/routes/protected/settings/scheduler/page')),
@@ -24,6 +24,8 @@ const Settings = {
   Security: React.lazy(() => import('#/routes/protected/settings/security/page')),
   Preferences: React.lazy(() => import('#/routes/protected/settings/preferences/page')),
   ActivityLog: React.lazy(() => import('#/routes/protected/settings/activity-log/page')),
+  AdminUsers: React.lazy(() => import('#/routes/protected/settings/administrator/page')),
+  AdminRoles: React.lazy(() => import('#/routes/protected/settings/admin-roles/page')),
 }
 
 const Database = {
@@ -83,7 +85,7 @@ const routes: RouteObject[] = [
           { path: '', element: <Navigate to="/settings/application" replace /> },
           { path: 'application', element: <Settings.Application /> },
           { path: 'authentication', element: <Settings.Authentication /> },
-          { path: 'storage', element: <Settings.Storage /> },
+          { path: 'media', element: <Settings.Media /> },
           { path: 'email', element: <Settings.Email /> },
           { path: 'integrations', element: <Settings.Integrations /> },
           { path: 'scheduler', element: <Settings.Scheduler /> },
@@ -94,6 +96,8 @@ const routes: RouteObject[] = [
           { path: 'security', element: <Settings.Security /> },
           { path: 'preferences', element: <Settings.Preferences /> },
           { path: 'activity-log', element: <Settings.ActivityLog /> },
+          { path: 'administrator', element: <Settings.AdminUsers /> },
+          { path: 'admin-roles', element: <Settings.AdminRoles /> },
         ],
         errorElement: <InternalError />,
       },
