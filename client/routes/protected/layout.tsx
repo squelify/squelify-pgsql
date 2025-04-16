@@ -1,9 +1,12 @@
 import { useHead } from '@unhead/react'
+import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { Outlet } from 'react-router'
 import AppLogo from '/favicon.svg'
+import { Button } from '#/components/button'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '#/components/sidebar'
 import AppCommand from './_command'
+import Notifications from './_notifications'
 import AppSidebar from './_sidebar'
 import UserMenu from './_usermenu'
 
@@ -31,8 +34,20 @@ export default function AppLayout() {
           <img src={AppLogo} alt="Squelify Logo" className="h-6 w-6 text-primary" />
           <span className="hidden font-bold text-lg md:inline-block">Squelify</span>
         </div>
+
         <div className="flex-1" />
-        <UserMenu />
+
+        <div className="flex items-center gap-2">
+          <div className="relative flex items-center gap-1">
+            <Notifications />
+            <Button variant="ghost" className="size-8">
+              <Lucide.CircleHelp className="size-4 shrink-0 opacity-50" />
+              <span className="sr-only">Help</span>
+            </Button>
+          </div>
+          <div className="mr-2 ml-1 hidden h-6 w-px bg-border sm:block" />
+          <UserMenu />
+        </div>
       </header>
       <div className="flex flex-1 overflow-hidden">
         <AppSidebar openCommand={setOpenCommand} />

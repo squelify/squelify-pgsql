@@ -8,6 +8,7 @@ const ProtectedLayout = React.lazy(() => import('#/routes/protected/layout'))
 const Dashboard = React.lazy(() => import('#/routes/protected/dashboard/page'))
 const SettingLayout = React.lazy(() => import('#/routes/protected/settings/layout'))
 const AuditLog = React.lazy(() => import('#/routes/protected/audit-log/page'))
+const Notifications = React.lazy(() => import('#/routes/protected/notifications/page'))
 const Setup = React.lazy(() => import('#/routes/setup/page'))
 
 const Settings = {
@@ -78,6 +79,7 @@ const routes: RouteObject[] = [
       { path: '/auth/roles', element: <Authentication.Roles /> },
       { path: '/auth/permissions', element: <Authentication.Permissions /> },
       { path: '/auth/api-keys', element: <Authentication.ApiKeys /> },
+      { path: '/notifications', element: <Notifications /> },
       {
         path: 'settings',
         element: <SettingLayout />,
