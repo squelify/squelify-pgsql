@@ -13,7 +13,7 @@ const Setup = React.lazy(() => import('#/routes/setup/page'))
 const Settings = {
   Application: React.lazy(() => import('#/routes/protected/settings/application/page')),
   Authentication: React.lazy(() => import('#/routes/protected/settings/authentication/page')),
-  Media: React.lazy(() => import('#/routes/protected/settings/media/page')),
+  Storage: React.lazy(() => import('#/routes/protected/settings/storage/page')),
   Email: React.lazy(() => import('#/routes/protected/settings/email/page')),
   Integrations: React.lazy(() => import('#/routes/protected/settings/integrations/page')),
   Scheduler: React.lazy(() => import('#/routes/protected/settings/scheduler/page')),
@@ -85,7 +85,7 @@ const routes: RouteObject[] = [
           { path: '', element: <Navigate to="/settings/application" replace /> },
           { path: 'application', element: <Settings.Application /> },
           { path: 'authentication', element: <Settings.Authentication /> },
-          { path: 'media', element: <Settings.Media /> },
+          { path: 'storage', element: <Settings.Storage /> },
           { path: 'email', element: <Settings.Email /> },
           { path: 'integrations', element: <Settings.Integrations /> },
           { path: 'scheduler', element: <Settings.Scheduler /> },

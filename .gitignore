@@ -77,4 +77,4 @@ terraform.tfvars*
 # Miscellaneous
 pnpm-exec-summary.json
 slim.report.json
-storage/
+/storage/

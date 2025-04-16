@@ -16,7 +16,7 @@ export default function SettingsLayout() {
       items: [
         { path: '/settings/application', label: 'Application', icon: Lucide.AppWindow },
         { path: '/settings/authentication', label: 'Authentication', icon: Lucide.LockKeyhole },
-        { path: '/settings/media', label: 'Storage & Media', icon: Lucide.ImageUp },
+        { path: '/settings/storage', label: 'Storage & Media', icon: Lucide.ImageUp },
         { path: '/settings/email', label: 'SMTP Mailer', icon: Lucide.Mail },
         { path: '/settings/integrations', label: 'Integrations', icon: Lucide.Plug },
         { path: '/settings/scheduler', label: 'Scheduler', icon: Lucide.TimerReset },
