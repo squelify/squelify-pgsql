@@ -62,17 +62,5 @@ export default defineEventHandler(async (event) => {
 })
 
 defineRouteMeta({
-  openAPI: {
-    summary: 'tRPC Endpoint',
-    tags: ['Internal'],
-    parameters: [],
-    responses: {
-      200: { $ref: 'resp-ok' },
-      400: { $ref: 'resp-bad-request' },
-      500: { $ref: 'resp-internal-server-error' },
-    },
-    $global: {
-      components: {},
-    },
-  },
+  openAPI: { 'x-internal': true },
 })

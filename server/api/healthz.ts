@@ -82,7 +82,7 @@ export default eventHandler(async (event): Promise<HealthCheckResponse> => {
 defineRouteMeta({
   openAPI: {
     summary: 'Health Check',
-    tags: ['Internal'],
+    tags: ['System'],
     parameters: [
       {
         in: 'header',
@@ -94,11 +94,11 @@ defineRouteMeta({
     responses: {
       200: { $ref: 'resp-ok' },
       400: { $ref: 'resp-bad-request' },
+      401: { $ref: 'resp-unauthorized' },
+      403: { $ref: 'resp-forbidden' },
+      404: { $ref: 'resp-not-found' },
       500: { $ref: 'resp-internal-server-error' },
       503: { $ref: 'resp-service-unavailable' },
-    },
-    $global: {
-      components: {},
     },
   },
 })

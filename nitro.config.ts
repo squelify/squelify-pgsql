@@ -68,7 +68,26 @@ export default defineNitroConfig({
     },
   },
 
+  openAPI: {
+    production: 'runtime',
+    route: '/api-specs.json',
+    meta: {
+      title: `${appConfig.meta.title} API`,
+      description: `${appConfig.meta.description}`,
+      version: appConfig.version,
+    },
+    ui: {
+      scalar: {
+        route: '/api-docs',
+        layout: 'classic',
+        theme: 'purple',
+      },
+      swagger: false,
+    },
+  },
+
   devServer: { watch: ['server', 'client'] },
   esbuild: { options: { jsx: 'automatic', target: 'ES2022' } },
   typescript: { strict: true, generateTsConfig: false },
+  experimental: { openAPI: !isProduction, tasks: true },
 })

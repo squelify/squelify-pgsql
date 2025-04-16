@@ -14,3 +14,7 @@ export const handleStaticWeb = defineCachedFunction(
     swr: true,
   }
 )
+
+defineRouteMeta({
+  openAPI: { 'x-internal': true },
+})

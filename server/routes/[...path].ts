@@ -27,3 +27,7 @@ export default defineEventHandler((event) => {
   // Otherwise, return default response or serve static pages
   return handleStaticWeb(event)
 })
+
+defineRouteMeta({
+  openAPI: { 'x-internal': true },
+})
