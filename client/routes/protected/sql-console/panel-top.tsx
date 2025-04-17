@@ -5,6 +5,7 @@ import { clx } from 'twistail-utils'
 import { Button } from '#/components/button'
 import CodeEditor, { type EditorContextData, type EditorRef } from '#/components/code-editor'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/tabs'
+import { Tooltip, TooltipContent, TooltipTrigger } from '#/components/tooltip'
 import { EmptyQueryState } from './empty-state'
 import { useSqlTabs } from './use-sql-tabs'
 
@@ -105,7 +106,7 @@ export function PanelTop({
         <div className="flex w-full items-center">
           <Button
             size="icon"
-            variant="outline"
+            variant="ghost"
             className="mr-1.5 mb-1 size-7"
             onClick={toggleLeftPanel}
             title={isLeftPanelVisible ? 'Hide Left Panel' : 'Show Left Panel'}
@@ -179,16 +180,20 @@ export function PanelTop({
                   </div>
                 </TabsTrigger>
               ))}
-              <Button
-                size="sm"
-                variant="ghost"
-                className="mb-1 ml-1 flex h-7 items-center gap-1 px-1 pr-1.5 pl-1"
-                onClick={createNewQueryTab}
-                title="Create New Query"
-              >
-                <Lucide.Plus className="size-4" />
-                <span>New Query</span>
-              </Button>
+              <Tooltip delayDuration={50}>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="mb-1 ml-1 flex size-7 items-center gap-1 p-1 text-muted-foreground hover:text-accent-foreground"
+                    onClick={createNewQueryTab}
+                  >
+                    <Lucide.CopyPlus className="size-4" />
+                    <span className="sr-only">New Query</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs" content="Create New Query" />
+              </Tooltip>
             </TabsList>
           </Tabs>
         </div>

@@ -6,7 +6,7 @@ import { PanelBottom } from './panel-bottom'
 import { PanelTop } from './panel-top'
 
 // Default panel size constants
-const DEFAULT_BOTTOM_PANEL_HEIGHT = 350
+const DEFAULT_BOTTOM_PANEL_HEIGHT = 450
 const STORAGE_PREFIX = 'splitpane-position-'
 
 // Helper function to update localStorage directly
@@ -138,11 +138,11 @@ export function RightPanel({ toggleLeftPanel, isLeftPanelVisible }: RightPanelPr
         </SplitPane>
       </div>
       {/* Status Bar */}
-      <div className="sticky bottom-0 flex h-10 items-center border-border border-t bg-sidebar p-1">
+      <div className="sticky bottom-0 flex h-10 items-center gap-2 border-border border-t bg-sidebar px-2 py-1.5">
         <Button
           size="icon"
-          variant="outline"
-          className="size-7"
+          variant="ghost"
+          className="size-6"
           onClick={() => toggleBottomPanelRef.current()}
           title={isBottomPanelVisible ? 'Hide Bottom Panel' : 'Show Bottom Panel'}
         >
@@ -158,6 +158,24 @@ export function RightPanel({ toggleLeftPanel, isLeftPanelVisible }: RightPanelPr
             </>
           )}
         </Button>
+
+        <div className="mr-1 ml-0.5 hidden h-5 w-px bg-border sm:block" />
+
+        <div className="flex flex-wrap gap-4">
+          <div className="-space-x-px isolate flex">
+            <Button size="xs" variant="outline" className="gap-1 rounded-r-none">
+              <Lucide.ChevronsLeft className="-ml-0.5 size-3.5" />
+              <span>Prev</span>
+            </Button>
+            <span className="flex h-7 w-auto items-center justify-center border bg-background px-4 text-center text-sm">
+              10
+            </span>
+            <Button size="xs" variant="outline" className="gap-1 rounded-l-none">
+              <span>Next</span>
+              <Lucide.ChevronsRight className="-mr-0.5 size-3.5" />
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   )

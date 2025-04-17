@@ -1,8 +1,10 @@
 import type { EditableGridCell, GridColumn, Item } from '@glideapps/glide-data-grid'
 import { GridCellKind } from '@glideapps/glide-data-grid'
 import { consola } from 'consola'
+import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { clx } from 'twistail-utils'
+import { Button } from '#/components/button'
 import DataGrid from '#/components/datagrid'
 import { SplitPane } from '#/components/split-pane'
 import { generateEmail, generateName, generatePhone, getRandomElement } from '#/utils/dummy'
@@ -20,7 +22,7 @@ type DummyItem = {
   phone: string
 }
 
-const TOTAL_ROWS = 100
+const TOTAL_ROWS = 250
 
 const COMPANIES = ['Acme Corp', 'TechStart', 'GlobalSys', 'DataFlow', 'CloudNet', 'SecureIT']
 
@@ -61,9 +63,16 @@ export function PanelBottom({ height, isDragging, separatorProps }: PanelBottomP
   return (
     <>
       <SplitPane.Separator {...separatorProps} isDragging={isDragging} orientation="vertical" />
+      {/* Action Bar */}
+      <div className="sticky bottom-0 flex h-9 items-center border-border border-t bg-sidebar p-1.5">
+        <Button size="xs" variant="outline" className="gap-1.5">
+          <Lucide.Download className="-ml-0.5 size-4" strokeWidth={1.8} />
+          <span>Export</span>
+        </Button>
+      </div>
       <div
         className={clx(
-          'custom-datagrid z-[9999] mt-0 h-[calc(100%-36px)] shrink-0 border-t bg-sidebar/80',
+          'custom-datagrid z-50 mt-0 h-[calc(100%-36px)] shrink-0 border-t bg-sidebar/80',
           isDragging && 'transition-none'
         )}
         style={{ height: `${height}px` }}
