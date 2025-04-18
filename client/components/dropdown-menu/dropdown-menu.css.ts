@@ -15,7 +15,7 @@ const dropdownMenuStyles = tv({
     subMenuTriggerIcon: 'ml-auto size-4 shrink-0',
     subMenuContent: [
       'relative z-50 overflow-hidden rounded-md border p-1 shadow-black/[2.5%] shadow-lg',
-      'max-h-[var(--radix-popper-available-height)] min-w-32',
+      'max-h-[var(--radix-popper-available-height)] min-w-20',
       'border-border bg-popover text-popover-foreground',
       'will-change-[transform,opacity] data-[state=closed]:animate-hide',
       'data-[side=bottom]:animate-slide-down-fade data-[side=left]:animate-slide-down-fade',
