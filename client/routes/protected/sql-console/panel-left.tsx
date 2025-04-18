@@ -168,11 +168,13 @@ export function LeftPanel({
                   <Accordion type="multiple" className="w-full" defaultValue={['favorites']}>
                     {queryCategories.map((category) => (
                       <AccordionItem key={category.id} value={category.id} className="border-none">
-                        <AccordionTrigger className="rounded-md border-border border-b bg-sidebar-accent/20 px-3 py-2.5 text-xs hover:bg-sidebar-accent/30">
-                          <div className="flex items-center gap-2">
-                            {category.icon}
-                            <span>{category.name}</span>
-                          </div>
+                        <AccordionTrigger
+                          className="justify-start rounded-md border-border border-b bg-sidebar-accent/20 px-3 py-2.5 text-xs hover:bg-sidebar-accent/30"
+                          triggerClassName="group-data-[state=open]:rotate-90"
+                          triggerIcon={Lucide.ChevronRight}
+                          triggerPosition="left"
+                        >
+                          {category.name}
                         </AccordionTrigger>
                         <AccordionContent>
                           <ScrollArea

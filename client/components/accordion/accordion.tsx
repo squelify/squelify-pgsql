@@ -1,13 +1,21 @@
 import * as Lucide from 'lucide-react'
+import { LucideIcon } from 'lucide-react'
 import { Accordion as AccordionPrimitive } from 'radix-ui'
 import * as React from 'react'
-import { accordionStyles } from './accordion.css'
+import { type AccordionStyles, accordionStyles } from './accordion.css'
+
+interface AccordionTriggerProps
+  extends React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>,
+    Pick<AccordionStyles, 'triggerPosition'> {
+  triggerIcon?: LucideIcon
+  triggerClassName?: string
+}
 
 const Accordion = React.forwardRef<
   React.ComponentRef<typeof AccordionPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Root>
 >(({ className, orientation = 'vertical', ...props }, forwardedRef) => {
-  const styles = accordionStyles({ orientation })
+  const styles = accordionStyles()
   return (
     <AccordionPrimitive.Root
       ref={forwardedRef}
@@ -20,27 +28,39 @@ const Accordion = React.forwardRef<
 
 const AccordionTrigger = React.forwardRef<
   React.ComponentRef<typeof AccordionPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
->(({ className, children, ...props }, forwardedRef) => {
-  const styles = accordionStyles()
-  return (
-    <AccordionPrimitive.Header className={styles.header()}>
-      <AccordionPrimitive.Trigger
-        className={styles.triger({ className })}
-        ref={forwardedRef}
-        {...props}
-      >
-        {children}
-        <Lucide.Plus
-          className={styles.trigerIcon()}
-          aria-hidden="true"
-          focusable="false"
-          strokeWidth={2}
-        />
-      </AccordionPrimitive.Trigger>
-    </AccordionPrimitive.Header>
-  )
-})
+  AccordionTriggerProps
+>(
+  (
+    {
+      className,
+      children,
+      triggerIcon: Icon = Lucide.Plus,
+      triggerPosition = 'right',
+      triggerClassName,
+      ...props
+    },
+    forwardedRef
+  ) => {
+    const styles = accordionStyles({ triggerPosition })
+    return (
+      <AccordionPrimitive.Header className={styles.header()}>
+        <AccordionPrimitive.Trigger
+          className={styles.triger({ className })}
+          ref={forwardedRef}
+          {...props}
+        >
+          {children}
+          <Icon
+            className={styles.trigerIcon({ className: triggerClassName })}
+            aria-hidden
+            focusable={false}
+            strokeWidth={2}
+          />
+        </AccordionPrimitive.Trigger>
+      </AccordionPrimitive.Header>
+    )
+  }
+)
 
 const AccordionContent = React.forwardRef<
   React.ComponentRef<typeof AccordionPrimitive.Content>,
