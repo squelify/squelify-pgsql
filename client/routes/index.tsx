@@ -6,6 +6,7 @@ import { InternalError, NotFound } from '#/components/errors'
 const AuthLayout = React.lazy(() => import('#/routes/auth/layout'))
 const ProtectedLayout = React.lazy(() => import('#/routes/protected/layout'))
 const Dashboard = React.lazy(() => import('#/routes/protected/dashboard/page'))
+const CollectionLayout = React.lazy(() => import('#/routes/protected/collections/layout'))
 const SettingLayout = React.lazy(() => import('#/routes/protected/settings/layout'))
 const AuditLog = React.lazy(() => import('#/routes/protected/audit-log/page'))
 const Notifications = React.lazy(() => import('#/routes/protected/notifications/page'))
@@ -36,7 +37,7 @@ const Database = {
 }
 
 const Content = {
-  Collections: React.lazy(() => import('#/routes/protected/collections/page')),
+  CollectionIndex: React.lazy(() => import('#/routes/protected/collections/index/page')),
   MediaLibrary: React.lazy(() => import('#/routes/protected/media-library/page')),
   Functions: React.lazy(() => import('#/routes/protected/functions/page')),
 }
@@ -71,7 +72,12 @@ const routes: RouteObject[] = [
       { path: '/schema-diagram', element: <Database.SchemaDiagram /> },
       { path: '/sql-console', element: <Database.SqlConsole /> },
       { path: '/table-editor', element: <Database.TableEditor /> },
-      { path: '/collections', element: <Content.Collections /> },
+      {
+        path: 'collections',
+        element: <CollectionLayout />,
+        children: [{ path: '', element: <Content.CollectionIndex /> }],
+        errorElement: <InternalError />,
+      },
       { path: '/media-library', element: <Content.MediaLibrary /> },
       { path: '/functions', element: <Content.Functions /> },
       { path: '/auth', element: <Navigate to="/auth/users" replace /> },

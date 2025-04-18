@@ -80,11 +80,11 @@
 
 @layer base {
     * {
-        @apply border-border outline-ring/50;
+        @apply border-border outline-ring/50 scroll-smooth;
     }
     html,
     body {
-        @apply antialiased min-h-screen scroll-smooth overflow-hidden;
+        @apply antialiased min-h-screen overflow-hidden;
     }
     body {
         @apply bg-background text-foreground font-sans;
