@@ -1,23 +1,118 @@
 import { useSeoMeta } from '@unhead/react'
-import * as Lucide from 'lucide-react'
+import * as React from 'react'
+import { SplitPane } from '#/components/split-pane'
+import { LeftPanel } from './panel-left'
+import { RightPanel } from './panel-right'
+
+// Default panel size constants
+const STORAGE_PREFIX = 'splitpane-position-'
+
+// Helper function to update localStorage directly
+const updateStoredPanelSize = (id: string, size: number): void => {
+  try {
+    localStorage.setItem(`${STORAGE_PREFIX}${id}`, size.toString())
+  } catch (e) {
+    console.warn('Failed to update panel size in localStorage:', e)
+  }
+}
 
 export default function Page() {
   useSeoMeta({ title: 'Functions' })
 
+  const DEFAULT_LEFT_PANEL_WIDTH = 250
+
+  // State to store the last panel size before hiding
+  const [lastLeftPanelWidth, setLastLeftPanelWidth] = React.useState(DEFAULT_LEFT_PANEL_WIDTH)
+
   return (
-    <div className="mx-auto flex min-h-full w-full items-center justify-center py-44 sm:py-56 md:py-0">
-      <div className="md:-mt-16 flex h-full min-h-[96%] max-w-2xl flex-col items-center justify-center p-4 text-center">
-        <div className="mb-8">
-          <Lucide.FunctionSquare className="size-20 text-muted-foreground transition-colors duration-200 hover:text-primary" />
-        </div>
-        <h1 className="mb-4 font-bold text-2xl">Nothing to display!</h1>
-        <div className="space-y-4 text-muted-foreground">
-          <p className="font-medium leading-7">
-            Apparently, we still work on this feature. <br />
-            Please check back later.
-          </p>
-        </div>
-      </div>
+    <div className="flex h-full w-full overflow-hidden">
+      <SplitPane
+        orientation="horizontal"
+        initial={DEFAULT_LEFT_PANEL_WIDTH}
+        min={0}
+        max={350}
+        id="functions-left-panel"
+        persistVisibility={true}
+        visibilityKey="functions-panel-visible"
+        initialVisible={true}
+      >
+        {({
+          position: leftPanelWidth,
+          isDragging: isLeftPanelDragging,
+          separatorProps: leftPanelSeparatorProps,
+          isVisible: isPanelVisible,
+          toggleVisibility: toggleLeftVisibility,
+          setPosition: setLeftPanelWidth,
+        }) => {
+          // Determine if the panel is actually visible based on width
+          const isLeftPanelVisible = leftPanelWidth > 0
+
+          // Toggle function for left panel that maintains persistent state
+          const toggleLeftPanel = React.useCallback(() => {
+            if (isLeftPanelVisible) {
+              // If panel is visible, save current width and hide
+              if (leftPanelWidth > 0) {
+                setLastLeftPanelWidth(leftPanelWidth)
+              }
+
+              // First update the visibility state if needed
+              if (isPanelVisible) {
+                toggleLeftVisibility()
+              }
+
+              // Then update the position
+              setLeftPanelWidth(0)
+              updateStoredPanelSize('functions-left-panel', 0)
+            } else {
+              // Calculate the width to restore - use last width or default
+              const widthToRestore = lastLeftPanelWidth || DEFAULT_LEFT_PANEL_WIDTH
+
+              // First update the visibility state if needed
+              if (!isPanelVisible) {
+                toggleLeftVisibility()
+              }
+
+              // Use setTimeout to ensure visibility state is updated first
+              // This helps avoid the need for double-clicking
+              setTimeout(() => {
+                // Then update the position
+                setLeftPanelWidth(widthToRestore)
+                updateStoredPanelSize('functions-left-panel', widthToRestore)
+              }, 0)
+            }
+          }, [
+            isLeftPanelVisible,
+            leftPanelWidth,
+            setLeftPanelWidth,
+            isPanelVisible,
+            toggleLeftVisibility,
+          ])
+
+          // Effect to save last panel width when resized
+          React.useEffect(() => {
+            if (leftPanelWidth > 0 && !isLeftPanelDragging) {
+              setLastLeftPanelWidth(leftPanelWidth)
+            }
+          }, [leftPanelWidth, isLeftPanelDragging])
+
+          return (
+            <>
+              <LeftPanel
+                position={leftPanelWidth}
+                isDragging={isLeftPanelDragging}
+                separatorProps={leftPanelSeparatorProps}
+                isVisible={isPanelVisible}
+                toggleVisibility={toggleLeftVisibility}
+                setPosition={setLeftPanelWidth}
+              />
+              <RightPanel
+                toggleLeftPanel={toggleLeftPanel}
+                isLeftPanelVisible={isLeftPanelVisible}
+              />
+            </>
+          )
+        }}
+      </SplitPane>
     </div>
   )
 }
