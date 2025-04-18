@@ -58,13 +58,15 @@
         "@codemirror/view": "^6.36.5",
         "@electric-sql/pglite": "^0.2.17",
         "@glideapps/glide-data-grid": "^6.0.3",
+        "@headless-tree/core": "^1.0.0",
+        "@headless-tree/react": "^1.0.0",
         "@lezer/highlight": "^1.2.1",
         "@nanostores/persistent": "^1.0.0",
         "@nanostores/react": "^1.0.0",
         "@noble/hashes": "^1.7.2",
         "@replit/codemirror-indentation-markers": "^6.5.3",
-        "@tanstack/react-query": "^5.74.3",
-        "@tanstack/react-query-devtools": "^5.74.3",
+        "@tanstack/react-query": "^5.74.4",
+        "@tanstack/react-query-devtools": "^5.74.4",
         "@trpc/client": "^11.1.0",
         "@trpc/server": "^11.1.0",
         "@trpc/tanstack-react-query": "^11.1.0",
@@ -91,7 +93,7 @@
         "react-day-picker": "^9.6.7",
         "react-dom": "^19.1.0",
         "react-error-boundary": "^5.0.0",
-        "react-router": "^7.5.0",
+        "react-router": "^7.5.1",
         "redactyl.js": "^1.6.0",
         "sonner": "^2.0.3",
         "std-env": "^3.9.0",
@@ -114,7 +116,7 @@
         "dotenv": "^16.5.0",
         "git-cliff": "^2.8.0",
         "h3": "^1.15.1",
-        "knip": "^5.50.4",
+        "knip": "^5.50.5",
         "lefthook": "^1.11.10",
         "nitropack": "^2.11.9",
         "npm-check-updates": "^17.1.18",
@@ -124,11 +126,15 @@
         "tailwindcss": "^4.1.4",
         "tsx": "^4.19.3",
         "typescript": "^5.8.3",
-        "vite": "^6.3.1",
+        "vite": "^6.3.2",
         "vite-tsconfig-paths": "^5.1.4"
     },
     "packageManager": "pnpm@10.8.1",
     "pnpm": {
-        "onlyBuiltDependencies": ["@biomejs/biome", "@parcel/watcher", "esbuild"]
+        "onlyBuiltDependencies": [
+            "@biomejs/biome",
+            "@parcel/watcher",
+            "esbuild"
+        ]
     }
 }

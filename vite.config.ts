@@ -18,7 +18,22 @@ const logger: ViteLogger = {
 }
 
 export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
+  plugins: [
+    react(),
+    tsconfigPaths(),
+    {
+      // Removes pure annotations warning on build from `@glideapps/glide-data-grid`
+      // @ref: https://github.com/dotnet/aspnetcore/issues/55286#issuecomment-2557288741
+      name: 'remove-pure-annotations',
+      enforce: 'pre',
+      transform(code, id) {
+        if (id.includes('node_modules/@glideapps/glide-data-grid')) {
+          return code.replace(/\/\*#__PURE__\*\//g, '')
+        }
+        return null
+      },
+    },
+  ],
   server: {
     strictPort: false,
     cors: { origin: '*' },

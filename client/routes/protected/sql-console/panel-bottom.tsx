@@ -6,7 +6,9 @@ import * as React from 'react'
 import { clx } from 'twistail-utils'
 import { Button } from '#/components/button'
 import DataGrid from '#/components/datagrid'
+import { Kbd } from '#/components/kbd'
 import { SplitPane } from '#/components/split-pane'
+import { Tooltip, TooltipContent, TooltipTrigger } from '#/components/tooltip'
 import { generateEmail, generateName, generatePhone, getRandomElement } from '#/utils/dummy'
 
 interface PanelBottomProps {
@@ -64,11 +66,48 @@ export function PanelBottom({ height, isDragging, separatorProps }: PanelBottomP
     <>
       <SplitPane.Separator {...separatorProps} isDragging={isDragging} orientation="vertical" />
       {/* Action Bar */}
-      <div className="sticky bottom-0 flex h-9 items-center border-border border-t bg-sidebar p-1.5">
-        <Button size="xs" variant="outline" className="gap-1.5">
-          <Lucide.Download className="-ml-0.5 size-4" strokeWidth={1.8} />
-          <span>Export</span>
-        </Button>
+      <div className="sticky bottom-0 flex h-9 items-center justify-between border-border border-t bg-sidebar p-1.5">
+        <div className="inline-flex w-full items-center justify-start gap-2">
+          <Button size="xs" variant="ghost" className="gap-1.5">
+            <Lucide.Download className="-ml-0.5 size-4" strokeWidth={1.8} />
+            <span>Export</span>
+          </Button>
+        </div>
+        <div className="inline-flex w-full items-center justify-end gap-2">
+          <div className="inline-flex w-full items-center justify-end gap-1">
+            <Lucide.RotateCw
+              className={clx(
+                'mx-1.5 size-4 animate-spin text-muted-foreground duration-500',
+                'hidden'
+              )}
+            />
+            <Lucide.CircleCheckBig className={clx('mx-1.5 size-4 text-success', 'hidden')} />
+            {/* TODO: replace with toggle button */}
+            <Tooltip delayDuration={50}>
+              <TooltipTrigger asChild>
+                <Button size="icon" variant="ghost" className="size-7">
+                  <Lucide.BookmarkPlus className="size-4" />
+                  <span className="sr-only">Add to favorites</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="z-[99] text-xs" content="Add to favorites" />
+            </Tooltip>
+
+            <Tooltip delayDuration={50}>
+              <TooltipTrigger asChild>
+                <Button size="icon" variant="ghost" className="size-7">
+                  <Lucide.ListPlus className="size-4" />
+                  <span className="sr-only">Prettify</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="z-[99] text-xs" content="Prettify" />
+            </Tooltip>
+          </div>
+          <Button size="xs" variant="primary">
+            <span>Run all queries</span>
+            <Kbd keys={['command', 'shift', 'enter']} className="-mr-1 border-none" />
+          </Button>
+        </div>
       </div>
       <div
         className={clx(

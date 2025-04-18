@@ -161,18 +161,27 @@ export function RightPanel({ toggleLeftPanel, isLeftPanelVisible }: RightPanelPr
 
         <div className="mr-1 ml-0.5 hidden h-5 w-px bg-border sm:block" />
 
+        {/* DataGrid Pagination */}
         <div className="flex flex-wrap gap-4">
           <div className="-space-x-px isolate flex">
-            <Button size="xs" variant="outline" className="gap-1 rounded-r-none">
-              <Lucide.ChevronsLeft className="-ml-0.5 size-3.5" />
-              <span>Prev</span>
+            <Button size="xs" variant="outline" className="rounded-r-none">
+              <Lucide.ChevronsLeft className="size-3.5" />
+              <span className="sr-only">First</span>
+            </Button>
+            <Button size="xs" variant="outline" className="rounded-r-none">
+              <Lucide.ChevronLeft className="size-3.5" />
+              <span className="sr-only">Prev</span>
             </Button>
             <span className="flex h-7 w-auto items-center justify-center border bg-background px-4 text-center text-sm">
               10
             </span>
-            <Button size="xs" variant="outline" className="gap-1 rounded-l-none">
-              <span>Next</span>
-              <Lucide.ChevronsRight className="-mr-0.5 size-3.5" />
+            <Button size="xs" variant="outline" className="rounded-r-none">
+              <span className="sr-only">Next</span>
+              <Lucide.ChevronRight className="size-3.5" />
+            </Button>
+            <Button size="xs" variant="outline" className="rounded-r-none">
+              <span className="sr-only">Last</span>
+              <Lucide.ChevronsRight className="size-3.5" />
             </Button>
           </div>
         </div>
