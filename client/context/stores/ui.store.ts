@@ -9,6 +9,9 @@ type UIStore = {
   theme: Theme
   sidebar: SidebarState
   splitpane: {}
+  viewMode: {
+    media: 'grid' | 'list'
+  }
 }
 
 /**
@@ -18,6 +21,9 @@ const defaultUIStoreValues: UIStore = {
   theme: 'system',
   sidebar: 'collapsed',
   splitpane: {},
+  viewMode: {
+    media: 'list',
+  },
 }
 
 /**
