@@ -105,7 +105,7 @@ export default function SettingsLayout() {
 
           {/* Version Information */}
           <div className="mt-auto pt-4 text-sidebar-foreground/50 text-xs">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pr-2 pl-1">
               <div className="flex items-center gap-1">
                 <Lucide.Info className="size-3" />
                 <span>v{pkg.version}</span>

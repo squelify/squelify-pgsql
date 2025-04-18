@@ -27,7 +27,7 @@ export function LeftPanel({
       {/* Left Panel - Always rendered but with width 0 when hidden */}
       <div
         className={clx(
-          'shrink-0 bg-sidebar transition-all duration-200 ease-in-out',
+          'h-full shrink-0 bg-sidebar transition-all duration-200 ease-in-out',
           isLeftPanelDragging && 'transition-none',
           !isLeftPanelVisible && 'opacity-0'
         )}

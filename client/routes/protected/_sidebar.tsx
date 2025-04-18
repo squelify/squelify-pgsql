@@ -1,5 +1,5 @@
 import * as Lucide from 'lucide-react'
-import { useLocation, useNavigate } from 'react-router'
+import { useLocation } from 'react-router'
 import AppLogo from '/favicon.svg'
 import { Kbd } from '#/components/kbd'
 import Link from '#/components/link'
@@ -7,7 +7,6 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarMenuBadge } from '#/comp
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail } from '#/components/sidebar'
 import { SidebarGroupAction, SidebarGroupContent, SidebarHeader } from '#/components/sidebar'
 import { SidebarGroup, SidebarGroupLabel } from '#/components/sidebar'
-import { toast } from '#/components/toast'
 
 interface AppSidebarProps {
   openCommand: (open: boolean) => void
@@ -15,14 +14,6 @@ interface AppSidebarProps {
 
 export default function AppSidebar({ openCommand }: AppSidebarProps) {
   const location = useLocation()
-  const navigate = useNavigate()
-
-  const handleLogout = () => {
-    localStorage.removeItem('squelify_user')
-    sessionStorage.removeItem('squelify_user')
-    toast.success('You have been logged out')
-    navigate('/login')
-  }
 
   // Primary navigation items
   const primaryNavigation = [
@@ -60,7 +51,7 @@ export default function AppSidebar({ openCommand }: AppSidebarProps) {
   // Secondary navigation items
   const secondaryNavigation = [
     { title: 'Audit Log', url: '/audit-log', icon: Lucide.FileClock },
-    { title: 'System Settings', url: '/settings', icon: Lucide.Settings },
+    { title: 'Settings', url: '/settings', icon: Lucide.Settings },
   ]
 
   return (
@@ -124,23 +115,17 @@ export default function AppSidebar({ openCommand }: AppSidebarProps) {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
-            <SidebarMenuItem className="hidden sm:block">
-              <SidebarMenuButton tooltip="Open Command" onClick={() => openCommand(true)}>
+          </SidebarMenu>
+        </SidebarGroupContent>
+        <SidebarGroupContent className="hidden border-t pt-2 sm:block">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton tooltip="Quick Action" onClick={() => openCommand(true)}>
                 <Lucide.Command className="size-4" />
-                <span>Open Command</span>
+                <span>Quick Action</span>
                 <SidebarMenuBadge>
                   <Kbd keys={['command']}>K</Kbd>
                 </SidebarMenuBadge>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroupContent>
-        <SidebarGroupContent className="border-t pt-2">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton tooltip="Logout" onClick={handleLogout}>
-                <Lucide.LogOut className="size-4" />
-                <span>Logout</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

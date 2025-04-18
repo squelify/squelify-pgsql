@@ -25,7 +25,7 @@ export default function Page() {
   const [lastLeftPanelWidth, setLastLeftPanelWidth] = React.useState(DEFAULT_LEFT_PANEL_WIDTH)
 
   return (
-    <div className="flex h-full w-full overflow-hidden">
+    <div className="absolute inset-0 flex w-full overflow-hidden">
       <SplitPane
         orientation="horizontal"
         initial={DEFAULT_LEFT_PANEL_WIDTH}

@@ -9,8 +9,8 @@ interface RightPanelProps {
 export function RightPanel({ toggleLeftPanel, isLeftPanelVisible }: RightPanelProps) {
   return (
     <div className="size-full overflow-auto bg-background">
-      <div className="h-full p-0">
-        <div className="flex items-center justify-between border-border border-b p-1">
+      <div className="flex h-full flex-col">
+        <div className="flex shrink-0 items-center justify-between border-border border-b px-1.5 py-1">
           <div className="flex w-full items-center">
             <Button
               size="icon"
@@ -32,7 +32,7 @@ export function RightPanel({ toggleLeftPanel, isLeftPanelVisible }: RightPanelPr
             </Button>
           </div>
         </div>
-        <div className="h-max w-full p-1">Content</div>
+        <div className="flex-1 overflow-auto p-1">Content</div>
       </div>
     </div>
   )
