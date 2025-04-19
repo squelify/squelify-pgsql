@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Button } from '#/components/button'
 import { Skeleton } from '#/components/skeleton/skeleton'
 import Diagram from './diagram'
-import { EmptyState } from './empty-state'
+// import { EmptyState } from './empty-state'
 
 export default function Page() {
   useSeoMeta({ title: 'Schema Diagram' })

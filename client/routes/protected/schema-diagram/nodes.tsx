@@ -1,8 +1,8 @@
-import type { BuiltInNode, Node, NodeTypes } from '@xyflow/react'
-import { Handle, type NodeProps, Position } from '@xyflow/react'
+import type { BuiltInNode, Node, NodeProps, NodeTypes } from '@xyflow/react'
+import { Handle, Position } from '@xyflow/react'
 
 // Entity node type definition
-type EntityNode = Node<
+export type EntityNode = Node<
   {
     tableName: string
     attributes: Array<{ name: string; type: string; isPrimary?: boolean; isForeign?: boolean }>
@@ -10,8 +10,8 @@ type EntityNode = Node<
   'entity'
 >
 
-type PositionLoggerNode = Node<{ label?: string }, 'position-logger'>
-type AppNode = BuiltInNode | PositionLoggerNode | EntityNode
+export type PositionLoggerNode = Node<{ label?: string }, 'position-logger'>
+export type AppNode = BuiltInNode | PositionLoggerNode | EntityNode
 
 // Custom Entity Node for ERD
 function EntityNodeComponent({ data }: NodeProps<EntityNode>) {
@@ -96,26 +96,10 @@ function EntityNodeComponent({ data }: NodeProps<EntityNode>) {
       </div>
 
       {/* Handles for connections */}
-      <Handle
-        type="target"
-        position={Position.Top}
-        style={{ background: 'var(--color-muted-foreground)', width: '8px', height: '8px' }}
-      />
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        style={{ background: 'var(--color-muted-foreground)', width: '8px', height: '8px' }}
-      />
-      <Handle
-        type="source"
-        position={Position.Right}
-        style={{ background: 'var(--color-muted-foreground)', width: '8px', height: '8px' }}
-      />
-      <Handle
-        type="target"
-        position={Position.Left}
-        style={{ background: 'var(--color-muted-foreground)', width: '8px', height: '8px' }}
-      />
+      <Handle type="target" position={Position.Top} className="size-2 bg-muted-foreground" />
+      <Handle type="source" position={Position.Bottom} className="size-2 bg-muted-foreground" />
+      <Handle type="source" position={Position.Right} className="size-2 bg-muted-foreground" />
+      <Handle type="target" position={Position.Left} className="size-2 bg-muted-foreground" />
     </div>
   )
 }
@@ -129,22 +113,10 @@ function PositionLoggerNode({
   const _y = `${Math.round(positionAbsoluteY)}px`
 
   return (
-    <div
-      className="react-flow__node-default"
-      style={{
-        background: 'var(--color-card)',
-        color: 'var(--color-card-foreground)',
-        fontSize: '0.8rem',
-        padding: '6px 8px',
-      }}
-    >
+    <div className="react-flow__node-default bg-card px-2 py-1.5 text-card-foreground text-sm">
       {data.label && <div>{data.label}</div>}
       <div>x y</div>
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        style={{ background: 'var(--color-muted-foreground)', width: '8px', height: '8px' }}
-      />
+      <Handle type="source" position={Position.Bottom} className="size-2 bg-muted-foreground" />
     </div>
   )
 }

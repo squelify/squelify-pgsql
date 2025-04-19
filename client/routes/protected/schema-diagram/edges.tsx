@@ -1,5 +1,5 @@
 import type { Edge, EdgeProps, EdgeTypes } from '@xyflow/react'
-import { MarkerType, getBezierPath, getSmoothStepPath } from '@xyflow/react'
+import { MarkerType, getSmoothStepPath } from '@xyflow/react'
 import * as React from 'react'
 
 // Custom edge component for relationships
@@ -16,7 +16,7 @@ const RelationshipEdge: React.FC<EdgeProps> = ({
   markerEnd,
   animated,
 }) => {
-  // Gunakan getSmoothStepPath untuk membuat jalur zigzag
+  // Use getsmoothsteppath to create zigzag paths
   const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
@@ -34,8 +34,8 @@ const RelationshipEdge: React.FC<EdgeProps> = ({
         id={id}
         style={{ ...style, strokeWidth: 1.5, stroke: 'var(--color-muted-foreground)' }}
         className={`react-flow__edge-path ${animated ? 'animated' : ''}`}
-        d={edgePath}
         markerEnd={markerEnd}
+        d={edgePath}
       />
       {data?.label && (
         <text
