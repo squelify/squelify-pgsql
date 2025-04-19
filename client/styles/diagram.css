@@ -1,0 +1,52 @@
+.entity-node {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    font-family: var(--font-sans);
+    background-color: var(--color-card);
+}
+
+.react-flow__controls {
+    background-color: var(--color-card);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    padding: 4px;
+    transform: scale(0.9);
+}
+
+.react-flow__controls-button {
+    background-color: var(--color-card);
+    color: var(--color-card-foreground);
+    border-bottom: 1px solid var(--color-border);
+    width: 16px;
+    height: 16px;
+    padding: 2px;
+    margin: 2px;
+}
+
+.react-flow__controls-button:hover {
+    background-color: var(--color-muted);
+}
+
+.react-flow__minimap {
+    background-color: var(--color-card);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    transform: scale(0.9);
+    transform-origin: bottom right;
+}
+
+.react-flow__edge-path {
+    stroke-width: 1.5px;
+}
+
+.react-flow__edge.animated .react-flow__edge-path {
+    stroke-dasharray: 5;
+    animation: dashdraw 0.5s linear infinite;
+}
+
+@keyframes dashdraw {
+    from {
+        stroke-dashoffset: 10;
+    }
+}
