@@ -3,6 +3,7 @@ import * as Lucide from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '#/components/button'
 import { Skeleton } from '#/components/skeleton/skeleton'
+import Diagram from './diagram'
 import { EmptyState } from './empty-state'
 
 export default function Page() {
@@ -31,9 +32,9 @@ export default function Page() {
 
       {/* Container */}
       <div className="flex-1 overflow-auto">
-        <div className="h-full p-4 md:p-6">
+        <div className="h-full">
           {isLoading ? (
-            <div>
+            <div className="p-4 md:p-6">
               <Skeleton className="mb-2 h-8 w-48" />
               <Skeleton className="mb-6 h-4 w-72" />
               <div className="grid gap-4">
@@ -43,7 +44,8 @@ export default function Page() {
             </div>
           ) : (
             <div className="flex h-full w-full flex-col items-center justify-center">
-              <EmptyState />
+              {/* <EmptyState /> */}
+              <Diagram />
             </div>
           )}
         </div>
