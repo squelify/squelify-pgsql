@@ -6,11 +6,40 @@ type Theme = 'dark' | 'light' | 'system'
 type SidebarState = 'expanded' | 'collapsed'
 
 type UIStore = {
-  theme: Theme
-  sidebar: SidebarState
-  splitpane: {}
-  viewMode: {
-    media: 'grid' | 'list'
+  global: {
+    theme: Theme
+    sidebar: SidebarState
+  }
+  'sql-console': {
+    left: {
+      position: number
+      visible: boolean
+    }
+    bottom: {
+      position: number
+      visible: boolean
+    }
+  }
+  'table-editor': {
+    left: {
+      position: number
+      visible: boolean
+    }
+  }
+  'schema-diagram': {
+    left: {
+      position: number
+      visible: boolean
+    }
+  }
+  'functions-editor': {
+    left: {
+      position: number
+      visible: boolean
+    }
+  }
+  'media-library': {
+    viewMode: 'grid' | 'list'
   }
 }
 
@@ -18,11 +47,40 @@ type UIStore = {
  * The default values for the UI store, which includes the initial state of the sidebar.
  */
 const defaultUIStoreValues: UIStore = {
-  theme: 'system',
-  sidebar: 'collapsed',
-  splitpane: {},
-  viewMode: {
-    media: 'list',
+  global: {
+    theme: 'system',
+    sidebar: 'collapsed',
+  },
+  'sql-console': {
+    left: {
+      position: 250,
+      visible: true,
+    },
+    bottom: {
+      position: 450,
+      visible: true,
+    },
+  },
+  'table-editor': {
+    left: {
+      position: 250,
+      visible: true,
+    },
+  },
+  'schema-diagram': {
+    left: {
+      position: 250,
+      visible: true,
+    },
+  },
+  'functions-editor': {
+    left: {
+      position: 250,
+      visible: true,
+    },
+  },
+  'media-library': {
+    viewMode: 'grid',
   },
 }
 
@@ -38,11 +96,19 @@ const uiStore = persistentMap<UIStore>(`${pkg.name}_ui:`, defaultUIStoreValues, 
 })
 
 /**
- * Saves the current UI state by merging the provided partial UI store values with the existing values.
+ * Saves the current UI state by merging the provided partial UI store values with the
+ * existing values. Deep merges partial UI store values with the existing state.
  * @param values - A partial object of the UI store values to be merged with the existing state.
  */
-function saveUiState(values: Partial<UIStore>) {
-  uiStore.set({ ...uiStore.get(), ...values })
+function saveUiState<K extends keyof UIStore>(key: K, values: Partial<UIStore[K]>) {
+  const currentState = uiStore.get()
+  uiStore.set({
+    ...currentState,
+    [key]: {
+      ...currentState[key],
+      ...values,
+    },
+  })
 }
 
 /**

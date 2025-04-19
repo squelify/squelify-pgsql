@@ -59,7 +59,9 @@ const SidebarProvider = React.forwardRef<HTMLDivElement, SidebarProviderProps>(
     const isControlled = controlledOpen !== undefined
 
     // For uncontrolled mode, use UI store value
-    const [uncontrolledOpen, setUncontrolledOpen] = React.useState(uiState.sidebar === 'expanded')
+    const [uncontrolledOpen, setUncontrolledOpen] = React.useState(
+      uiState.global.sidebar === 'expanded'
+    )
 
     // Use controlled value if provided, otherwise use uncontrolled
     const open = isControlled ? controlledOpen : uncontrolledOpen
@@ -71,7 +73,7 @@ const SidebarProvider = React.forwardRef<HTMLDivElement, SidebarProviderProps>(
         const newState: SidebarState = newOpen ? 'expanded' : 'collapsed'
 
         // Update UI store
-        saveUiState({ sidebar: newState })
+        saveUiState('global', { sidebar: newState })
 
         // Update local state if uncontrolled
         if (!isControlled) {
@@ -87,12 +89,12 @@ const SidebarProvider = React.forwardRef<HTMLDivElement, SidebarProviderProps>(
     // Sync with UI store when it changes (only for uncontrolled mode)
     React.useEffect(() => {
       if (!isControlled) {
-        const storeOpen = uiState.sidebar === 'expanded'
+        const storeOpen = uiState.global.sidebar === 'expanded'
         if (uncontrolledOpen !== storeOpen) {
           setUncontrolledOpen(storeOpen)
         }
       }
-    }, [uiState.sidebar, uncontrolledOpen, isControlled])
+    }, [uiState.global.sidebar, uncontrolledOpen, isControlled])
 
     // Toggle sidebar based on device type
     const toggleSidebar = React.useCallback(() => {

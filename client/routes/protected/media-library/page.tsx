@@ -28,10 +28,10 @@ export default function Page() {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [items, setItems] = useState<MediaItem[]>(() => generateDummyMedia(20))
   const uiState = useStore(uiStore)
-  const viewMode = uiState.viewMode.media
+  const viewMode = uiState['media-library'].viewMode
 
   const handleViewModeChange = (mode: 'grid' | 'list') => {
-    saveUiState({ viewMode: { media: mode } })
+    saveUiState('media-library', { viewMode: mode })
   }
 
   const handleRefresh = useCallback(async () => {

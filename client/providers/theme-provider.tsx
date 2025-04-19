@@ -18,7 +18,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 function ThemeProvider({ children }: React.PropsWithChildren) {
   const uiState = useStore(uiStore)
-  const [theme, setTheme] = useState<Theme>(() => uiState.theme)
+  const [theme, setTheme] = useState<Theme>(() => uiState.global.theme)
   const [resolvedTheme, setResolvedTheme] = useState<'dark' | 'light'>('light')
 
   useEffect(() => {
@@ -54,7 +54,7 @@ function ThemeProvider({ children }: React.PropsWithChildren) {
   const value = {
     theme,
     setTheme: (newTheme: Theme) => {
-      saveUiState({ theme: newTheme })
+      saveUiState('global', { theme: newTheme })
       setTheme(newTheme)
     },
     resolvedTheme,

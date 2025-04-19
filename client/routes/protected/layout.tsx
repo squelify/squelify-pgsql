@@ -40,7 +40,7 @@ export default function AppLayout() {
         <div className="flex items-center gap-2">
           <div className="relative flex items-center gap-1">
             <Notifications />
-            <Button variant="ghost" className="size-8">
+            <Button variant="ghost" className="size-8 rounded-full hover:bg-sidebar-accent">
               <Lucide.CircleHelp className="size-4 shrink-0 opacity-50" />
               <span className="sr-only">Help</span>
             </Button>

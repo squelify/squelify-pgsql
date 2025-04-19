@@ -1,27 +1,18 @@
+import { useStore } from '@nanostores/react'
 import { useSeoMeta } from '@unhead/react'
 import * as React from 'react'
 import { SplitPane } from '#/components/split-pane'
+import { defaultUIStoreValues, saveUiState, uiStore } from '#/context/stores/ui.store'
 import { LeftPanel } from './panel-left'
 import { RightPanel } from './panel-right'
-
-// Default panel size constants
-const STORAGE_PREFIX = 'splitpane-position-'
-
-// Helper function to update localStorage directly
-const updateStoredPanelSize = (id: string, size: number): void => {
-  try {
-    localStorage.setItem(`${STORAGE_PREFIX}${id}`, size.toString())
-  } catch (e) {
-    console.warn('Failed to update panel size in localStorage:', e)
-  }
-}
 
 export default function Page() {
   useSeoMeta({ title: 'SQL Console' })
 
-  const DEFAULT_LEFT_PANEL_WIDTH = 250
+  const uiState = useStore(uiStore)
 
   // State to store the last panel size before hiding
+  const DEFAULT_LEFT_PANEL_WIDTH = defaultUIStoreValues['sql-console'].left.position
   const [lastLeftPanelWidth, setLastLeftPanelWidth] = React.useState(DEFAULT_LEFT_PANEL_WIDTH)
 
   return (
@@ -62,7 +53,9 @@ export default function Page() {
 
               // Then update the position
               setLeftPanelWidth(0)
-              updateStoredPanelSize('sql-console-left-panel', 0)
+              saveUiState('sql-console', {
+                left: { position: 0, visible: false },
+              })
             } else {
               // Calculate the width to restore - use last width or default
               const widthToRestore = lastLeftPanelWidth || DEFAULT_LEFT_PANEL_WIDTH
@@ -77,7 +70,9 @@ export default function Page() {
               setTimeout(() => {
                 // Then update the position
                 setLeftPanelWidth(widthToRestore)
-                updateStoredPanelSize('sql-console-left-panel', widthToRestore)
+                saveUiState('sql-console', {
+                  left: { position: widthToRestore, visible: true },
+                })
               }, 0)
             }
           }, [

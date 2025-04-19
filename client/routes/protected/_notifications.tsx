@@ -74,7 +74,7 @@ export default function Notifications() {
   return (
     <Collapsible open={open} onOpenChange={setOpen} ref={collapsibleRef}>
       <CollapsibleTrigger asChild>
-        <Button variant="ghost" className="relative size-8">
+        <Button variant="ghost" className="relative size-8 rounded-full hover:bg-sidebar-accent">
           <Lucide.BellRing className="size-4 shrink-0 opacity-50" />
           {unreadCount > 0 && (
             <span className="-top-1 -right-1 absolute flex size-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-xs">
