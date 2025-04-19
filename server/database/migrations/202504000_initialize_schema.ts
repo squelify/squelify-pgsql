@@ -7,7 +7,7 @@ import type { Database } from '~/database/db.schema'
 import logger from '~/utils/logger'
 
 // This is optional, recomended if you want to separate your schema.
-const ADDITIONAL_SCHEMAS: string[] = ['auth']
+const ADDITIONAL_SCHEMAS: string[] = []
 
 export const up = async (db: Kysely<Database>): Promise<void> => {
   // Prepare extra schema and extensions
@@ -25,7 +25,7 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
 
   // Create auto-update function, fill updated_at column automatically.
   // CURRENT_TIMESTAMP similar to timezone('utc'::text, now())::timestamptz
-  await sql`CREATE OR REPLACE FUNCTION fn_updated_at_value()
+  await sql`CREATE OR REPLACE FUNCTION internal.fn_updated_at_value()
     RETURNS TRIGGER AS $$
     BEGIN
       NEW.updated_at = CURRENT_TIMESTAMP;
@@ -37,7 +37,7 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
 
 export const down = async (db: Kysely<Database>): Promise<void> => {
   // Drop function first
-  await sql`DROP FUNCTION IF EXISTS fn_updated_at_value();`.execute(db)
+  await sql`DROP FUNCTION IF EXISTS internal.fn_updated_at_value();`.execute(db)
 
   // Drop schemas in reverse order
   if (ADDITIONAL_SCHEMAS.length > 0) {

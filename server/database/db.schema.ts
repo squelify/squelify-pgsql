@@ -6,8 +6,12 @@
  * @see: https://www.kysely.dev/docs/recipes/schemas
  */
 
+import type { IAdmin } from './schemas/admin'
 import type { IUser } from './schemas/user'
 
-export interface Database {
-  users: IUser
+interface Internal {
+  'internal.admin': IAdmin
+  'internal.users': IUser
 }
+
+export interface Database extends Internal {}

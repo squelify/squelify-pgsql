@@ -26,12 +26,6 @@ type UIStore = {
       visible: boolean
     }
   }
-  'schema-diagram': {
-    left: {
-      position: number
-      visible: boolean
-    }
-  }
   'functions-editor': {
     left: {
       position: number
@@ -62,12 +56,6 @@ const defaultUIStoreValues: UIStore = {
     },
   },
   'table-editor': {
-    left: {
-      position: 250,
-      visible: true,
-    },
-  },
-  'schema-diagram': {
     left: {
       position: 250,
       visible: true,

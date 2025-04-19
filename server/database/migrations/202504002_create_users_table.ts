@@ -8,7 +8,7 @@ import { addColumnTimestamps, createColumnIndex, dropColumnIndex } from '~/datab
 import type { Database } from '~/database/db.schema'
 
 export const up = async (database: Kysely<Database>): Promise<void> => {
-  const db = database.withSchema('public')
+  const db = database.withSchema('internal')
 
   // Create table
   await db.schema
@@ -21,17 +21,17 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
     .execute()
 
   // Create required indexes and auto-update trigger
-  await createTriggerUpdatedAt('users', 'public').execute(db)
+  await createTriggerUpdatedAt('users', 'internal').execute(db)
   await createColumnIndex(db, 'users', 'id').execute()
   await createColumnIndex(db, 'users', 'created_at').execute()
   await createColumnIndex(db, 'users', 'updated_at').execute()
 }
 
 export const down = async (database: Kysely<Database>): Promise<void> => {
-  const db = database.withSchema('public')
+  const db = database.withSchema('internal')
   await dropColumnIndex(db, 'users', 'id').execute()
   await dropColumnIndex(db, 'users', 'created_at').execute()
   await dropColumnIndex(db, 'users', 'updated_at').execute()
-  await dropTriggerUpdatedAt('users', 'public').execute(db)
+  await dropTriggerUpdatedAt('users', 'internal').execute(db)
   await db.schema.dropTable('users').ifExists().execute()
 }

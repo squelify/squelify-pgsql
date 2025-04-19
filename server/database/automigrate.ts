@@ -12,6 +12,14 @@ export async function getMigrationItems(): Promise<DatabaseMigration[]> {
       name: '202504000_initialize_schema',
       migration: await import('./migrations/202504000_initialize_schema'),
     },
+    {
+      name: '202504001_create_admin_table',
+      migration: await import('./migrations/202504001_create_admin_table'),
+    },
+    {
+      name: '202504002_create_users_table',
+      migration: await import('./migrations/202504002_create_users_table'),
+    },
   ]
 }
 

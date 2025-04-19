@@ -47,7 +47,7 @@ export function dropTriggerUpdatedAt(table: string, schema = 'public'): RawBuild
 export function createTriggerUpdatedAt(table: string, schema = 'public'): RawBuilder<string> {
   return sql.raw(`CREATE TRIGGER trg_${table}_updated_at
     BEFORE UPDATE ON ${schema}.${table} FOR EACH ROW
-    EXECUTE FUNCTION fn_updated_at_value();
+    EXECUTE FUNCTION ${schema}.fn_updated_at_value();
   `)
 }
 

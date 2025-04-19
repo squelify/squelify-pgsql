@@ -12,7 +12,7 @@ export default function Page() {
   const uiState = useStore(uiStore)
 
   // State to store the last panel size before hiding
-  const DEFAULT_LEFT_PANEL_WIDTH = defaultUIStoreValues['schema-diagram']?.left.position
+  const DEFAULT_LEFT_PANEL_WIDTH = defaultUIStoreValues['functions-editor']?.left.position
   const [lastLeftPanelWidth, setLastLeftPanelWidth] = React.useState(DEFAULT_LEFT_PANEL_WIDTH)
 
   return (

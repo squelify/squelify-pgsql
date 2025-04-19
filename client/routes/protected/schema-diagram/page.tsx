@@ -1,113 +1,53 @@
-import { useStore } from '@nanostores/react'
 import { useSeoMeta } from '@unhead/react'
-import * as React from 'react'
-import { SplitPane } from '#/components/split-pane'
-import { defaultUIStoreValues, saveUiState, uiStore } from '#/context/stores/ui.store'
-import { LeftPanel } from './panel-left'
-import { RightPanel } from './panel-right'
+import * as Lucide from 'lucide-react'
+import { useState } from 'react'
+import { Button } from '#/components/button'
+import { Skeleton } from '#/components/skeleton/skeleton'
+import { EmptyState } from './empty-state'
 
 export default function Page() {
   useSeoMeta({ title: 'Schema Diagram' })
 
-  const uiState = useStore(uiStore)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
-  // State to store the last panel size before hiding
-  const DEFAULT_LEFT_PANEL_WIDTH = defaultUIStoreValues['schema-diagram']?.left.position
-  const [lastLeftPanelWidth, setLastLeftPanelWidth] = React.useState(DEFAULT_LEFT_PANEL_WIDTH)
+  // Simulate loading state (remove after API integration)
+  setTimeout(() => setIsLoading(false), 800)
 
   return (
-    <div className="absolute inset-0 flex w-full overflow-hidden">
-      <SplitPane
-        orientation="horizontal"
-        initial={DEFAULT_LEFT_PANEL_WIDTH}
-        min={0}
-        max={350}
-        id="schema-diagram-left-panel"
-        persistVisibility={true}
-        visibilityKey="schema-diagram-panel-visible"
-        initialVisible={true}
-      >
-        {({
-          position: leftPanelWidth,
-          isDragging: isLeftPanelDragging,
-          separatorProps: leftPanelSeparatorProps,
-          isVisible: isPanelVisible,
-          toggleVisibility: toggleLeftVisibility,
-          setPosition: setLeftPanelWidth,
-        }) => {
-          // Determine if the panel is actually visible based on width
-          const isLeftPanelVisible = leftPanelWidth > 0
+    <div className="flex size-full flex-col md:flex-row">
+      {/* Mobile Header */}
+      <div className="flex items-center justify-between border-b px-4 py-2 md:hidden">
+        <h1 className="font-semibold text-lg">Schema Diagram</h1>
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={() => setMobileNavOpen(!mobileNavOpen)}
+          aria-label="Toggle settings menu"
+        >
+          <Lucide.Menu className="size-5" />
+        </Button>
+      </div>
 
-          // Toggle function for left panel that maintains persistent state
-          const toggleLeftPanel = React.useCallback(() => {
-            if (isLeftPanelVisible) {
-              // If panel is visible, save current width and hide
-              if (leftPanelWidth > 0) {
-                setLastLeftPanelWidth(leftPanelWidth)
-              }
-
-              // First update the visibility state if needed
-              if (isPanelVisible) {
-                toggleLeftVisibility()
-              }
-
-              // Then update the position
-              setLeftPanelWidth(0)
-              saveUiState('schema-diagram', {
-                left: { position: 0, visible: false },
-              })
-            } else {
-              // Calculate the width to restore - use last width or default
-              const widthToRestore = lastLeftPanelWidth || DEFAULT_LEFT_PANEL_WIDTH
-
-              // First update the visibility state if needed
-              if (!isPanelVisible) {
-                toggleLeftVisibility()
-              }
-
-              // Use setTimeout to ensure visibility state is updated first
-              // This helps avoid the need for double-clicking
-              setTimeout(() => {
-                // Then update the position
-                setLeftPanelWidth(widthToRestore)
-                saveUiState('schema-diagram', {
-                  left: { position: widthToRestore, visible: true },
-                })
-              }, 0)
-            }
-          }, [
-            isLeftPanelVisible,
-            leftPanelWidth,
-            setLeftPanelWidth,
-            isPanelVisible,
-            toggleLeftVisibility,
-          ])
-
-          // Effect to save last panel width when resized
-          React.useEffect(() => {
-            if (leftPanelWidth > 0 && !isLeftPanelDragging) {
-              setLastLeftPanelWidth(leftPanelWidth)
-            }
-          }, [leftPanelWidth, isLeftPanelDragging])
-
-          return (
-            <>
-              <LeftPanel
-                position={leftPanelWidth}
-                isDragging={isLeftPanelDragging}
-                separatorProps={leftPanelSeparatorProps}
-                isVisible={isPanelVisible}
-                toggleVisibility={toggleLeftVisibility}
-                setPosition={setLeftPanelWidth}
-              />
-              <RightPanel
-                toggleLeftPanel={toggleLeftPanel}
-                isLeftPanelVisible={isLeftPanelVisible}
-              />
-            </>
-          )
-        }}
-      </SplitPane>
+      {/* Container */}
+      <div className="flex-1 overflow-auto">
+        <div className="h-full p-4 md:p-6">
+          {isLoading ? (
+            <div>
+              <Skeleton className="mb-2 h-8 w-48" />
+              <Skeleton className="mb-6 h-4 w-72" />
+              <div className="grid gap-4">
+                <Skeleton className="h-32 w-full rounded-md" />
+                <Skeleton className="h-32 w-full rounded-md" />
+              </div>
+            </div>
+          ) : (
+            <div className="flex h-full w-full flex-col items-center justify-center">
+              <EmptyState />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

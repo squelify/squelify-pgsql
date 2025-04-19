@@ -98,14 +98,14 @@ export function LeftPanel({
                     <ListboxItem className="py-1.5" value="auth">
                       auth
                     </ListboxItem>
+                    <ListboxItem className="py-1.5" value="public">
+                      public
+                    </ListboxItem>
                     <ListboxItem className="py-1.5" value="realtime">
                       realtime
                     </ListboxItem>
                     <ListboxItem className="py-1.5" value="storage">
                       storage
-                    </ListboxItem>
-                    <ListboxItem className="py-1.5" value="public">
-                      public
                     </ListboxItem>
                   </ListboxContent>
                 </Listbox>

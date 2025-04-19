@@ -4,7 +4,7 @@ import { handleStaticWeb } from '~/http/handlers/static.handler'
 export default defineEventHandler((event) => {
   const matchedUrl = getRequestURL(event).pathname
 
-  if (matchedUrl.startsWith('/api/')) {
+  if (matchedUrl === '/api' || matchedUrl.startsWith('/api/')) {
     if (event.path.length !== 2) {
       return createErrorResponse(event, `Resource not found`, 404)
     }

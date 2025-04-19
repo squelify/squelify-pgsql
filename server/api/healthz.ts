@@ -11,21 +11,27 @@ interface HealthCheckResponse {
   environment: {
     mode: string
     logLevel: string
-    nodeVersion: string
+    nodeVersion?: string
   }
-  memory: {
+  memory?: {
     heapUsed: string
     heapTotal: string
     external: string
     residentSetSize: string
   }
-  database: {
+  database?: {
     connected: boolean
     latency: string
   }
 }
 
 export default eventHandler(async (event): Promise<HealthCheckResponse> => {
+  // Extract authorization header
+  const authHeader = getHeader(event, 'Authorization')
+
+  // TODO: replace with the real token validation
+  const isAuthenticated = authHeader?.startsWith('Bearer 123123')
+
   const memoryUsage = process.memoryUsage()
   const db = event.context.db
 
@@ -57,26 +63,33 @@ export default eventHandler(async (event): Promise<HealthCheckResponse> => {
   const seconds = Math.floor(uptimeSeconds % 60)
   const uptime = `${days}d ${hours}h ${minutes}m ${seconds}s`
 
-  return {
+  // Base response for all users
+  const response: HealthCheckResponse = {
     status: 'healthy',
     timestamp: new Date().toISOString(),
     uptime,
     environment: {
       mode: env.APP_MODE ?? 'production',
       logLevel: env.APP_LOG_LEVEL ?? 'info',
-      nodeVersion: process.version,
     },
-    memory: {
+  }
+
+  // Add additional information for authenticated users
+  if (isAuthenticated) {
+    response.environment.nodeVersion = process.version
+    response.memory = {
       heapUsed: prettyBytes(memoryUsage.heapUsed),
       heapTotal: prettyBytes(memoryUsage.heapTotal),
       external: prettyBytes(memoryUsage.external),
       residentSetSize: prettyBytes(memoryUsage.rss),
-    },
-    database: {
+    }
+    response.database = {
       connected: dbConnected,
       latency: dbLatency,
-    },
+    }
   }
+
+  return response
 })
 
 defineRouteMeta({
@@ -89,6 +102,13 @@ defineRouteMeta({
         name: 'Content-Type',
         required: true,
         example: 'application/json',
+      },
+      {
+        in: 'header',
+        name: 'Authorization',
+        required: false,
+        example: 'Bearer <token>',
+        description: 'Bearer token for accessing detailed health information',
       },
     ],
     responses: {

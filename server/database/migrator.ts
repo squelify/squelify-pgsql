@@ -23,6 +23,7 @@ export const migrateDBClient = new Kysely<Database>({
 export const migrateClient = new Migrator({
   db: migrateDBClient,
   provider: new NitroMigrator(MIGRATION_FOLDER),
+  migrationTableSchema: 'internal',
   migrationTableName: '_migration',
   migrationLockTableName: '_migration_lock',
   allowUnorderedMigrations: false,
