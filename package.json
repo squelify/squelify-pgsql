@@ -79,7 +79,7 @@
         "globby": "^14.1.0",
         "http-status": "^2.1.0",
         "input-otp": "^1.4.2",
-        "kysely": "^0.28.0",
+        "kysely": "^0.28.1",
         "kysely-pglite": "^0.6.1",
         "kysely-postgres-js": "^2.0.0",
         "lucide-react": "^0.501.0",

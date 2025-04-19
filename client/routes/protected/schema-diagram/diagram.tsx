@@ -1,7 +1,8 @@
 import '@xyflow/react/dist/style.css'
 import '../../../styles/diagram.css'
 import { MarkerType, addEdge, useEdgesState, useNodesState } from '@xyflow/react'
-import { Background, Controls, MiniMap, type OnConnect, Panel, ReactFlow } from '@xyflow/react'
+import { Background, Controls, MiniMap, Panel, ReactFlow } from '@xyflow/react'
+import type { OnConnect } from '@xyflow/react'
 import { useCallback, useState } from 'react'
 
 import { edgeTypes, initialEdges } from './edges'
@@ -66,9 +67,7 @@ export default function Diagram() {
           >
             <h3 style={{ margin: '0 0 8px 0', fontSize: '1rem' }}>ERD Diagram</h3>
             <div>
-              <label
-                style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
-              >
+              <label className="flex cursor-pointer items-center gap-2">
                 <input
                   type="checkbox"
                   checked={showMiniMap}
