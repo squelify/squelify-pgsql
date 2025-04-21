@@ -1,4 +1,5 @@
 import { useSeoMeta } from '@unhead/react'
+import { ReactFlowProvider } from '@xyflow/react'
 import * as Lucide from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '#/components/button'
@@ -45,7 +46,9 @@ export default function Page() {
           ) : (
             <div className="flex h-full w-full flex-col items-center justify-center">
               {/* <EmptyState /> */}
-              <Diagram />
+              <ReactFlowProvider>
+                <Diagram />
+              </ReactFlowProvider>
             </div>
           )}
         </div>
