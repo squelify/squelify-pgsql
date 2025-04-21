@@ -1,5 +1,6 @@
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
+import { clx } from 'twistail-utils'
 import { Button } from '#/components/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '#/components/collapsible'
 import Link from '#/components/link'
@@ -101,7 +102,10 @@ export default function Notifications() {
               notifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`rounded-md border-l-4 ${notification.read ? 'border-l-muted-foreground' : 'border-l-primary'} bg-muted/50 p-3 text-sm`}
+                  className={clx(
+                    'rounded-md border-l-4 bg-muted/50 p-3 text-sm',
+                    notification.read ? 'border-l-muted-foreground' : 'border-l-primary'
+                  )}
                 >
                   <div className="flex items-start justify-between">
                     <span className="font-medium">{notification.title}</span>

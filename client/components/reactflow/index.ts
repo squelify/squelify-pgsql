@@ -1,3 +1,4 @@
+export * from './animated-edge'
 export * from './base-handle'
 export * from './base-node'
 export * from './database-schema-node'

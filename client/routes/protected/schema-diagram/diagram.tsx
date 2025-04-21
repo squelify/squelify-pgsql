@@ -1,10 +1,12 @@
 import '@xyflow/react/dist/style.css'
-import { Background, Controls, Edge, MiniMap, Panel, Position, ReactFlow } from '@xyflow/react'
-import { memo, useState } from 'react'
+import { Edge, Position, ReactFlow } from '@xyflow/react'
+import { Background, MiniMap, NodeMouseHandler, Panel } from '@xyflow/react'
+import { memo, useCallback, useState } from 'react'
 import { Button } from '#/components/button'
 import { DatabaseSchemaNodeHeader, LabeledHandle, ZoomSelect } from '#/components/reactflow'
 import { DatabaseSchemaNode, DatabaseSchemaNodeBody } from '#/components/reactflow'
 import { DatabaseSchemaTableCell, DatabaseSchemaTableRow } from '#/components/reactflow'
+import { AnimatedSvgEdge } from '#/components/reactflow'
 
 export type DatabaseSchemaNodeData = {
   selected?: boolean
@@ -47,8 +49,14 @@ const DatabaseSchemaDemo = memo(({ data, selected }: DatabaseSchemaNodeData) => 
   )
 })
 
-const nodeTypes = {
-  databaseSchema: DatabaseSchemaDemo,
+const nodeTypes = { databaseSchema: DatabaseSchemaDemo }
+
+// Define relationship types for better edge positioning
+type RelationType = 'one-to-one' | 'one-to-many' | 'many-to-one' | 'many-to-many'
+
+// Define edge data with relationship information that satisfies Record<string, unknown>
+interface EdgeData extends Record<string, unknown> {
+  relationship: RelationType
 }
 
 const defaultNodes = [
@@ -99,13 +107,16 @@ const defaultNodes = [
   },
 ]
 
-const defaultEdges: Edge[] = [
+// Using step type for zigzag lines with relationship data
+const defaultEdges: Edge<EdgeData>[] = [
   {
     id: 'products-warehouses',
     source: '1',
     target: '2',
     sourceHandle: 'warehouse_id',
     targetHandle: 'id',
+    type: 'step',
+    data: { relationship: 'many-to-one' },
   },
   {
     id: 'products-suppliers',
@@ -113,20 +124,91 @@ const defaultEdges: Edge[] = [
     target: '3',
     sourceHandle: 'supplier_id',
     targetHandle: 'id',
+    type: 'step',
+    data: { relationship: 'many-to-one' },
   },
 ]
 
 export default function Diagram() {
   const [showMiniMap, setShowMiniMap] = useState(true)
+  const [edges, setEdges] = useState(defaultEdges)
+
+  // Handler for mouse enter on node
+  const onNodeMouseEnter: NodeMouseHandler = useCallback((_, node) => {
+    setEdges((eds) =>
+      eds.map((edge) => {
+        if (edge.source === node.id || edge.target === node.id) {
+          // Keep the relationship data and style when animating
+          const relationshipData = edge.data?.relationship || 'one-to-one'
+
+          return {
+            ...edge,
+            type: 'animatedSvgEdge',
+            data: {
+              duration: 1.5,
+              shape: 'circle',
+              // Use step for zigzag animation
+              path: 'step',
+              direction: 'alternate',
+              repeat: 'indefinite',
+              relationship: relationshipData,
+            },
+            // Maintain dashed line style during animation
+            style: {
+              ...edge.style,
+              strokeDasharray: '5,5',
+            },
+          }
+        }
+        return edge
+      })
+    )
+  }, [])
+
+  // Handler for mouse leave on node
+  const onNodeMouseLeave: NodeMouseHandler = useCallback(() => {
+    setEdges((eds) =>
+      eds.map((edge) => {
+        // Preserve the relationship data when returning to normal state
+        const relationshipData = edge.data?.relationship || 'one-to-one'
+
+        return {
+          ...edge,
+          // Return to step type to maintain zigzag
+          type: 'step',
+          data: { relationship: relationshipData },
+          // Maintain dashed line style
+          style: {
+            strokeDasharray: '5,5',
+            strokeWidth: 2,
+          },
+        }
+      })
+    )
+  }, [])
+
+  const edgeTypes = {
+    animatedSvgEdge: AnimatedSvgEdge,
+  }
 
   return (
     <ReactFlow
       defaultViewport={{ x: 0, y: 0, zoom: 1.5 }}
       fitViewOptions={{ maxZoom: 0.8 }}
       defaultNodes={defaultNodes}
-      defaultEdges={defaultEdges}
+      edges={edges}
       nodeTypes={nodeTypes}
-      fitView
+      edgeTypes={edgeTypes}
+      onNodeMouseEnter={onNodeMouseEnter}
+      onNodeMouseLeave={onNodeMouseLeave}
+      fitView={true}
+      defaultEdgeOptions={{
+        type: 'step',
+        style: {
+          strokeWidth: 2,
+          strokeDasharray: '5,5',
+        },
+      }}
     >
       <Background gap={20} size={1} />
       <ZoomSelect position="bottom-left" />
