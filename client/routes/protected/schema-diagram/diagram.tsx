@@ -1,20 +1,15 @@
 import '@xyflow/react/dist/style.css'
 import { Edge, Position, ReactFlow } from '@xyflow/react'
-import { Background, MiniMap, NodeMouseHandler, Panel } from '@xyflow/react'
+import { Background, MiniMap, NodeMouseHandler } from '@xyflow/react'
 import { memo, useCallback, useState } from 'react'
-import { Button } from '#/components/button'
 import { DatabaseSchemaNodeHeader, LabeledHandle, ZoomSelect } from '#/components/reactflow'
 import { DatabaseSchemaNode, DatabaseSchemaNodeBody } from '#/components/reactflow'
 import { DatabaseSchemaTableCell, DatabaseSchemaTableRow } from '#/components/reactflow'
 import { AnimatedSvgEdge } from '#/components/reactflow'
-
-export type DatabaseSchemaNodeData = {
-  selected?: boolean
-  data: {
-    label: string
-    schema: { title: string; type: string }[]
-  }
-}
+import { toast } from '#/components/toast'
+import ControlPanel from './control'
+import { schemaEdges } from './use-edges'
+import { type DatabaseSchemaNodeData, schemaNodes } from './use-nodes'
 
 const DatabaseSchemaDemo = memo(({ data, selected }: DatabaseSchemaNodeData) => {
   return (
@@ -51,87 +46,9 @@ const DatabaseSchemaDemo = memo(({ data, selected }: DatabaseSchemaNodeData) => 
 
 const nodeTypes = { databaseSchema: DatabaseSchemaDemo }
 
-// Define relationship types for better edge positioning
-type RelationType = 'one-to-one' | 'one-to-many' | 'many-to-one' | 'many-to-many'
-
-// Define edge data with relationship information that satisfies Record<string, unknown>
-interface EdgeData extends Record<string, unknown> {
-  relationship: RelationType
-}
-
-const defaultNodes = [
-  {
-    id: '1',
-    position: { x: 0, y: 0 },
-    type: 'databaseSchema',
-    data: {
-      label: 'products',
-      schema: [
-        { title: 'id', type: 'uuid' },
-        { title: 'name', type: 'varchar' },
-        { title: 'description', type: 'varchar' },
-        { title: 'warehouse_id', type: 'uuid' },
-        { title: 'supplier_id', type: 'uuid' },
-        { title: 'price', type: 'money' },
-        { title: 'quantity', type: 'int4' },
-      ],
-    },
-  },
-  {
-    id: '2',
-    position: { x: 350, y: -100 },
-    type: 'databaseSchema',
-    data: {
-      label: 'warehouses',
-      schema: [
-        { title: 'id', type: 'uuid' },
-        { title: 'name', type: 'varchar' },
-        { title: 'address', type: 'varchar' },
-        { title: 'capacity', type: 'int4' },
-      ],
-    },
-  },
-  {
-    id: '3',
-    position: { x: 350, y: 200 },
-    type: 'databaseSchema',
-    data: {
-      label: 'suppliers',
-      schema: [
-        { title: 'id', type: 'uuid' },
-        { title: 'name', type: 'varchar' },
-        { title: 'description', type: 'varchar' },
-        { title: 'country', type: 'varchar' },
-      ],
-    },
-  },
-]
-
-// Using step type for zigzag lines with relationship data
-const defaultEdges: Edge<EdgeData>[] = [
-  {
-    id: 'products-warehouses',
-    source: '1',
-    target: '2',
-    sourceHandle: 'warehouse_id',
-    targetHandle: 'id',
-    type: 'step',
-    data: { relationship: 'many-to-one' },
-  },
-  {
-    id: 'products-suppliers',
-    source: '1',
-    target: '3',
-    sourceHandle: 'supplier_id',
-    targetHandle: 'id',
-    type: 'step',
-    data: { relationship: 'many-to-one' },
-  },
-]
-
 export default function Diagram() {
-  const [showMiniMap, setShowMiniMap] = useState(true)
-  const [edges, setEdges] = useState(defaultEdges)
+  const [showMiniMap, setShowMiniMap] = useState(false)
+  const [edges, setEdges] = useState(schemaEdges)
 
   // Handler for mouse enter on node
   const onNodeMouseEnter: NodeMouseHandler = useCallback((_, node) => {
@@ -153,10 +70,12 @@ export default function Diagram() {
               repeat: 'indefinite',
               relationship: relationshipData,
             },
-            // Maintain dashed line style during animation
+            // Maintain dashed line style during animation and add color
             style: {
               ...edge.style,
               strokeDasharray: '5,5',
+              stroke: 'var(--color-primary)',
+              strokeWidth: 2,
             },
           }
         }
@@ -177,14 +96,19 @@ export default function Diagram() {
           // Return to step type to maintain zigzag
           type: 'step',
           data: { relationship: relationshipData },
-          // Maintain dashed line style
+          // Return to original style
           style: {
             strokeDasharray: '5,5',
+            stroke: 'var(--color-muted-foreground)',
             strokeWidth: 2,
           },
         }
       })
     )
+  }, [])
+
+  const applyAutoLayout = useCallback(() => {
+    toast.warning('This feature is not available yet!')
   }, [])
 
   const edgeTypes = {
@@ -195,7 +119,7 @@ export default function Diagram() {
     <ReactFlow
       defaultViewport={{ x: 0, y: 0, zoom: 1.5 }}
       fitViewOptions={{ maxZoom: 0.8 }}
-      defaultNodes={defaultNodes}
+      defaultNodes={schemaNodes}
       edges={edges}
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
@@ -205,33 +129,20 @@ export default function Diagram() {
       defaultEdgeOptions={{
         type: 'step',
         style: {
-          strokeWidth: 2,
           strokeDasharray: '5,5',
+          stroke: 'var(--color-muted-foreground)',
+          strokeWidth: 2,
         },
       }}
     >
       <Background gap={20} size={1} />
       <ZoomSelect position="bottom-left" />
-      {showMiniMap && <MiniMap nodeStrokeWidth={1} nodeColor="var(--color-muted)" />}
-      <Panel
-        position="top-left"
-        className="flex flex-col gap-2 rounded-md border border-border bg-card px-2.5 py-2 text-card-foreground text-sm"
-      >
-        <div className="flex flex-col gap-2">
-          <label className="flex cursor-pointer items-center gap-2">
-            <input
-              type="checkbox"
-              checked={showMiniMap}
-              onChange={() => setShowMiniMap(!showMiniMap)}
-              className="m-0"
-            />
-            Show Mini Map
-          </label>
-          <Button type="button" variant="secondary" size="xs">
-            Auto Layout
-          </Button>
-        </div>
-      </Panel>
+      {showMiniMap && <MiniMap nodeStrokeWidth={1} />}
+      <ControlPanel
+        showMiniMap={showMiniMap}
+        setShowMiniMap={setShowMiniMap}
+        applyAutoLayout={applyAutoLayout}
+      />
     </ReactFlow>
   )
 }

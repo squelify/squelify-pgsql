@@ -25,8 +25,7 @@ export const LabeledHandle = forwardRef<
     className={clx('relative flex items-center', flexDirections[position], className)}
   >
     <BaseHandle position={position} className={handleClassName} {...props} />
-    {/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
-    <label className={clx('px-3 text-foreground', labelClassName)}>{title}</label>
+    <span className={clx('px-3 text-foreground', labelClassName)}>{title}</span>
   </div>
 ))
 
