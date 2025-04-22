@@ -10,11 +10,12 @@
  */
 
 import { resolve } from 'node:path'
+import { PGlite } from '@electric-sql/pglite'
 import { pg_trgm } from '@electric-sql/pglite/contrib/pg_trgm'
 import { uuid_ossp } from '@electric-sql/pglite/contrib/uuid_ossp'
+import { PGliteDialect as KyselyPGliteDialect } from '@squelify/kysely-pglite'
 import { CamelCasePlugin, Kysely, ParseJSONResultsPlugin } from 'kysely'
 import type { ErrorLogEvent, KyselyConfig, QueryLogEvent } from 'kysely'
-import { KyselyPGlite } from 'kysely-pglite'
 import { PostgresJSDialect } from 'kysely-postgres-js'
 import postgres from 'postgres'
 import { env } from 'std-env'
@@ -22,18 +23,21 @@ import type { Database } from '~/database/db.schema'
 import logger from '~/utils/logger'
 
 // Using the PGLite dialect with persistence to disk
-const { dialect: PGliteDialect } = await KyselyPGlite.create(resolve('storage/pgdata'), {
-  // Read more about the extensions here: https://pglite.dev/extensions
-  // Read more about the options here: https://pglite.dev/docs/api
-  extensions: { pg_trgm, uuid_ossp },
-})
+// Read more about the extensions here: https://pglite.dev/extensions
+// Read more about the options here: https://pglite.dev/docs/api
+const PGliteDialect = new KyselyPGliteDialect(
+  new PGlite(resolve('storage/pgdata'), {
+    extensions: { pg_trgm, uuid_ossp },
+  })
+)
 
 const PostgresDialect = new PostgresJSDialect({
   postgres: postgres(String(env.DATABASE_URL)),
 })
 
 export const kyselyConfig: KyselyConfig = {
-  dialect: String(env.DATABASE_TYPE).toLowerCase() === 'postgres' ? PostgresDialect : PGliteDialect,
+  dialect:
+    String(env.DATABASE_DIALECT).toLowerCase() === 'postgres' ? PostgresDialect : PGliteDialect,
   plugins: [new CamelCasePlugin(), new ParseJSONResultsPlugin()],
 }
 
