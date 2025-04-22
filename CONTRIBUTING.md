@@ -1,202 +1,53 @@
-# Contributing Guideline
+# Contributing to Squelify
 
-Please open an issue to discuss the contribution you wish to make before submitting any changes.
+Welcome to the Squelify developer community. Thanks for taking the time to contribute!
 
-This way we can guide you through the process and give feedback.
+This guide covers two main topics:
 
-## 🏁 Quick Start
+1. the [legal terms](#legal-terms) under which you contribute to the project
+2. the [guidelines](#contributor-guidelines) for how to contribute to the project
 
-You will need `Node.js >=20.18.0`, `pnpm >=10.8.0` and `Docker >= 26.1.3` installed on your machine.
+## Legal terms
 
-### Up and Running
+Squelify operates under the [default GitHub terms](https://help.github.com/en/articles/github-terms-of-service#6-contributions-under-repository-license),
+where your contributions are licensed under the terms of our contributor license agreement. The [Squelify Contributor License Agreement](https://squelify.com/docs/contributor-license-agreement)
+("CLA") is a legal agreement that essentially assigns the IP in your contributions to the Squelify project.
 
-1. Install the required toolchain & SDK: [Node.js][nodejs], [pnpm][pnpm], and [Docker][docker].
-2. Install required project dependencies: `pnpm install`
-3. Create `.env` file or copy from `.env.example`, then configure required variables.
-4. Generate application secret key: `pnpm --silent squelify make app-key`
-5. Start the database server and local SMTP server: `pnpm compose:up`
-6. Run database migration: `pnpm --silent squelify migrate up`
-7. Run project in development mode: `pnpm dev`
+### How do I accept the CLA?
 
-> Application will run at <http://localhost:3278>
+The **Squelify repositories** are defined as any repository hosted on the GitHub platform within the [squelify](https://github.com/squelify) organisation. By contributing code to any of the Squelify repositories, for example by pushing commits to GitHub and / or by raising a Pull Request, you indicate your acceptance of the CLA.
 
-An alternative option for generating a secret key is to use [AuthWeb](https://auth.web.id/password).
+<blockquote>
+  :warning: Do not contributing code to any of the Squelify repositories unless you accept the Squelify Contributor License Agreement. Contributing code to the Squelify repositories indicates your acceptance of the terms.
+</blockquote>
 
-### OAuth Configuration
+## Contributor Guidelines
 
-Callback: `http://localhost:3278/api/auth/<PROVIDER>/callback`
+Please read the guideance below about what to do if you:
 
-### Webhooks
+- [found a bug](#did-you-find-a-bug)
+- [fixed a bug](#did-you-write-a-patch-that-fixes-a-bug)
+- [want to add a new feature or change an existing one](#do-you-intend-to-add-a-new-feature-or-change-an-existing-one)
 
-In order to receive webhooks (_i.e. notifications, payment integrations, etc_), you will need
-to expose the local port to the internet. To expose a local port to the internet, you can use
-service like [Tailscale Funnel][tailscale], [Expose][expose-dev], [ngrok][ngrok],
-or [untun][untun] by [UnJS][unjs].
+### Did you find a bug?
 
-In this case we will use Tailscale Funnel. By default, no alias for `tailscale` is set up.
-If you plan on frequently accessing the Tailscale CLI, you can add an alias to your `.bashrc`
-or `.zshrc` to make it easier.
+* ensure that the bug was not already reported by searching on GitHub under the relevant issue tracker
+* if you're unable to find an open issue addressing the problem, open a new one
 
-```sh
-alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
-```
+Be sure to include a title and clear description, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
 
-```sh
-tailscale funnel --bg=false http://localhost:3278
-tailscale funnel status
-```
+### Did you write a patch that fixes a bug?
 
-Reference: https://www.twilio.com/blog/expose-localhost-to-internet-with-tunnel
+* open a new GitHub pull request with the patch
+* ensure the PR description clearly describes the problem and solution. Include the relevant issue number if applicable
 
-## 🔰 Database Migration
+### Do you intend to add a new feature or change an existing one?
 
-The migration generator creates new migration files with standardized naming format:
-`YYYYMMXXX_NAME.ts` where:
+* say hello and suggest your change on the discussion channels for the [Squelify community](https://github.com/orgs/squelify/discussions)
+* assuming you get positive feedback, raise a Pull Request against your fork/branch to track the development of the feature and discuss the implementation
 
-- `YYYYMM`: Year and month (e.g. 202412)
-- `XXX`: Sequential number within the month (e.g. 001)
-- `NAME`: Migration name using snake_case
+Then write some code ;) We welcome contributions and encourage you to pitch in :)
 
-```bash
-pnpm squelify make migration <name>
-```
+---
 
-### Example
-
-```sh
-pnpm squelify make migration create_users_table
-```
-
-### Reset Migrations
-
-To reset the database and seed the database with the default data, you can run the following command:
-
-```sh
-pnpm --silent squelify migrate reset --migrate --seed
-```
-
-### User Migrations
-
-Squelify supports custom database migrations through SQL files.
-Place your migration files in `sqdata/migrations` directory with
-format `YYYYMMXXX_description.sql`:
-
-#### Migration Filename Format:
-
-`YYYYMMXXX` = Year Month Sequential Number
-
-- YYYYMM (6 digits) = Year and Month (e.g. 202412)
-- XXX (3 digits) = Sequential number within the month (e.g. 001)
-
-#### Validation Rules
-
-- File size limit: 1MB
-- Reserved prefix `_sq_` not allowed
-- Valid SQLite syntax required
-- Foreign key integrity checks
-- Column naming conventions
-- Valid SQLite data types
-- Proper constraint definitions
-- Index limitations (max 5 per table)
-- View definition validation
-- Checksum verification
-
-#### Example:
-```sql
---- Path: sqdata/migrations/202504001_create_posts_table.sql
-
-CREATE TABLE IF NOT EXISTS posts (
-  id TEXT PRIMARY KEY,
-  title TEXT NOT NULL,
-  description TEXT,
-  is_active INTEGER NOT NULL DEFAULT 1 CHECK(is_active IN (0, 1)),
-  created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
-  updated_at INTEGER,
-  deleted_at INTEGER
-) STRICT;
-
-CREATE TRIGGER IF NOT EXISTS trg_posts_timestamp
-AFTER UPDATE ON posts
-FOR EACH ROW
-BEGIN
-  UPDATE posts
-  SET updated_at = strftime('%s', 'now')
-  WHERE id = NEW.id;
-END;
-
-CREATE INDEX IF NOT EXISTS idx_posts_title ON posts(title);
-CREATE INDEX IF NOT EXISTS idx_posts_is_active ON posts(is_active);
-CREATE INDEX IF NOT EXISTS idx_posts_created_at ON posts(created_at);
-```
-
-## Testing
-
-> TODO: add more information here
-
-### Simple Load Testing
-
-Using [`oha`](https://github.com/hatoo/oha) to perform a simple load testing.
-
-```sh
-oha -z 10s -m GET http://localhost:3278/api/healthz -c 350 -n 10000
-```
-
-## 🐳 Docker Container
-
-### Development Server
-
-```sh
-# Start development server
-docker-compose up -d
-
-# Stop development server
-docker-compose down --remove-orphans --volumes
-```
-
-### Build Container
-
-```sh
-pnpm docker:build
-```
-
-### List Docker Images
-
-```sh
-pnpm docker:images
-```
-
-### Testing Container
-
-```sh
-docker run --network=host --rm -it --env-file .env \
-  -v $(pwd)/sqdata:/srv/sqdata --name squelify \
-  ghcr.io/squelify/squelify:latest
-```
-
-### Push Images
-
-Sign in to container registry:
-
-```sh
-echo $REGISTRY_TOKEN | docker login ghcr.io --username YOUR_USERNAME --password-stdin
-```
-
-Push docker image:
-
-```sh
-docker push ghcr.io/squelify/squelify:latest
-```
-
-## 🚀 Deployment
-
-Read [Deployment Guide](./DEPLOY.md) for detailed documentation.
-
-<!-- link reference definition -->
-[docker]: https://docs.docker.com/engine/install
-[expose-dev]: https://expose.dev/
-[ngrok]: https://ngrok.com/
-[nodejs]: https://nodejs.org/en/download/
-[pnpm]: https://pnpm.io/installation
-[tailscale]: https://tailscale.com/kb/1223/funnel
-[untun]: https://unjs.io/packages/untun
-[unjs]: https://unjs.io
+This Contributing Guidelines is adopted from the [ElectricSQL Contributing Guidelines](https://github.com/electric-sql/meta/blob/main/CONTRIBUTING.md).

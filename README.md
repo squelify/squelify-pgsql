@@ -77,7 +77,7 @@ Built by developers, for developers. Here's what you get:
 
 ## 🏃 Getting Started
 
-Check our [Contributing Guidelines](./CONTRIBUTING.md) for setup instructions.
+Check our [Contributing Guidelines](./CONTRIBUTING.md) and [Quick Start](./QUICK-START.md) for setup instructions.
 
 ## 📦 Deployment
 
