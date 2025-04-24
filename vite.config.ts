@@ -6,7 +6,7 @@ import { isProduction, isTest } from 'std-env'
 import { type Logger as ViteLogger, defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
-const _console = createConsola({ defaults: { tag: 'nitro' } })
+const _console = createConsola({ defaults: { tag: 'vite' } })
 
 const logger: ViteLogger = {
   info: (msg: string) => _console.info(msg),
@@ -17,6 +17,30 @@ const logger: ViteLogger = {
   hasErrorLogged: () => true,
   hasWarned: false,
 }
+
+type AssetOutputEntry = {
+  output: string
+  regex: RegExp
+}
+
+const assets: AssetOutputEntry[] = [
+  {
+    output: 'images/[name]-[hash][extname]',
+    regex: /\.(png|jpe?g|gif|svg|webp|avif)$/,
+  },
+  {
+    output: 'css/[name]-[hash][extname]',
+    regex: /\.css$/,
+  },
+  {
+    output: 'assets/[name]-[hash][extname]',
+    regex: /\.(js|ts|jsx|tsx)$/,
+  },
+  {
+    output: '[name][extname]',
+    regex: /\.(xml|json|txt)$/,
+  },
+]
 
 export default defineConfig({
   plugins: [
@@ -34,7 +58,7 @@ export default defineConfig({
         return null
       },
     },
-    sonda({ filename: 'build/sonda-report.html', open: !isProduction }),
+    sonda({ filename: 'build/sonda-report.html', open: false }),
   ],
   server: {
     strictPort: false,
@@ -51,6 +75,38 @@ export default defineConfig({
     rollupOptions: {
       input: resolve('client/entry.client.tsx'),
       output: {
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: (assetInfo) => {
+          const fileName = assetInfo.names?.[0] || ''
+
+          // Determine the output path based on AssetOutputEntry entries
+          for (const asset of assets) {
+            if (fileName && asset.regex.test(fileName)) {
+              return asset.output
+            }
+          }
+
+          // Otherwise, use the default output path
+          return 'assets/[name]-[hash][extname]'
+        },
+        chunkFileNames: (chunkInfo) => {
+          // Get path from the first module in Chunk
+          const firstId = chunkInfo.moduleIds[0] || ''
+
+          // If the file has extensions like .tsx or .jsx, extract the folder name for prefix
+          if (firstId.includes('/page.tsx') || firstId.includes('/page.jsx')) {
+            const parts = firstId.split('/')
+            const pageIndex = parts.findIndex((part) => part === 'page.tsx' || part === 'page.jsx')
+            if (pageIndex > 0) {
+              const parentFolder = parts[pageIndex - 1] || ''
+              if (parentFolder && parentFolder !== 'client') {
+                return `assets/page-${parentFolder}-[hash].js`
+              }
+            }
+          }
+
+          return 'assets/[name]-[hash].js'
+        },
         manualChunks(id) {
           if (id.includes('react-dom')) {
             return 'react-dom'
@@ -60,6 +116,9 @@ export default defineConfig({
           }
           if (id.includes('@codemirror/view')) {
             return 'codemirror-view'
+          }
+          if (id.endsWith('.css') || id.includes('.module.css')) {
+            return 'styles'
           }
         },
       },
