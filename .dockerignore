@@ -18,6 +18,7 @@ compose.env*
 node_modules
 npm-debug.log
 slim.report.json
+sonda-report.html
 playwright-report/
 storybook-static/
 tests-results/

@@ -1,6 +1,7 @@
 import { resolve } from 'node:path'
 import react from '@vitejs/plugin-react'
 import { createConsola } from 'consola'
+import sonda from 'sonda/vite'
 import { isProduction, isTest } from 'std-env'
 import { type Logger as ViteLogger, defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
@@ -33,6 +34,7 @@ export default defineConfig({
         return null
       },
     },
+    sonda({ filename: 'build/sonda-report.html', open: !isProduction }),
   ],
   server: {
     strictPort: false,
@@ -44,8 +46,24 @@ export default defineConfig({
   build: {
     manifest: true,
     emptyOutDir: true,
+    sourcemap: !isProduction,
     chunkSizeWarningLimit: 1024 * 4,
-    rollupOptions: { input: resolve('client/entry.client.tsx') },
+    rollupOptions: {
+      input: resolve('client/entry.client.tsx'),
+      output: {
+        manualChunks(id) {
+          if (id.includes('react-dom')) {
+            return 'react-dom'
+          }
+          if (id.includes('lucide-react')) {
+            return 'lucide-react'
+          }
+          if (id.includes('@codemirror/view')) {
+            return 'codemirror-view'
+          }
+        },
+      },
+    },
     terserOptions: { format: { comments: false } },
     outDir: resolve('build/client'),
     reportCompressedSize: false,
