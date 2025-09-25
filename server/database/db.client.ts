@@ -35,9 +35,20 @@ const PostgresDialect = new PostgresJSDialect({
   postgres: postgres(String(env.DATABASE_URL)),
 })
 
+const getDialect = () => {
+  switch (String(env.DATABASE_ENGINE).toLowerCase()) {
+    case 'postgres':
+      return PostgresDialect
+    case 'pglite':
+      return PGliteDialect
+    default:
+      logger.warn(`Unknown DATABASE_ENGINE "${env.DATABASE_ENGINE}", falling back to pglite.`)
+      return PGliteDialect
+  }
+}
+
 export const kyselyConfig: KyselyConfig = {
-  dialect:
-    String(env.DATABASE_ENGINE).toLowerCase() === 'postgres' ? PostgresDialect : PGliteDialect,
+  dialect: getDialect(),
   plugins: [new CamelCasePlugin(), new ParseJSONResultsPlugin()],
 }
 
