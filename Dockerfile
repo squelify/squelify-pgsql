@@ -5,14 +5,6 @@ ARG PLATFORM=linux/amd64
 ARG DISTROLESS_TAG=nonroot
 ARG NODE_VERSION=22
 
-FROM --platform=${PLATFORM} busybox:stable-glibc AS glibc
-LABEL org.opencontainers.image.source="https://github.com/squelify/squelify"
-LABEL org.opencontainers.image.documentation="https://github.com/squelify/squelify"
-LABEL org.opencontainers.image.description="A modern headless CMS and backend-as-a-service platform"
-LABEL org.opencontainers.image.licenses="FSL-1.0-Apache-2.0"
-LABEL org.opencontainers.image.authors="Aris Ripandi"
-LABEL org.opencontainers.image.vendor="Aris Ripandi"
-
 # -----------------------------------------------------------------------------
 # Base image with pnpm package manager.
 # -----------------------------------------------------------------------------
@@ -62,7 +54,14 @@ RUN chmod -R 0775 /srv/storage
 # -----------------------------------------------------------------------------
 # Production image, copy build output files and run the application.
 # -----------------------------------------------------------------------------
+FROM --platform=${PLATFORM} busybox:stable-glibc AS glibc
 FROM --platform=${PLATFORM} gcr.io/distroless/nodejs${NODE_VERSION}-debian12:${DISTROLESS_TAG}
+LABEL org.opencontainers.image.source="https://github.com/squelify/squelify"
+LABEL org.opencontainers.image.documentation="https://github.com/squelify/squelify"
+LABEL org.opencontainers.image.description="A modern headless CMS and backend-as-a-service platform"
+LABEL org.opencontainers.image.licenses="FSL-1.0-Apache-2.0"
+LABEL org.opencontainers.image.authors="Aris Ripandi"
+LABEL org.opencontainers.image.vendor="Aris Ripandi"
 
 # Read application environment variables
 ARG APP_LOG_LEVEL
