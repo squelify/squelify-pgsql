@@ -24,8 +24,8 @@ export const migrateClient = new Migrator({
   db: migrateDBClient,
   provider: new NitroMigrator(MIGRATION_FOLDER),
   migrationTableSchema: 'internal',
-  migrationTableName: '_migration',
-  migrationLockTableName: '_migration_lock',
+  migrationTableName: 'app_migrations',
+  migrationLockTableName: 'app_migration_lock',
   allowUnorderedMigrations: false,
 })
 

@@ -7,7 +7,7 @@ export function getSqlHeader(version: string): string {
 -- Database version: ${version}
 --
 -- Note: All CREATE statements are made idempotent with IF NOT EXISTS
--- System tables are excluded (_migration, _migration_lock)
+-- System tables are excluded (app_migrations, app_migration_lock)
 --\n`
 }
 

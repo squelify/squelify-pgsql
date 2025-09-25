@@ -37,7 +37,7 @@ const PostgresDialect = new PostgresJSDialect({
 
 export const kyselyConfig: KyselyConfig = {
   dialect:
-    String(env.DATABASE_DIALECT).toLowerCase() === 'postgres' ? PostgresDialect : PGliteDialect,
+    String(env.DATABASE_ENGINE).toLowerCase() === 'postgres' ? PostgresDialect : PGliteDialect,
   plugins: [new CamelCasePlugin(), new ParseJSONResultsPlugin()],
 }
 
