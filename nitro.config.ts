@@ -79,8 +79,9 @@ export default defineNitroConfig({
     ui: {
       scalar: {
         route: '/api-docs',
-        layout: 'classic',
+        layout: 'modern',
         theme: 'purple',
+        hideModels: true,
       },
       swagger: false,
     },
