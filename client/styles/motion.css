@@ -298,8 +298,8 @@
     }
 
     /* ------------------- Animation for navigation menu -------------------  */
-    --animate-navmenu-enter-from-left: navmenu-enter-from-left 0.30s cubic-bezier(0.16, 1, 0.3, 1);
-    --animate-navmenu-enter-from-right: navmenu-enter-from-right 0.30s cubic-bezier(0.16, 1, 0.3, 1);
+    --animate-navmenu-enter-from-left: navmenu-enter-from-left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    --animate-navmenu-enter-from-right: navmenu-enter-from-right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     --animate-navmenu-exit-to-left: navmenu-exit-to-left 0.15s ease-out;
     --animate-navmenu-exit-to-right: navmenu-exit-to-right 0.15s ease-out;
     --animate-nav-viewport-open: nav-viewport-open 0.25s cubic-bezier(0.16, 1, 0.3, 1);

@@ -1,9 +1,10 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
 
+name: squelify
+
 services:
   pgsql:
-    image: postgres:${PGSQL_VERSION:-17-alpine}
-    container_name: squelify_pgsql
+    image: postgres:${PGSQL_VERSION:-18rc1-alpine}
     hostname: postgres
     restart: unless-stopped
     ports: ['5432:5432']
@@ -23,7 +24,6 @@ services:
 
   pgweb:
     image: sosedoff/pgweb:latest
-    container_name: squelify_pgweb
     restart: unless-stopped
     ports: ['54321:8081']
     environment:
@@ -37,7 +37,6 @@ services:
 
   mailpit:
     image: axllent/mailpit:latest
-    container_name: squelify_mailpit
     restart: unless-stopped
     volumes: ['mailpit_data:/data']
     ports: ['1025:1025', '8025:8025']
@@ -51,7 +50,6 @@ services:
   # @ref: https://docs.docker.com/compose/compose-file/compose-file-v3/#network_mode
   valkey:
     image: valkey/valkey:8-alpine
-    container_name: squelify_valkey
     hostname: valkey
     restart: unless-stopped
     ports: ['6379:6379']
@@ -75,7 +73,6 @@ services:
   # aws --no-verify-ssl --endpoint-url http://127.0.0.1:7070 s3 ls s3://
   locals3:
     image: ghcr.io/versity/versitygw:latest
-    container_name: squelify_s3
     restart: unless-stopped
     hostname: locals3
     ports: ['7070:7070']
@@ -87,7 +84,6 @@ services:
 
   localcdn:
     image: joseluisq/static-web-server:2
-    container_name: squelify_cdn
     restart: unless-stopped
     ports: ['7080:80', '7443:443']
     environment:

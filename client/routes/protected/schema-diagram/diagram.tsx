@@ -1,11 +1,16 @@
 import '@xyflow/react/dist/style.css'
-import { Edge, Position, ReactFlow } from '@xyflow/react'
-import { Background, MiniMap, NodeMouseHandler } from '@xyflow/react'
+import { Background, Edge, MiniMap, NodeMouseHandler, Position, ReactFlow } from '@xyflow/react'
 import { memo, useCallback, useState } from 'react'
-import { DatabaseSchemaNodeHeader, LabeledHandle, ZoomSelect } from '#/components/reactflow'
-import { DatabaseSchemaNode, DatabaseSchemaNodeBody } from '#/components/reactflow'
-import { DatabaseSchemaTableCell, DatabaseSchemaTableRow } from '#/components/reactflow'
-import { AnimatedSvgEdge } from '#/components/reactflow'
+import {
+  AnimatedSvgEdge,
+  DatabaseSchemaNode,
+  DatabaseSchemaNodeBody,
+  DatabaseSchemaNodeHeader,
+  DatabaseSchemaTableCell,
+  DatabaseSchemaTableRow,
+  LabeledHandle,
+  ZoomSelect,
+} from '#/components/reactflow'
 import { toast } from '#/components/toast'
 import ControlPanel from './control'
 import { schemaEdges } from './use-edges'

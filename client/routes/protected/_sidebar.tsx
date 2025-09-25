@@ -1,12 +1,23 @@
 import * as Lucide from 'lucide-react'
 import { useLocation } from 'react-router'
-import AppLogo from '/favicon.svg'
 import { Kbd } from '#/components/kbd'
 import Link from '#/components/link'
-import { Sidebar, SidebarContent, SidebarFooter, SidebarMenuBadge } from '#/components/sidebar'
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail } from '#/components/sidebar'
-import { SidebarGroupAction, SidebarGroupContent, SidebarHeader } from '#/components/sidebar'
-import { SidebarGroup, SidebarGroupLabel } from '#/components/sidebar'
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupAction,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+} from '#/components/sidebar'
+import AppLogo from '/favicon.svg'
 
 interface AppSidebarProps {
   openCommand: (open: boolean) => void

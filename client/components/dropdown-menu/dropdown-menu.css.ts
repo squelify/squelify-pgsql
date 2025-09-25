@@ -1,4 +1,4 @@
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv, type VariantProps } from 'tailwind-variants/lite'
 
 const dropdownMenuStyles = tv({
   slots: {
@@ -8,7 +8,7 @@ const dropdownMenuStyles = tv({
     radioGroup: [],
     subMenuTrigger: [
       'relative flex cursor-default select-none items-center rounded-sm py-1.5 pr-1 pl-2 outline-hidden transition-colors sm:text-sm',
-      'text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground ',
+      'text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground',
       'data-[disabled]:pointer-events-none data-[state=checked]:font-semibold data-[disabled]:text-muted-foreground',
       'data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
     ],

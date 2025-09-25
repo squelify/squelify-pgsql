@@ -9,8 +9,8 @@
  * optionally be provided as a `string` in inserts and can never be updated.
  */
 
-import { type Kysely, type RawBuilder, sql } from 'kysely'
 import type { CreateIndexBuilder, CreateTableBuilder, DropIndexBuilder } from 'kysely'
+import { type Kysely, type RawBuilder, sql } from 'kysely'
 import { serialize } from 'superjson'
 import type { Database } from './db.schema'
 

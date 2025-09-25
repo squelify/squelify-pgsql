@@ -2,7 +2,7 @@ import { createReadStream, existsSync, readdirSync } from 'node:fs'
 import { stat } from 'node:fs/promises'
 import { extname, join, resolve } from 'node:path'
 import process from 'node:process'
-import { type H3Event, createError, sendStream } from 'h3'
+import { createError, type H3Event, sendStream } from 'h3'
 import { handleBypassCache } from '~/utils/cache'
 import { DURATION } from '~/utils/datetime'
 

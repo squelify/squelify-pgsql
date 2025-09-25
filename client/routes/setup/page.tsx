@@ -2,16 +2,26 @@ import { useSeoMeta } from '@unhead/react'
 import { consola } from 'consola'
 import { useQueryState } from 'nuqs'
 import { useEffect, useState, useTransition } from 'react'
-import { Card, CardContent, CardDescription } from '#/components/card'
-import { CardFooter, CardHeader, CardTitle } from '#/components/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '#/components/card'
 import Link from '#/components/link'
 import { toast } from '#/components/toast'
 
 import SetupForm from './setup-form'
 import { AlreadyInstalledStatus, ErrorStatus, LoadingStatus, SuccessStatus } from './setup-status'
 import DemoTokens from './token-demo'
-import { AdminUserData, createAdminUserApi } from './use-setup'
-import { validateSetupToken, validateSetupTokenApi } from './use-setup'
+import {
+  AdminUserData,
+  createAdminUserApi,
+  validateSetupToken,
+  validateSetupTokenApi,
+} from './use-setup'
 
 export default function Page() {
   useSeoMeta({ title: 'Initial Setup - Squelify' })

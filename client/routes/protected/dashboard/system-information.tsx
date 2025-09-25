@@ -2,10 +2,15 @@ import { useQuery } from '@tanstack/react-query'
 import * as Lucide from 'lucide-react'
 import { Badge } from '#/components/badge'
 import { Button } from '#/components/button'
-import { Card, CardContent, CardDescription, CardTitle } from '#/components/card'
-import { CardDivider, CardHeader } from '#/components/card'
-import { DescriptionList, DescriptionTerm } from '#/components/description-list'
-import { DescriptionDetails } from '#/components/description-list'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardDivider,
+  CardHeader,
+  CardTitle,
+} from '#/components/card'
+import { DescriptionDetails, DescriptionList, DescriptionTerm } from '#/components/description-list'
 import { Text } from '#/components/text'
 import { useTRPC } from '#/utils/trpc'
 

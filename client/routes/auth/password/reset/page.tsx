@@ -3,16 +3,25 @@ import { consola } from 'consola'
 import * as Lucide from 'lucide-react'
 import { useQueryState } from 'nuqs'
 import { useEffect, useRef, useState, useTransition } from 'react'
-import { Card, CardContent, CardDescription } from '#/components/card'
-import { CardFooter, CardHeader, CardTitle } from '#/components/card'
-import { Form, FormControl, FormField, FormSubmit } from '#/components/form'
-import { FormLabel, FormMessage } from '#/components/form'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '#/components/card'
+import { Form, FormControl, FormField, FormLabel, FormMessage, FormSubmit } from '#/components/form'
 import { Input } from '#/components/input'
 import Link from '#/components/link'
 import { toast } from '#/components/toast'
-
-import { resetPasswordApi, validatePassword, validateResetTokenApi } from './use-reset-password'
-import { isValidUUID, validateToken } from './use-reset-password'
+import {
+  isValidUUID,
+  resetPasswordApi,
+  validatePassword,
+  validateResetTokenApi,
+  validateToken,
+} from './use-reset-password'
 
 export default function Page() {
   useSeoMeta({ title: 'Reset Password' })
@@ -217,74 +226,72 @@ export default function Page() {
   }
 
   return (
-    <>
-      <div className="w-full max-w-sm">
-        {formError && (
-          <div className="mb-4 rounded-md bg-destructive/10 p-3 text-destructive text-sm">
-            {formError}
-          </div>
+    <div className="w-full max-w-sm">
+      {formError && (
+        <div className="mb-4 rounded-md bg-destructive/10 p-3 text-destructive text-sm">
+          {formError}
+        </div>
+      )}
+
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle>Reset Password</CardTitle>
+          <CardDescription>Create a new password for your account</CardDescription>
+        </CardHeader>
+
+        <CardContent className="pt-4">{renderContent()}</CardContent>
+
+        {!isSuccess && isTokenValid && (
+          <CardFooter className="flex items-center justify-center border-t p-4 sm:justify-center">
+            <Link
+              href="/login"
+              className="inline-flex items-center justify-center text-muted-foreground text-sm hover:text-primary"
+            >
+              <Lucide.ArrowLeft className="mr-1 inline-block size-4" />
+              <span>Back to login</span>
+            </Link>
+          </CardFooter>
         )}
+      </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle>Reset Password</CardTitle>
-            <CardDescription>Create a new password for your account</CardDescription>
-          </CardHeader>
-
-          <CardContent className="pt-4">{renderContent()}</CardContent>
-
-          {!isSuccess && isTokenValid && (
-            <CardFooter className="flex items-center justify-center border-t p-4 sm:justify-center">
-              <Link
-                href="/login"
-                className="inline-flex items-center justify-center text-muted-foreground text-sm hover:text-primary"
-              >
-                <Lucide.ArrowLeft className="mr-1 inline-block size-4" />
-                <span>Back to login</span>
-              </Link>
-            </CardFooter>
-          )}
-        </Card>
-
-        {!isTokenValid && !isSuccess && (
-          <div className="mt-4 text-center text-muted-foreground text-xs">
-            <p>Demo valid tokens:</p>
-            <code
-              className="mt-1 block cursor-pointer rounded bg-muted p-1 hover:text-primary-foreground"
-              onClick={() => setToken('123e4567-e89b-12d3-a456-426614174000')}
-            >
-              ?token=123e4567-e89b-12d3-a456-426614174000
-            </code>
-            <code
-              className="mt-1 block cursor-pointer rounded bg-muted p-1 hover:text-primary-foreground"
-              onClick={() => setToken('123e4567-e89b-12d3-a456-426614174001')}
-            >
-              ?token=123e4567-e89b-12d3-a456-426614174001
-            </code>
-            <p className="mt-2">Demo expired token:</p>
-            <code
-              className="mt-1 block cursor-pointer rounded bg-muted p-1 hover:text-primary-foreground"
-              onClick={() => setToken('123e4567-e89b-12d3-a456-426614174002')}
-            >
-              ?token=123e4567-e89b-12d3-a456-426614174002
-            </code>
-            <p className="mt-2">Demo invalid token:</p>
-            <code
-              className="mt-1 block cursor-pointer rounded bg-muted p-1 hover:text-primary-foreground"
-              onClick={() => setToken('123e4567-e89b-12d3-a456-426614174003')}
-            >
-              ?token=123e4567-e89b-12d3-a456-426614174003
-            </code>
-            <p className="mt-2">Demo empty token:</p>
-            <code
-              className="mt-1 block cursor-pointer rounded bg-muted p-1 hover:text-primary-foreground"
-              onClick={() => setToken(null)}
-            >
-              ?token=
-            </code>
-          </div>
-        )}
-      </div>
-    </>
+      {!isTokenValid && !isSuccess && (
+        <div className="mt-4 text-center text-muted-foreground text-xs">
+          <p>Demo valid tokens:</p>
+          <code
+            className="mt-1 block cursor-pointer rounded bg-muted p-1 hover:text-primary-foreground"
+            onClick={() => setToken('123e4567-e89b-12d3-a456-426614174000')}
+          >
+            ?token=123e4567-e89b-12d3-a456-426614174000
+          </code>
+          <code
+            className="mt-1 block cursor-pointer rounded bg-muted p-1 hover:text-primary-foreground"
+            onClick={() => setToken('123e4567-e89b-12d3-a456-426614174001')}
+          >
+            ?token=123e4567-e89b-12d3-a456-426614174001
+          </code>
+          <p className="mt-2">Demo expired token:</p>
+          <code
+            className="mt-1 block cursor-pointer rounded bg-muted p-1 hover:text-primary-foreground"
+            onClick={() => setToken('123e4567-e89b-12d3-a456-426614174002')}
+          >
+            ?token=123e4567-e89b-12d3-a456-426614174002
+          </code>
+          <p className="mt-2">Demo invalid token:</p>
+          <code
+            className="mt-1 block cursor-pointer rounded bg-muted p-1 hover:text-primary-foreground"
+            onClick={() => setToken('123e4567-e89b-12d3-a456-426614174003')}
+          >
+            ?token=123e4567-e89b-12d3-a456-426614174003
+          </code>
+          <p className="mt-2">Demo empty token:</p>
+          <code
+            className="mt-1 block cursor-pointer rounded bg-muted p-1 hover:text-primary-foreground"
+            onClick={() => setToken(null)}
+          >
+            ?token=
+          </code>
+        </div>
+      )}
+    </div>
   )
 }

@@ -1,6 +1,6 @@
 import { persistentMap } from '@nanostores/persistent'
-import pkg from '~~/package.json' with { type: 'json' }
 import { storeDecode, storeEncode } from '#/utils/helper'
+import pkg from '~~/package.json' with { type: 'json' }
 
 type Theme = 'dark' | 'light' | 'system'
 type SidebarState = 'expanded' | 'collapsed'

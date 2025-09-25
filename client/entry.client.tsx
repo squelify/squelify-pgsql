@@ -1,5 +1,5 @@
 import './styles/global.css'
-import { UnheadProvider, createHead } from '@unhead/react/client'
+import { createHead, UnheadProvider } from '@unhead/react/client'
 import consola from 'consola'
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
 import React, { type ErrorInfo } from 'react'

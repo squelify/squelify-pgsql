@@ -1,8 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
 import * as Lucide from 'lucide-react'
 import { Badge } from '#/components/badge'
-import { Card, CardContent, CardDescription, CardTitle } from '#/components/card'
-import { CardDivider, CardHeader } from '#/components/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardDivider,
+  CardHeader,
+  CardTitle,
+} from '#/components/card'
 import { ProgressBar } from '#/components/progress-bar'
 import { Text } from '#/components/text'
 import { useTRPC } from '#/utils/trpc'

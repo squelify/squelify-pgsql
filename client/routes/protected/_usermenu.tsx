@@ -2,9 +2,15 @@ import * as Lucide from 'lucide-react'
 import { useNavigate } from 'react-router'
 import { Avatar, AvatarFallback, AvatarImage } from '#/components/avatar'
 import { Button } from '#/components/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup } from '#/components/dropdown-menu'
-import { DropdownMenuItem, DropdownMenuLabel } from '#/components/dropdown-menu'
-import { DropdownMenuSeparator, DropdownMenuTrigger } from '#/components/dropdown-menu'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '#/components/dropdown-menu'
 import { toast } from '#/components/toast'
 
 export default function UserMenu() {

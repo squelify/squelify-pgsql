@@ -2,9 +2,9 @@ import * as Lucide from 'lucide-react'
 import { useState } from 'react'
 import { Outlet, useLocation } from 'react-router'
 import { clx } from 'twistail-utils'
-import pkg from '~~/package.json' with { type: 'json' }
 import { Button } from '#/components/button'
 import Link from '#/components/link'
+import pkg from '~~/package.json' with { type: 'json' }
 
 export default function SettingsLayout() {
   const location = useLocation()

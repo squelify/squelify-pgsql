@@ -1,7 +1,14 @@
 import { useRef, useState } from 'react'
 import { Checkbox } from '#/components/checkbox'
-import { Form, FormControl, FormField, FormLabel, FormMessage } from '#/components/form'
-import { FormSubmit, FormValidityState } from '#/components/form'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormLabel,
+  FormMessage,
+  FormSubmit,
+  FormValidityState,
+} from '#/components/form'
 import { Input } from '#/components/input'
 import { AdminUserData, isValidUUID, validateEmail, validatePassword } from './use-setup'
 

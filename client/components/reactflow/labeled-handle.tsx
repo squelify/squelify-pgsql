@@ -1,5 +1,5 @@
 import { HandleProps } from '@xyflow/react'
-import { HTMLAttributes, forwardRef } from 'react'
+import { forwardRef, HTMLAttributes } from 'react'
 import { clx } from 'twistail-utils'
 import { BaseHandle } from '#/components/reactflow'
 

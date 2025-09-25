@@ -1,5 +1,10 @@
-import type { DataEditorProps, Item, Theme } from '@glideapps/glide-data-grid'
-import type { GridColumn, GridSelection } from '@glideapps/glide-data-grid'
+import type {
+  DataEditorProps,
+  GridColumn,
+  GridSelection,
+  Item,
+  Theme,
+} from '@glideapps/glide-data-grid'
 
 // Define props interface
 export interface DataGridProps<T> extends Partial<DataEditorProps> {

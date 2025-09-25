@@ -4,14 +4,25 @@ import * as Lucide from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 import { clx } from 'twistail-utils'
 import { Button } from '#/components/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from '#/components/dropdown-menu'
-import { DropdownMenuLabel, DropdownMenuSeparator } from '#/components/dropdown-menu'
-import { DropdownMenuCheckboxItem, DropdownMenuTrigger } from '#/components/dropdown-menu'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '#/components/dropdown-menu'
 import { Input } from '#/components/input'
-import { Listbox, ListboxTrigger, ListboxValue } from '#/components/listbox'
-import { ListboxContent, ListboxItem } from '#/components/listbox'
+import {
+  Listbox,
+  ListboxContent,
+  ListboxItem,
+  ListboxTrigger,
+  ListboxValue,
+} from '#/components/listbox'
 import { saveUiState, uiStore } from '#/context/stores/ui.store'
-import { type MediaItem, generateDummyMedia } from '#/utils/dummy'
+import { generateDummyMedia, type MediaItem } from '#/utils/dummy'
 import GridView, { GridViewSkeleton } from './grid-view'
 import ListView, { ListViewSkeleton } from './list-view'
 

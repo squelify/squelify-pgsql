@@ -1,13 +1,26 @@
 import * as Lucide from 'lucide-react'
 import { AspectRatio } from '#/components/aspect-ratio'
 import { Button } from '#/components/button'
-import { Dialog, DialogContent, DialogTrigger } from '#/components/dialog'
-import { DialogHeader, DialogTitle } from '#/components/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '#/components/dialog'
 import { Input } from '#/components/input'
 import { Popover, PopoverContent, PopoverTrigger } from '#/components/popover'
 import { Skeleton } from '#/components/skeleton'
-import { Table, TableBody, TableCaption, TableCell, TableRow } from '#/components/table'
-import { TableHead, TableHeaderCell, TableRoot } from '#/components/table'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRoot,
+  TableRow,
+} from '#/components/table'
 import type { MediaItem } from '#/utils/dummy'
 
 interface ListViewProps {
