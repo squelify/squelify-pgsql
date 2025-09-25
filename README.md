@@ -121,6 +121,12 @@ For detailed licensing information, see the [LICENSE](./LICENSE.md) file.
 - **The Database**: Our database foundation is powered by [PGLite][pglite] and [PostgreSQL][postgresql].
 - **Logo**: The Squelify logo was created with the help of [Canva][canva].
 
+## 🔰 Support
+
+Squelify is mostly a [one-man][riipandi-github] project, not backed by a VC fund
+or anything. If you find Squelify useful, please star it on GitHub and spread the
+word among your peers. It really helps to move the project forward.
+
 ---
 
 <sub>💝 Support this project via [GitHub sponsors][github-sponsors] or by subscribing on Polar.</sub>
@@ -146,6 +152,7 @@ For detailed licensing information, see the [LICENSE](./LICENSE.md) file.
 [pocketbase]: https://pocketbase.io
 [postgresql]: https://www.postgresql.org/
 [riipandi-x]: https://x.com/intent/follow?screen_name=riipandi
+[riipandi-github]: https://github.com/riipandi
 [sentry-licensing]: https://blog.sentry.io/introducing-the-functional-source-license-freedom-without-free-riding/
 [squelify-docker]: https://github.com/squelify/squelify/pkgs/container/squelify
 [squelify-docs]: https://squelify.com/docs

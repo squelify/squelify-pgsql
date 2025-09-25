@@ -6,8 +6,8 @@
 
 import { Slot } from 'radix-ui'
 import * as React from 'react'
-import { SplitPaneState, UseSplitPaneProps } from './split-pane-utils'
 import { type SplitPaneStyles, splitPaneStyles } from './split-pane.css'
+import { SplitPaneState, UseSplitPaneProps } from './split-pane-utils'
 import { useSplitPane } from './use-split-pane'
 
 // Panel component for first and last panels

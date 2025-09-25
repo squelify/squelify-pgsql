@@ -32,6 +32,7 @@ temp/
 .data
 .cache
 .nitro
+.sonda
 .output
 .wrangler
 .wireit

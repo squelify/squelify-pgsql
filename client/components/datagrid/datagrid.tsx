@@ -1,6 +1,6 @@
 import '@glideapps/glide-data-grid/dist/index.css'
-import { CompactSelection, DataEditor, GridCellKind } from '@glideapps/glide-data-grid'
 import type { GridCell, GridColumn, GridSelection, Item } from '@glideapps/glide-data-grid'
+import { CompactSelection, DataEditor, GridCellKind } from '@glideapps/glide-data-grid'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { clx } from 'twistail-utils'
 

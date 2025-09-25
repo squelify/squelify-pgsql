@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { createConsola } from 'consola'
 import sonda from 'sonda/vite'
 import { isProduction, isTest } from 'std-env'
-import { type Logger as ViteLogger, defineConfig } from 'vite'
+import { defineConfig, type Logger as ViteLogger } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 const _console = createConsola({ defaults: { tag: 'vite' } })
@@ -72,7 +72,7 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: !isProduction,
     chunkSizeWarningLimit: 1024 * 4,
-    rollupOptions: {
+    rolldownOptions: {
       input: resolve('client/entry.client.tsx'),
       output: {
         entryFileNames: 'assets/[name]-[hash].js',
@@ -129,7 +129,6 @@ export default defineConfig({
     minify: isProduction,
   },
   publicDir: resolve('public'),
-  esbuild: { legalComments: 'inline' },
   optimizeDeps: {
     /**
      * Excludes the specified packages from the Vite dependency optimization.

@@ -2,9 +2,9 @@ import { Slot } from 'radix-ui'
 import * as React from 'react'
 import { Skeleton } from '#/components/skeleton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '#/components/tooltip'
-import { useSidebar } from './sidebar-context'
-import { sidebarMenuButtonStyles, sidebarStyles } from './sidebar.css'
 import type { SidebarMenuButtonStyles, SidebarStyles } from './sidebar.css'
+import { sidebarMenuButtonStyles, sidebarStyles } from './sidebar.css'
+import { useSidebar } from './sidebar-context'
 
 export const SidebarMenu = React.forwardRef<HTMLUListElement, React.ComponentProps<'ul'>>(
   ({ className, ...props }, forwardedRef) => {

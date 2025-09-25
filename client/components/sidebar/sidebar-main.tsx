@@ -10,9 +10,9 @@ import {
   DrawerTitle,
 } from '#/components/drawer'
 import { Input } from '#/components/input'
-import { useSidebar } from './sidebar-context'
-import { sidebarStyles } from './sidebar.css'
 import type { SidebarStyles } from './sidebar.css'
+import { sidebarStyles } from './sidebar.css'
+import { useSidebar } from './sidebar-context'
 
 type SidebarProps = React.ComponentProps<'div'> & {
   collapsible?: 'offcanvas' | 'icon' | 'none'

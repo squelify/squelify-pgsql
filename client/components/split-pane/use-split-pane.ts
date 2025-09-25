@@ -9,11 +9,11 @@ import {
   KEYS_HORIZONTAL,
   KEYS_POSITIVE,
   KEYS_VERTICAL,
+  positionStorage,
   SeparatorProps,
   SplitPaneState,
-  UseSplitPaneProps,
-  positionStorage,
   throttle,
+  UseSplitPaneProps,
   visibilityStorage,
 } from './split-pane-utils'
 

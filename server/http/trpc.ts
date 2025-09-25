@@ -1,10 +1,10 @@
 import { styleText } from 'node:util'
-import { TRPCError, initTRPC } from '@trpc/server'
+import { initTRPC, TRPCError } from '@trpc/server'
 import { env } from 'std-env'
 import superjson from 'superjson'
 import { ZodError } from 'zod'
-import type { Context, Meta } from '~/http/context'
 import { getRequestHeader } from '#imports'
+import type { Context, Meta } from '~/http/context'
 
 const t = initTRPC
   .context<Context>()

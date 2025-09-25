@@ -1,8 +1,15 @@
 import * as Lucide from 'lucide-react'
 import { useNavigate } from 'react-router'
-import { CommandDialog, CommandEmpty, CommandGroup } from '#/components/command/command'
-import { CommandInput, CommandItem, CommandList } from '#/components/command/command'
-import { CommandSeparator, CommandShortcut } from '#/components/command/command'
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from '#/components/command/command'
 import { ScrollArea } from '#/components/scroll-area'
 import { toast } from '#/components/toast'
 import { useTheme } from '#/context/hooks/use-theme'

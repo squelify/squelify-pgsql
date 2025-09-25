@@ -1,12 +1,24 @@
 import { autocompletion, completionKeymap } from '@codemirror/autocomplete'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
-import { defaultHighlightStyle, syntaxHighlighting } from '@codemirror/language'
-import { bracketMatching, indentOnInput } from '@codemirror/language'
+import {
+  bracketMatching,
+  defaultHighlightStyle,
+  indentOnInput,
+  syntaxHighlighting,
+} from '@codemirror/language'
 import { highlightSelectionMatches, searchKeymap } from '@codemirror/search'
 import { EditorState, type Extension } from '@codemirror/state'
-import { crosshairCursor, drawSelection, dropCursor, rectangularSelection } from '@codemirror/view'
-import { highlightActiveLine, highlightSpecialChars } from '@codemirror/view'
-import { highlightActiveLineGutter, keymap, lineNumbers } from '@codemirror/view'
+import {
+  crosshairCursor,
+  drawSelection,
+  dropCursor,
+  highlightActiveLine,
+  highlightActiveLineGutter,
+  highlightSpecialChars,
+  keymap,
+  lineNumbers,
+  rectangularSelection,
+} from '@codemirror/view'
 
 export function createCoreExtensions() {
   return [

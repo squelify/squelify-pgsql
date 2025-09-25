@@ -1,12 +1,17 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client'
-import { httpSubscriptionLink, splitLink } from '@trpc/client'
+import {
+  createTRPCClient,
+  httpBatchLink,
+  httpSubscriptionLink,
+  loggerLink,
+  splitLink,
+} from '@trpc/client'
 import * as React from 'react'
 import superjson from 'superjson'
-import type { AppRouter } from '~/http/router'
 import useFetch from '#/context/hooks/use-fetch'
 import { TRPCProvider } from '#/utils/trpc'
+import type { AppRouter } from '~/http/router'
 
 function makeQueryClient() {
   return new QueryClient({
@@ -20,7 +25,7 @@ function makeQueryClient() {
   })
 }
 
-let browserQueryClient: QueryClient | undefined = undefined
+let browserQueryClient: QueryClient | undefined
 
 function getQueryClient() {
   if (typeof window === 'undefined') {

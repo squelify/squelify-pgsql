@@ -1,4 +1,4 @@
-import { randomBytes } from '@noble/hashes/utils'
+import { randomBytes } from '@noble/hashes/utils.js'
 
 /**
  * Generates a cryptographically secure random key with specified length

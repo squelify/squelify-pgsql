@@ -1,7 +1,7 @@
 import { styleText } from 'node:util'
 import { consola as _console_ } from 'consola'
-import { LogLevels, createConsola } from 'consola/core'
 import type { LogLevel, LogType } from 'consola/core'
+import { createConsola, LogLevels } from 'consola/core'
 import Redactyl from 'redactyl.js'
 import { env } from 'std-env'
 

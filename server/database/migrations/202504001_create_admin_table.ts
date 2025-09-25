@@ -3,8 +3,13 @@
 // Down migrations are optional. you can safely delete this function.
 
 import { type Kysely, sql } from 'kysely'
-import { createTriggerUpdatedAt, dropTriggerUpdatedAt } from '~/database/db.helper'
-import { addColumnTimestamps, createColumnIndex, dropColumnIndex } from '~/database/db.helper'
+import {
+  addColumnTimestamps,
+  createColumnIndex,
+  createTriggerUpdatedAt,
+  dropColumnIndex,
+  dropTriggerUpdatedAt,
+} from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export const up = async (database: Kysely<Database>): Promise<void> => {

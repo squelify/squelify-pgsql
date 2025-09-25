@@ -1,4 +1,4 @@
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv, type VariantProps } from 'tailwind-variants/lite'
 
 const dividerStyles = tv({
   base: 'flex items-center justify-between gap-3 text-muted-foreground text-sm',

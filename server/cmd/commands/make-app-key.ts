@@ -1,7 +1,7 @@
 import { defineCommand } from 'citty'
 import consola from 'consola'
 import { randomUUID } from 'uncrypto'
-import { Options, newAPIKey } from 'uuidkey'
+import { newAPIKey, Options } from 'uuidkey'
 
 export default defineCommand({
   meta: {

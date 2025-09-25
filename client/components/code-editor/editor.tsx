@@ -1,12 +1,16 @@
-import * as Lucide from 'lucide-react'
-import { forwardRef, useCallback, useEffect, useRef } from 'react'
-import { useImperativeHandle, useLayoutEffect } from 'react'
-
 import { autocompletion } from '@codemirror/autocomplete'
 import { EditorSelection } from '@codemirror/state'
-import { EditorView } from '@codemirror/view'
-import { placeholder } from '@codemirror/view'
+import { EditorView, placeholder } from '@codemirror/view'
 import { indentationMarkers } from '@replit/codemirror-indentation-markers'
+import * as Lucide from 'lucide-react'
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useLayoutEffect,
+  useRef,
+} from 'react'
 
 import { createCoreExtensions } from './extensions/core-extensions'
 import { createRunBlockGutter } from './extensions/run-block-gutter'
