@@ -1,17 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import {
-  createTRPCClient,
-  httpBatchLink,
-  httpSubscriptionLink,
-  loggerLink,
-  splitLink,
-} from '@trpc/client'
+import { consola } from 'consola'
 import * as React from 'react'
-import superjson from 'superjson'
 import useFetch from '#/context/hooks/use-fetch'
-import { TRPCProvider } from '#/utils/trpc'
-import type { AppRouter } from '~/http/router'
 
 function makeQueryClient() {
   return new QueryClient({
@@ -20,6 +11,11 @@ function makeQueryClient() {
         // With SSR, we usually want to set some default staleTime
         // above 0 to avoid refetching immediately on the client
         staleTime: 60 * 1000,
+      },
+      mutations: {
+        onError: (error) => {
+          consola.error('QueryClient', error)
+        },
       },
     },
   })
@@ -52,41 +48,9 @@ export default function DataProvider({ children }: React.PropsWithChildren) {
   const queryClient = getQueryClient()
   const { data: hc } = useFetch<any>('/api/healthz')
 
-  const [trpcClient] = React.useState(() =>
-    createTRPCClient<AppRouter>({
-      links: [
-        loggerLink({
-          enabled: (opts) =>
-            (import.meta.env.DEV && typeof window !== 'undefined') ||
-            (opts.direction === 'down' && opts.result instanceof Error),
-        }),
-        splitLink({
-          // uses the httpSubscriptionLink for subscriptions
-          condition: (op) => op.type === 'subscription',
-          true: httpSubscriptionLink({
-            url: `/trpc`,
-            transformer: superjson,
-          }),
-          false: httpBatchLink({
-            url: '/trpc',
-            // async headers() {
-            //   const authState = authStore.get()
-            //   if (!authState?.token?.accessToken) return {}
-            //   return { Authorization: `Bearer ${authState?.token?.accessToken}` }
-            // },
-            transformer: superjson,
-            maxURLLength: 2083,
-          }),
-        }),
-      ],
-    })
-  )
-
   return (
     <QueryClientProvider client={queryClient}>
-      <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
-        {children}
-      </TRPCProvider>
+      {children}
       <ReactQueryDevtools position="bottom" client={queryClient} />
       {!import.meta.env.DEV && hc?.environment.logLevel === 'debug' ? (
         <React.Suspense fallback={null}>

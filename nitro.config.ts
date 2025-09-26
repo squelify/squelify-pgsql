@@ -32,7 +32,7 @@ export default defineNitroConfig({
   },
 
   handlers: [{ handler: '~/http/middleware/core.ts', middleware: true }],
-  errorHandler: '~/http/error',
+  errorHandler: '~/http/server-error',
 
   hooks: {
     'rollup:before': async (nitro) => {
@@ -81,7 +81,9 @@ export default defineNitroConfig({
         route: '/api-docs',
         layout: 'modern',
         theme: 'purple',
+        tagsSorter: 'alpha',
         hideModels: true,
+        telemetry: false,
       },
       swagger: false,
     },

@@ -4,6 +4,7 @@ import { createConsola } from 'consola'
 import sonda from 'sonda/vite'
 import { isProduction, isTest } from 'std-env'
 import { defineConfig, type Logger as ViteLogger } from 'vite'
+import devtoolsJson from 'vite-plugin-devtools-json'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 const _console = createConsola({ defaults: { tag: 'vite' } })
@@ -45,6 +46,7 @@ const assets: AssetOutputEntry[] = [
 export default defineConfig({
   plugins: [
     react(),
+    devtoolsJson(),
     tsconfigPaths(),
     {
       // Removes pure annotations warning on build from `@glideapps/glide-data-grid`
@@ -66,7 +68,7 @@ export default defineConfig({
     hmr: { overlay: false },
   },
   clearScreen: true,
-  envPrefix: ['PUBLIC_'],
+  envPrefix: ['PUBLIC_', 'APP_'],
   build: {
     manifest: true,
     emptyOutDir: true,

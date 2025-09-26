@@ -1,40 +1,17 @@
 import process from 'node:process'
-import { TRPCError } from '@trpc/server'
+import { implement, ORPCError } from '@orpc/server'
 import status from 'http-status'
 import { sql } from 'kysely'
 import prettyBytes from 'pretty-bytes'
 import { env } from 'std-env'
-import type { Context } from '~/http/context'
+import { ORPCContext } from '~/orpc/context'
+import { sysInfoContract } from '~/orpc/schemas/sysinfo.schema'
 
-interface SysInfoResponse {
-  status: string
-  timestamp: string
-  uptime: string
-  environment: {
-    mode: string
-    logLevel: string
-    nodeVersion: string
-  }
-  memory: {
-    heapUsed: string
-    heapTotal: string
-    external: string
-    residentSetSize: string
-  }
-  database: {
-    connected: boolean
-    latency: string
-  }
-}
+const sysinfo = implement(sysInfoContract).$context<ORPCContext>()
 
-interface SysInfoParams {
-  ctx: Context
-  signal: AbortSignal | undefined
-}
-
-export async function sysInfoHandler(params: SysInfoParams): Promise<SysInfoResponse> {
+export const sysInfoHandler = sysinfo.handler(async ({ context }) => {
   const memoryUsage = process.memoryUsage()
-  const db = params.ctx.h3Event.context.db
+  const db = context.db
 
   // Check database connection with timing
   let dbConnected = false
@@ -49,14 +26,11 @@ export async function sysInfoHandler(params: SysInfoParams): Promise<SysInfoResp
     dbConnected = dbStatus && dbStatus.rows[0].status === 1
 
     if (!dbConnected) {
-      throw new TRPCError({
-        code: 'SERVICE_UNAVAILABLE',
-        message: status['503_MESSAGE'],
-      })
+      throw new ORPCError(`SERVICE_UNAVAILABLE`, { status: 503, message: status['503_MESSAGE'] })
     }
   } catch (error) {
-    throw new TRPCError({
-      code: 'SERVICE_UNAVAILABLE',
+    throw new ORPCError(`SERVICE_UNAVAILABLE`, {
+      status: 503,
       message: error instanceof Error ? error.message : status['503_MESSAGE'],
     })
   }
@@ -89,4 +63,4 @@ export async function sysInfoHandler(params: SysInfoParams): Promise<SysInfoResp
       latency: dbLatency,
     },
   }
-}
+})

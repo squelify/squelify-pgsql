@@ -12,11 +12,10 @@ import {
 } from '#/components/card'
 import { DescriptionDetails, DescriptionList, DescriptionTerm } from '#/components/description-list'
 import { Text } from '#/components/text'
-import { useTRPC } from '#/utils/trpc'
+import { orpc } from '#/utils/orpc'
 
 export default function SystemInformation() {
-  const trpc = useTRPC()
-  const { data, isLoading, error, refetch } = useQuery(trpc.sysinfo.queryOptions())
+  const { data, isLoading, error, refetch } = useQuery(orpc.sysinfo.queryOptions())
 
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
