@@ -11,11 +11,10 @@ import {
 } from '#/components/card'
 import { ProgressBar } from '#/components/progress-bar'
 import { Text } from '#/components/text'
-import { useTRPC } from '#/utils/trpc'
+import { orpc } from '#/utils/orpc'
 
 export default function SystemStatus() {
-  const trpc = useTRPC()
-  const { data, isLoading, error } = useQuery(trpc.sysinfo.queryOptions())
+  const { data, isLoading, error } = useQuery(orpc.sysinfo.queryOptions())
 
   return (
     <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -78,8 +77,8 @@ export default function SystemStatus() {
                     size="sm"
                     variant="success"
                     value={Math.min(
-                      (Number.parseInt(data?.memory.heapUsed || '0') /
-                        Number.parseInt(data?.memory.heapTotal || '1')) *
+                      (Number.parseInt(data?.memory.heapUsed || '0', 10) /
+                        Number.parseInt(data?.memory.heapTotal || '1', 10)) *
                         100,
                       100
                     )}
@@ -88,8 +87,8 @@ export default function SystemStatus() {
                   <span className="whitespace-nowrap font-semibold text-foreground text-xs">
                     {Math.round(
                       Math.min(
-                        (Number.parseInt(data?.memory.heapUsed || '0') /
-                          Number.parseInt(data?.memory.heapTotal || '1')) *
+                        (Number.parseInt(data?.memory.heapUsed || '0', 10) /
+                          Number.parseInt(data?.memory.heapTotal || '1', 10)) *
                           100,
                         100
                       )

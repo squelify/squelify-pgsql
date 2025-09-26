@@ -71,9 +71,9 @@ Built by developers, for developers. Here's what you get:
 - 💪 Technical Stack
   - [Nitro](https://nitro.unjs.io) - Next Generation Server Toolkit.
   - [TypeScript](https://www.typescriptlang.org) - Type-safe development.
-  - [PGLite](https://pglite.dev/) - Embeddable Postgres in WASM.
+  - [PGLite](https://pglite.dev) - Embeddable Postgres in WASM.
   - [Kysely](https://kysely.dev) - Type-safe SQL query builder.
-  - [tRPC](https://trpc.io/) - End-to-end typesafe APIs made easy.
+  - [oRPC](https://orpc.unnoq.com) - Typesafe APIs Made Simple.
 
 ## 🏃 Getting Started
 

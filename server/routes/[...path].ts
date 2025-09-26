@@ -1,5 +1,4 @@
-import { renderSPAClient } from '~/http/handlers/spa.handler'
-import { handleStaticWeb } from '~/http/handlers/static.handler'
+import { handleStaticWeb, renderSPAClient } from '~/http/handlers'
 
 export default defineEventHandler((event) => {
   const matchedUrl = getRequestURL(event).pathname
@@ -8,6 +7,7 @@ export default defineEventHandler((event) => {
     if (event.path.length !== 2) {
       return createErrorResponse(event, `Resource not found`, 404)
     }
+
     const message = `An error occurred while processing request to ${matchedUrl}`
     return sendError(
       event,
