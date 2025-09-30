@@ -17,9 +17,8 @@
         "image": "ghcr.io/squelify/squelify"
     },
     "scripts": {
-        "dev": "nitro dev",
         "build": "nitro build",
-        "prepare": "nitro prepare",
+        "dev": "PORT=3080 nitro dev",
         "start": "node --import dotenv/config build/server/index.mjs",
         "docker:build": "docker build -f Dockerfile . --build-arg DISTROLESS_TAG=debug-nonroot -t $npm_package_config_image:$npm_package_version-dev",
         "docker:push": "docker push $npm_package_config_image:latest-dev && docker push $npm_package_config_image:$npm_package_version-dev",
@@ -31,6 +30,7 @@
         "compose:cleanup": "docker compose -f compose.yaml down --remove-orphans --volumes",
         "compose:up": "docker compose -f compose.yaml up --detach --remove-orphans",
         "compose:down": "docker compose -f compose.yaml down --remove-orphans",
+        "prepare": "nitro prepare",
         "check": "biome check . --write",
         "format": "biome format . --write",
         "lint": "biome lint . --write",

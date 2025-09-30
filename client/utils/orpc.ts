@@ -10,7 +10,7 @@ const createLink = () => {
   return new RPCLink({
     url: import.meta.env.SQUELIFY_BASE_URL
       ? `${import.meta.env.SQUELIFY_BASE_URL}/orpc`
-      : 'http://localhost:3000/orpc',
+      : 'http://localhost:3080/orpc',
     headers: { Authorization: `Bearer ${token}` },
     plugins: [
       new SimpleCsrfProtectionLinkPlugin(),
