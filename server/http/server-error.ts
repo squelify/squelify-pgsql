@@ -1,5 +1,5 @@
 import { env } from 'std-env'
-import type { AppConfig } from '~~/app.config'
+import pkg from '~~/package.json' with { type: 'json' }
 
 interface ErrorInfo {
   code: number
@@ -204,8 +204,6 @@ const renderErrorContent = (error: ErrorInfo, isDev: boolean) => `
 `
 
 export default defineNitroErrorHandler((error, event) => {
-  const appConfig = useAppConfig(event) as AppConfig
-
   if (event.path.startsWith('/api')) {
     setResponseHeader(event, 'Content-Type', 'application/json')
     return send(
@@ -242,8 +240,8 @@ export default defineNitroErrorHandler((error, event) => {
 
   // Render the complete HTML using the template
   const htmlBody = renderTemplate({
-    title: appConfig.meta.title,
-    description: appConfig.meta.description,
+    title: pkg.config.productName,
+    description: pkg.description,
     error: errorInfo,
     children: content,
   })

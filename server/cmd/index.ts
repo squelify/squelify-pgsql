@@ -1,12 +1,12 @@
 import 'dotenv/config'
 import { defineCommand, runMain, showUsage } from 'citty'
-import { appConfig } from '~~/app.config'
+import pkg from '~~/package.json' with { type: 'json' }
 
 const main = defineCommand({
   meta: {
     name: 'cmd',
-    version: appConfig.version,
-    description: `${appConfig.meta.title} Command Line Interface`,
+    version: pkg.version,
+    description: `${pkg.config.productName} Command Line Interface`,
   },
   args: {
     help: {

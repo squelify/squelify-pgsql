@@ -2,7 +2,7 @@ import { resolve } from 'node:path'
 import { createConsola } from 'consola'
 import { makeDirectory } from 'make-dir'
 import { isDevelopment, isProduction } from 'std-env'
-import { appConfig } from './app.config'
+import pkg from './package.json' with { type: 'json' }
 
 const _console = createConsola({ defaults: { tag: 'nitro' } })
 
@@ -10,7 +10,6 @@ export default defineNitroConfig({
   compatibilityDate: '2025-04-11',
   preset: 'node-server',
   serveStatic: 'node',
-  appConfig: appConfig,
   minify: isProduction,
   sourceMap: isDevelopment,
   srcDir: resolve('server'),
@@ -26,7 +25,7 @@ export default defineNitroConfig({
   },
 
   // Application metadata and preview command
-  framework: { name: appConfig.identifier, version: appConfig.version },
+  framework: { name: pkg.name, version: pkg.version },
   commands: {
     preview: 'NODE_PATH=server/node_modules node --import dotenv/config server/index.mjs',
   },
@@ -72,9 +71,9 @@ export default defineNitroConfig({
     production: 'runtime',
     route: '/api-specs.json',
     meta: {
-      title: `${appConfig.meta.title} API`,
-      description: `${appConfig.meta.description}`,
-      version: appConfig.version,
+      title: `${pkg.config.productName} API`,
+      description: `${pkg.description}`,
+      version: pkg.version,
     },
     ui: {
       scalar: {

@@ -5,6 +5,7 @@ import process, { env } from 'node:process'
 import { createError, type H3Event, sendStream } from 'h3'
 import { handleBypassCache } from '~/utils/cache'
 import { DURATION } from '~/utils/datetime'
+import pkg from '~~/package.json' with { type: 'json' }
 
 const ALLOWED_DOCS = ['html', 'css', 'json', 'js', 'pdf', 'txt']
 const ALLOWED_IMAGES = ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico']
@@ -159,7 +160,7 @@ export const renderSPAClient = defineCachedFunction(
     setResponseHeader(event, 'Content-Type', 'text/html')
 
     // Get values from context
-    const { appConfig, csrfToken } = event.context
+    const { csrfToken } = event.context
 
     if (process.dev) {
       const config = useRuntimeConfig()
@@ -183,7 +184,7 @@ export const renderSPAClient = defineCachedFunction(
 
       const html = renderSPATemplate({
         csrfToken: csrfToken,
-        title: appConfig.meta.title,
+        title: pkg.config.productName,
         children: body,
         cssLinks: [],
       })
@@ -213,7 +214,7 @@ export const renderSPAClient = defineCachedFunction(
 
     const html = renderSPATemplate({
       csrfToken: csrfToken,
-      title: appConfig.meta.title,
+      title: pkg.config.productName,
       children: body,
       cssLinks: cssLinks,
     })
