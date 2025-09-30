@@ -27,7 +27,7 @@ services:
     restart: unless-stopped
     ports: ['54321:8081']
     environment:
-      PGWEB_DATABASE_URL: 'postgresql://pgadmin:securedb@pgsql:5432/squelify?sslmode=disable'
+      PGWEB_SQUELIFY_DATABASE_URL: 'postgresql://pgadmin:securedb@pgsql:5432/squelify?sslmode=disable'
     healthcheck:
       test: ["CMD", "nc", "-vz", "127.0.0.1", "8081"]
       interval: 5s
@@ -79,8 +79,8 @@ services:
     volumes: ['./temp/s3data:/srv:rw']
     command: --port 0.0.0.0:7070 posix /srv
     environment:
-      ROOT_ACCESS_KEY: ${S3_ACCESS_KEY_ID:-myS3AccessKey}
-      ROOT_SECRET_KEY: ${S3_SECRET_ACCESS_KEY:-myS3SecretKey}
+      ROOT_ACCESS_KEY: ${SQUELIFY_S3_ACCESS_KEY_ID:-myS3AccessKey}
+      ROOT_SECRET_KEY: ${SQUELIFY_S3_SECRET_ACCESS_KEY:-myS3SecretKey}
 
   localcdn:
     image: joseluisq/static-web-server:2

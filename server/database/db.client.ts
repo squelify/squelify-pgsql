@@ -32,17 +32,19 @@ const PGliteDialect = new KyselyPGliteDialect(
 )
 
 const PostgresDialect = new PostgresJSDialect({
-  postgres: postgres(String(env.DATABASE_URL)),
+  postgres: postgres(String(env.SQUELIFY_DATABASE_URL)),
 })
 
 const getDialect = () => {
-  switch (String(env.DATABASE_ENGINE).toLowerCase()) {
+  switch (String(env.SQUELIFY_DATABASE_DATABASE_ENGINE).toLowerCase()) {
     case 'postgres':
       return PostgresDialect
     case 'pglite':
       return PGliteDialect
     default:
-      logger.warn(`Unknown DATABASE_ENGINE "${env.DATABASE_ENGINE}", falling back to pglite.`)
+      logger.warn(
+        `Unknown SQUELIFY_DATABASE_DATABASE_ENGINE "${env.SQUELIFY_DATABASE_DATABASE_ENGINE}", falling back to pglite.`
+      )
       return PGliteDialect
   }
 }
@@ -56,12 +58,12 @@ export const kyselyConfig: KyselyConfig = {
 export default new Kysely<Database>({
   ...kyselyConfig,
   log: (event: QueryLogEvent | ErrorLogEvent): void => {
-    if (event.level === 'query' && String(env.APP_LOG_LEVEL).toLowerCase() === 'trace') {
+    if (event.level === 'query' && String(env.SQUELIFY_APP_LOG_LEVEL).toLowerCase() === 'trace') {
       logger.withTag('kysely').debug(event.query.sql, event.query.parameters)
       return
     }
 
-    if (event.level === 'error' && String(env.APP_LOG_LEVEL).toLowerCase() === 'debug') {
+    if (event.level === 'error' && String(env.SQUELIFY_APP_LOG_LEVEL).toLowerCase() === 'debug') {
       logger.withTag('kysely').error(event.error)
     }
   },

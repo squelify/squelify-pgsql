@@ -124,7 +124,7 @@
         "git-cliff": "^2.10.1",
         "h3": "^1.15.4",
         "knip": "^5.64.1",
-        "lefthook": "^1.13.5",
+        "lefthook": "^1.13.6",
         "nitropack": "^2.12.6",
         "npm-check-updates": "^19.0.0",
         "postcss": "^8.5.6",

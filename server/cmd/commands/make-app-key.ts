@@ -30,7 +30,7 @@ export default defineCommand({
         return
       }
 
-      consola.log(`JWT_SECRET_KEY=${keyStr}`)
+      consola.log(`SQUELIFY_JWT_SECRET_KEY=${keyStr}`)
     } catch (error) {
       consola.error(error instanceof Error ? error.message : 'Unknown error occurred')
       process.exit(1)

@@ -14,7 +14,7 @@ const ALLOWED_MEDIA = ['mp4', 'mp3', 'wav', 'ogg', 'webm']
 const ALLOWED_EXTENSIONS = [...ALLOWED_DOCS, ...ALLOWED_IMAGES, ...ALLOWED_ASSETS, ...ALLOWED_MEDIA]
 
 // Default index files (comma-separated in env)
-const DEFAULT_INDEX_FILES = env.DEFAULT_INDEX_FILES?.split(',')
+const SQUELIFY_DEFAULT_INDEX_FILES = env.SQUELIFY_DEFAULT_INDEX_FILES?.split(',')
   .map((f) => f.trim())
   .filter(Boolean) || ['index.html']
 
@@ -42,7 +42,7 @@ export const handleStaticWeb = defineCachedFunction(
     // For root path, check if index.html or default.html exists
     if (matchedUrl === '/') {
       let foundIndex = null
-      for (const file of DEFAULT_INDEX_FILES) {
+      for (const file of SQUELIFY_DEFAULT_INDEX_FILES) {
         const indexPath = join(staticDir, file)
         if (await isFileAccessible(indexPath)) {
           foundIndex = indexPath
@@ -71,7 +71,7 @@ export const handleStaticWeb = defineCachedFunction(
       if (matchedUrl.endsWith('/')) {
         // Try default index files in the directory
         let foundIndex = null
-        for (const file of DEFAULT_INDEX_FILES) {
+        for (const file of SQUELIFY_DEFAULT_INDEX_FILES) {
           const indexPath = join(filePath, file)
           if (await isFileAccessible(indexPath)) {
             foundIndex = indexPath
@@ -95,7 +95,7 @@ export const handleStaticWeb = defineCachedFunction(
     if (fileStat.isDirectory()) {
       // Try default index files in the directory
       let foundIndex = null
-      for (const file of DEFAULT_INDEX_FILES) {
+      for (const file of SQUELIFY_DEFAULT_INDEX_FILES) {
         const indexPath = join(filePath, file)
         if (await isFileAccessible(indexPath)) {
           foundIndex = indexPath

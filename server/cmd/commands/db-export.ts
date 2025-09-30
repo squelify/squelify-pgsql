@@ -79,7 +79,7 @@ export default defineCommand({
     try {
       consola.start('Exporting Squelify database:', exportPath)
 
-      const sql = postgres(String(env.DATABASE_URL))
+      const sql = postgres(String(env.SQUELIFY_DATABASE_URL))
       const dbVersion = await getDatabaseVersion(sql)
 
       // TODO: add table, indexes, constraints, etc.

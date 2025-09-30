@@ -48,8 +48,8 @@ export const sysInfoHandler = sysinfo.handler(async ({ context }) => {
     timestamp: new Date().toISOString(),
     uptime,
     environment: {
-      mode: env.APP_MODE ?? 'production',
-      logLevel: env.APP_LOG_LEVEL ?? 'info',
+      mode: env.SQUELIFY_APP_MODE ?? 'production',
+      logLevel: env.SQUELIFY_APP_LOG_LEVEL ?? 'info',
       nodeVersion: process.version,
     },
     memory: {

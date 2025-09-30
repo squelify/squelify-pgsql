@@ -69,8 +69,8 @@ export default eventHandler(async (event): Promise<HealthCheckResponse> => {
     timestamp: new Date().toISOString(),
     uptime,
     environment: {
-      mode: env.APP_MODE ?? 'production',
-      logLevel: env.APP_LOG_LEVEL ?? 'info',
+      mode: env.SQUELIFY_APP_MODE ?? 'production',
+      logLevel: env.SQUELIFY_APP_LOG_LEVEL ?? 'info',
     },
   }
 

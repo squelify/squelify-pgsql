@@ -8,8 +8,8 @@ import { router } from '~/orpc/router'
 const createLink = () => {
   const token = 'your-auth-token' // Ganti dengan mekanisme token yang benar
   return new RPCLink({
-    url: import.meta.env.APP_BASE_URL
-      ? `${import.meta.env.APP_BASE_URL}/orpc`
+    url: import.meta.env.SQUELIFY_APP_BASE_URL
+      ? `${import.meta.env.SQUELIFY_APP_BASE_URL}/orpc`
       : 'http://localhost:3000/orpc',
     headers: { Authorization: `Bearer ${token}` },
     plugins: [

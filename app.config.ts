@@ -4,10 +4,10 @@ import pkg from './package.json' with { type: 'json' }
 const appConfig = {
   identifier: pkg.name,
   version: pkg.version,
-  baseURL: env.APP_BASE_URL || 'http://localhost:3000',
+  baseURL: env.SQUELIFY_APP_BASE_URL || 'http://localhost:3000',
   database: {
     client: 'postgres',
-    url: env.DATABASE_URL,
+    url: env.SQUELIFY_DATABASE_URL,
   },
   meta: {
     title: 'Squelify',

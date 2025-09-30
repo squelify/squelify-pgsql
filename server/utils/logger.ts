@@ -74,7 +74,7 @@ const formatLogType = (type: LogType): string => {
 }
 
 const getLogLevelNumber = (logType: LogType): LogLevel => LogLevels[logType] as LogLevel
-const LOG_LEVEL = getLogLevelNumber((env.APP_LOG_LEVEL as LogType) || 'info')
+const LOG_LEVEL = getLogLevelNumber((env.SQUELIFY_APP_LOG_LEVEL as LogType) || 'info')
 
 export default createConsola({
   formatOptions: { compact: true, colors: true, columns: 0, errorLevel: 4 },
