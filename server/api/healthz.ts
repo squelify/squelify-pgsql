@@ -70,7 +70,7 @@ export default eventHandler(async (event): Promise<HealthCheckResponse> => {
     uptime,
     environment: {
       mode: env.SQUELIFY_APP_MODE ?? 'production',
-      logLevel: env.SQUELIFY_APP_LOG_LEVEL ?? 'info',
+      logLevel: env.SQUELIFY_LOG_LEVEL ?? 'info',
     },
   }
 

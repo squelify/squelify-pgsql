@@ -15,7 +15,7 @@ const isRunningFromCLI = (): boolean => process.argv.length > 2
  * @returns Formatted timestamp string.
  */
 function formatTimestamp(date?: Date, localtime = env.TZ !== 'UTC'): string {
-  if (env.DISABLE_LOG_TIMESTAMP) return ''
+  if (!env.SQUELIFY_LOG_TIMESTAMP || String(env.SQUELIFY_LOG_TIMESTAMP) === 'false') return ''
 
   const now = date ?? new Date()
   const useUTC = !localtime
@@ -74,7 +74,7 @@ const formatLogType = (type: LogType): string => {
 }
 
 const getLogLevelNumber = (logType: LogType): LogLevel => LogLevels[logType] as LogLevel
-const LOG_LEVEL = getLogLevelNumber((env.SQUELIFY_APP_LOG_LEVEL as LogType) || 'info')
+const LOG_LEVEL = getLogLevelNumber((env.SQUELIFY_LOG_LEVEL as LogType) || 'info')
 
 export default createConsola({
   formatOptions: { compact: true, colors: true, columns: 0, errorLevel: 4 },

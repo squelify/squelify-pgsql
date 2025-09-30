@@ -58,12 +58,12 @@ export const kyselyConfig: KyselyConfig = {
 export default new Kysely<Database>({
   ...kyselyConfig,
   log: (event: QueryLogEvent | ErrorLogEvent): void => {
-    if (event.level === 'query' && String(env.SQUELIFY_APP_LOG_LEVEL).toLowerCase() === 'trace') {
+    if (event.level === 'query' && String(env.SQUELIFY_LOG_LEVEL).toLowerCase() === 'trace') {
       logger.withTag('kysely').debug(event.query.sql, event.query.parameters)
       return
     }
 
-    if (event.level === 'error' && String(env.SQUELIFY_APP_LOG_LEVEL).toLowerCase() === 'debug') {
+    if (event.level === 'error' && String(env.SQUELIFY_LOG_LEVEL).toLowerCase() === 'debug') {
       logger.withTag('kysely').error(event.error)
     }
   },

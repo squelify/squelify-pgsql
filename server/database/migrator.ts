@@ -17,8 +17,7 @@ type MigrationAction = 'migrate' | 'rollback' | 'reset'
 export const migrateDBClient = new Kysely<Database>({
   ...kyselyConfig,
   // Only log errors and queries if the log level is `trace`
-  log:
-    String(env.SQUELIFY_APP_LOG_LEVEL).toLowerCase() === 'trace' ? ['error', 'query'] : ['error'],
+  log: String(env.SQUELIFY_LOG_LEVEL).toLowerCase() === 'trace' ? ['error', 'query'] : ['error'],
 })
 
 export const migrateClient = new Migrator({
