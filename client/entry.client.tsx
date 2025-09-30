@@ -13,11 +13,10 @@ import ThemeProvider from '#/providers/theme-provider'
 import AppRouter from '#/routes'
 
 if (import.meta.env.PROD) {
+  const msg1 = `Does this page need fixes or improvements? ${String.fromCodePoint(0x1f91d)} We like your curiosity!`
+  const msg2 = `Help us improve Squelify by joining the team: https://www.squelify.com`
   consola.log(
-    `%cWelcome to Squelify!%c\n
-Does this page need fixes or improvements? ${String.fromCodePoint(0x1f91d)} We like your curiosity!
-Help us improve Squelify by joining the team: https://www.squelify.com
-`,
+    `%cWelcome to Squelify!%c\n\n${msg1}${msg2}`,
     'padding-top: 0.5em; font-size: 2em;',
     'padding-bottom: 0.5em;'
   )

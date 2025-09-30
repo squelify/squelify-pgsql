@@ -19,7 +19,7 @@
     "scripts": {
         "build": "nitro build",
         "dev": "PORT=3080 nitro dev",
-        "start": "node --import dotenv/config build/server/index.mjs",
+        "start": "PORT=3080 node --import dotenv/config build/server/index.mjs",
         "docker:build": "docker build -f Dockerfile . --build-arg DISTROLESS_TAG=debug-nonroot -t $npm_package_config_image:$npm_package_version-dev",
         "docker:push": "docker push $npm_package_config_image:latest-dev && docker push $npm_package_config_image:$npm_package_version-dev",
         "docker:run": "pnpm --silent run dockerx --name $npm_package_name $npm_package_config_image:$npm_package_version-dev",
