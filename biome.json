@@ -8,7 +8,15 @@
     },
     "files": {
         "ignoreUnknown": true,
-        "includes": ["**", "!.github", "!.nitro", "!public", "!storage/*", "!temp/*"]
+        "includes": [
+            "**",
+            "!.github",
+            "!.nitro",
+            "!public",
+            "!storage/*",
+            "!storybook-static/*",
+            "!temp/*"
+        ]
     },
     "formatter": {
         "enabled": true,
