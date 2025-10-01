@@ -9,10 +9,8 @@
  * optionally be provided as a `string` in inserts and can never be updated.
  */
 
-import type { CreateIndexBuilder, CreateTableBuilder, DropIndexBuilder } from 'kysely'
-import { type Kysely, type RawBuilder, sql } from 'kysely'
+import { type CreateTableBuilder, type RawBuilder, sql } from 'kysely'
 import { serialize } from 'superjson'
-import type { Database } from './db.schema'
 
 // Postgres-specific function, returns the current timestamp in ISO8601 format.
 // For zod compatibility, we need to use the ISO8601 format.

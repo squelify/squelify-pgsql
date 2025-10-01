@@ -43,7 +43,7 @@ const getDialect = () => {
       return PGliteDialect
     default:
       logger.warn(
-        `Unknown SQUELIFY_DATABASE_DATABASE_ENGINE "${env.SQUELIFY_DATABASE_DATABASE_ENGINE}", falling back to pglite.`
+        `Unknown database engine "${env.SQUELIFY_DATABASE_DATABASE_ENGINE}", falling back to pglite.`
       )
       return PGliteDialect
   }
