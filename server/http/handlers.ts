@@ -2,10 +2,12 @@ import { createReadStream, existsSync, readdirSync } from 'node:fs'
 import { stat } from 'node:fs/promises'
 import { extname, join, resolve } from 'node:path'
 import process, { env } from 'node:process'
-import { createError, type H3Event, sendStream } from 'h3'
+import type { EventHandler, H3Event } from 'h3'
+import { createError, sendStream } from 'h3'
 import { handleBypassCache } from '~/utils/cache'
 import { DURATION } from '~/utils/datetime'
 import pkg from '~~/package.json' with { type: 'json' }
+import { guardApiKey } from './guards'
 
 const ALLOWED_DOCS = ['html', 'css', 'json', 'js', 'pdf', 'txt']
 const ALLOWED_IMAGES = ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico']
@@ -228,3 +230,13 @@ export const renderSPAClient = defineCachedFunction(
     swr: true,
   }
 )
+
+// Wrapper for defining protected event handlers
+export function defineProtectedEventHandler<T>(
+  handler: (event: H3Event) => Promise<T> | T
+): EventHandler {
+  return defineEventHandler(async (event) => {
+    await guardApiKey(event)
+    return handler(event)
+  })
+}

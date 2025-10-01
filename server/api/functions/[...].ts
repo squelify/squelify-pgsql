@@ -2,20 +2,20 @@ import { existsSync } from 'node:fs'
 import { parse, resolve } from 'node:path'
 import { globby } from 'globby'
 import * as h3 from 'h3'
-import { createError, createRouter, defineEventHandler, eventHandler } from 'h3'
 import { sql } from 'kysely'
-import { env, isDevelopment } from 'std-env'
+import { isDevelopment } from 'std-env'
 import dbClient from '~/database/db.client'
 import { createRateLimit, getRateLimitInfo } from '~/database/repository/rate_limit.repo'
 import { RATE_LIMIT_CONFIG } from '~/database/schemas/rate_limit'
-import { createErrorResponse, getClientInfo } from '~/utils/http'
+import { guardApiKey } from '~/http/guards'
+import { getClientInfo } from '~/utils/http'
 
 type HttpMethod = (typeof HTTP_METHODS)[number]
 
 const FUNCTION_TIMEOUT = 30 * 1000 // 30 seconds
 const HTTP_METHODS = ['get', 'post', 'put', 'patch', 'delete'] as const
 const functionsDir = resolve(process.cwd(), 'storage/functions')
-const router = createRouter({ preemptive: true })
+const router = h3.createRouter({ preemptive: true })
 
 let routesReady = false
 
@@ -114,7 +114,7 @@ async function checkRateLimit(event: any): Promise<void> {
     const ipLimitInfo = await getRateLimitInfo(db, clientIP, 'ip')
     if (ipLimitInfo.isLimited && ipLimitInfo.resetAt) {
       const waitMinutes = Math.ceil((ipLimitInfo.resetAt - Math.floor(Date.now() / 1000)) / 60)
-      throw createError({
+      throw h3.createError({
         statusCode: 429,
         statusMessage: `Too many requests from this IP. Please try again in ${waitMinutes} minute(s).`,
         data: {
@@ -131,7 +131,7 @@ async function checkRateLimit(event: any): Promise<void> {
       const userLimitInfo = await getRateLimitInfo(db, userId, 'user')
       if (userLimitInfo.isLimited && userLimitInfo.resetAt) {
         const waitMinutes = Math.ceil((userLimitInfo.resetAt - Math.floor(Date.now() / 1000)) / 60)
-        throw createError({
+        throw h3.createError({
           statusCode: 429,
           statusMessage: `Too many requests from this user. Please try again in ${waitMinutes} minute(s).`,
           data: {
@@ -157,7 +157,7 @@ async function checkRateLimit(event: any): Promise<void> {
     const globalLimitInfo = await getRateLimitInfo(db, 'global', 'global')
     if (globalLimitInfo.isLimited && globalLimitInfo.resetAt) {
       const waitMinutes = Math.ceil((globalLimitInfo.resetAt - Math.floor(Date.now() / 1000)) / 60)
-      throw createError({
+      throw h3.createError({
         statusCode: 429,
         statusMessage: `System is experiencing high load. Please try again in ${waitMinutes} minute(s).`,
         data: {
@@ -215,7 +215,7 @@ async function registerRoutes() {
 
     router.add(
       routePath,
-      eventHandler(async (event) => {
+      h3.eventHandler(async (event) => {
         try {
           // Check rate limits first
           await checkRateLimit(event)
@@ -224,7 +224,7 @@ async function registerRoutes() {
 
           // Security: Ensure file is within functions directory
           if (!filePath.startsWith(functionsDir)) {
-            throw createError({
+            throw h3.createError({
               statusCode: 403,
               statusMessage: 'Access denied',
             })
@@ -235,7 +235,7 @@ async function registerRoutes() {
           const handler = userFunction.default || userFunction
 
           if (typeof handler !== 'function') {
-            throw createError({
+            throw h3.createError({
               statusCode: 500,
               statusMessage: `Function ${file} does not export a valid handler`,
             })
@@ -260,14 +260,14 @@ async function registerRoutes() {
           }
 
           if (error instanceof Error) {
-            throw createError({
+            throw h3.createError({
               statusCode: 500,
               statusMessage: `Function ${file} execution failed`,
               data: isDevelopment ? error.message : undefined,
             })
           }
 
-          throw createError({
+          throw h3.createError({
             statusCode: 500,
             statusMessage: `Function ${file} execution failed`,
             data: isDevelopment ? String(error) : undefined,
@@ -284,25 +284,13 @@ async function registerRoutes() {
 const routesPromise = registerRoutes()
 
 export default defineEventHandler(async (event) => {
-  // Protect the endpoint with API key (header or query parameter)
-  const apiKeyHeader = event.headers.get('X-API-Key')
-  const apiKeyQuery = h3.getQuery(event).apiKey as string | undefined
-  const apiKey = apiKeyHeader || apiKeyQuery
-
-  if (!apiKey) {
-    return createErrorResponse(event, 'Missing API key on request header or query parameter', 401)
-  }
-
-  // TODO: Validate the apiKey against your stored keys, for now we just compare with SQUELIFY_PUBLISHABLE_KEY
-  if (apiKey !== env.SQUELIFY_PUBLISHABLE_KEY) {
-    return createErrorResponse(event, 'Invalid API key, you must provide a valid key', 401)
-  }
+  await guardApiKey(event) // Protect the endpoint with API key
 
   if (!routesReady) await routesPromise
 
   if (!existsSync(functionsDir)) {
     logger.info('No user functions folder found')
-    throw createError({
+    throw h3.createError({
       statusCode: 404,
       statusMessage: 'Functions directory not found',
     })
@@ -315,7 +303,7 @@ export default defineEventHandler(async (event) => {
       timeout = setTimeout(() => {
         logger.error(`Function timeout after ${FUNCTION_TIMEOUT}ms for ${event.node.req.url}`)
         reject(
-          createError({
+          h3.createError({
             statusCode: 408,
             statusMessage: 'Function execution timeout',
           })
@@ -339,14 +327,14 @@ export default defineEventHandler(async (event) => {
     }
 
     if (error instanceof Error) {
-      throw createError({
+      throw h3.createError({
         statusCode: 500,
         statusMessage: 'Internal function error',
         data: isDevelopment ? error.message : undefined,
       })
     }
 
-    throw createError({
+    throw h3.createError({
       statusCode: 500,
       statusMessage: 'Internal function error',
       data: isDevelopment ? String(error) : undefined,
