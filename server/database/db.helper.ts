@@ -17,6 +17,10 @@ import { serialize } from 'superjson'
 // Use this: z.string().datetime({ offset: true })
 export const ISO_TIMESTAMP = sql`timezone('utc'::text, now())::timestamptz`
 
+// Use UUIDv7 as the default UUID generation strategy.
+// NOTICE: This requires PostgreSQL version 18 or higher.
+export const DEFAULT_UUID_v7 = sql`uuidv7()`
+
 export const addColumnTimestamps = <T extends string, C extends string = never>(
   builder: CreateTableBuilder<T, C>
 ) => {

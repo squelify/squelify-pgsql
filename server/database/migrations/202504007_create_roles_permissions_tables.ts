@@ -14,7 +14,9 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
   // roles
   await db.schema
     .createTable('roles')
-    .addColumn('id', 'uuid', (col) => col.primaryKey().notNull().defaultTo(sql`uuidv7()`))
+    .addColumn('id', 'uuid', (col) =>
+      col.primaryKey().notNull().defaultTo(dbHelper.DEFAULT_UUID_v7)
+    )
     .addColumn('name', 'text', (col) => col.notNull().unique())
     .addColumn('slug', 'text', (col) => col.notNull().unique())
     .addColumn('description', 'text', (col) => col.defaultTo(null))
@@ -62,7 +64,9 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
   // permissions
   await db.schema
     .createTable('permissions')
-    .addColumn('id', 'uuid', (col) => col.primaryKey().notNull().defaultTo(sql`uuidv7()`))
+    .addColumn('id', 'uuid', (col) =>
+      col.primaryKey().notNull().defaultTo(dbHelper.DEFAULT_UUID_v7)
+    )
     .addColumn('name', 'text', (col) => col.notNull().unique())
     .addColumn('slug', 'text', (col) => col.notNull().unique())
     .addColumn('description', 'text', (col) => col.defaultTo(null))
@@ -114,7 +118,9 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
   // role_permissions
   await db.schema
     .createTable('role_permissions')
-    .addColumn('id', 'uuid', (col) => col.primaryKey().notNull().defaultTo(sql`uuidv7()`))
+    .addColumn('id', 'uuid', (col) =>
+      col.primaryKey().notNull().defaultTo(dbHelper.DEFAULT_UUID_v7)
+    )
     .addColumn('role_id', 'uuid', (col) => col.notNull().references('roles.id').onDelete('cascade'))
     .addColumn('permission_id', 'uuid', (col) =>
       col.notNull().references('permissions.id').onDelete('cascade')
@@ -143,7 +149,9 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
   // user_roles
   await db.schema
     .createTable('user_roles')
-    .addColumn('id', 'uuid', (col) => col.primaryKey().notNull().defaultTo(sql`uuidv7()`))
+    .addColumn('id', 'uuid', (col) =>
+      col.primaryKey().notNull().defaultTo(dbHelper.DEFAULT_UUID_v7)
+    )
     .addColumn('user_id', 'uuid', (col) => col.notNull().references('users.id').onDelete('cascade'))
     .addColumn('role_id', 'uuid', (col) => col.notNull().references('roles.id').onDelete('cascade'))
     .addColumn('granted_by', 'uuid', (col) =>
@@ -198,7 +206,9 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
   // user_permissions
   await db.schema
     .createTable('user_permissions')
-    .addColumn('id', 'uuid', (col) => col.primaryKey().notNull().defaultTo(sql`uuidv7()`))
+    .addColumn('id', 'uuid', (col) =>
+      col.primaryKey().notNull().defaultTo(dbHelper.DEFAULT_UUID_v7)
+    )
     .addColumn('user_id', 'uuid', (col) => col.notNull().references('users.id').onDelete('cascade'))
     .addColumn('permission_id', 'uuid', (col) =>
       col.notNull().references('permissions.id').onDelete('cascade')

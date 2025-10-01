@@ -11,6 +11,7 @@
 
 import { resolve } from 'node:path'
 import { PGlite } from '@electric-sql/pglite'
+import { btree_gin } from '@electric-sql/pglite/contrib/btree_gin'
 import { pg_trgm } from '@electric-sql/pglite/contrib/pg_trgm'
 import { uuid_ossp } from '@electric-sql/pglite/contrib/uuid_ossp'
 import { PGliteDialect as KyselyPGliteDialect } from '@squelify/kysely-pglite'
@@ -27,7 +28,7 @@ import logger from '~/utils/logger'
 // Read more about the options here: https://pglite.dev/docs/api
 const PGliteDialect = new KyselyPGliteDialect(
   new PGlite(resolve('storage/pgdata'), {
-    extensions: { pg_trgm, uuid_ossp },
+    extensions: { uuid_ossp, pg_trgm, btree_gin },
   })
 )
 

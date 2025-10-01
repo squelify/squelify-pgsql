@@ -15,7 +15,9 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
   // Create table
   await db.schema
     .createTable(TABLE_NAME)
-    .addColumn('id', 'uuid', (col) => col.primaryKey().notNull().defaultTo(sql`uuidv7()`))
+    .addColumn('id', 'uuid', (col) =>
+      col.primaryKey().notNull().defaultTo(dbHelper.DEFAULT_UUID_v7)
+    )
     .addColumn('profile_name', 'text', (col) => col.notNull())
     .addColumn('user_id', 'uuid', (col) => col.notNull().references('users.id').onDelete('cascade'))
     .addColumn('webhook_url', 'text', (col) => col.notNull())

@@ -136,7 +136,9 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
   // Create table
   await db.schema
     .createTable('${tableName}')
-    .addColumn('id', 'text', (col) => col.primaryKey())
+    .addColumn('id', 'uuid', (col) =>
+      col.primaryKey().notNull().defaultTo(dbHelper.DEFAULT_UUID_v7)
+    )
     // ----- Add columns here -----
     .$call(dbHelper.addColumnTimestamps) // [created_at, updated_at]
     .modifyEnd(sql\`USING heap\`)

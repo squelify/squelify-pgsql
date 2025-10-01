@@ -14,7 +14,6 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
   await sql`SET timezone = 'UTC'`.execute(db) /* Set to UTC timezone */
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`.execute(db)
   await sql`CREATE EXTENSION IF NOT EXISTS "pg_trgm";`.execute(db)
-  await sql`CREATE EXTENSION IF NOT EXISTS "pgcrypto";`.execute(db)
   await sql`CREATE EXTENSION IF NOT EXISTS "btree_gin";`.execute(db)
 
   if (ADDITIONAL_SCHEMAS.length > 0) {
@@ -47,6 +46,5 @@ export const down = async (db: Kysely<Database>): Promise<void> => {
   // Drop extensions
   await sql`DROP EXTENSION IF EXISTS "uuid-ossp";`.execute(db)
   await sql`DROP EXTENSION IF EXISTS "pg_trgm";`.execute(db)
-  await sql`DROP EXTENSION IF EXISTS "pgcrypto";`.execute(db)
   await sql`DROP EXTENSION IF EXISTS "btree_gin";`.execute(db)
 }
