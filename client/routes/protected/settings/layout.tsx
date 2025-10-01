@@ -5,6 +5,7 @@ import { clx } from 'twistail-utils'
 import { Button } from '#/components/button'
 import Link from '#/components/link'
 import pkg from '~~/package.json' with { type: 'json' }
+import { AboutDialog } from './about'
 
 export default function SettingsLayout() {
   const location = useLocation()
@@ -26,8 +27,8 @@ export default function SettingsLayout() {
     {
       title: 'Sync & Backup',
       items: [
-        { path: '/settings/backup', label: 'Backup Collections', icon: Lucide.Archive },
-        { path: '/settings/restore', label: 'Restore Collections', icon: Lucide.ArchiveRestore },
+        { path: '/settings/backup', label: 'Backup Database', icon: Lucide.Archive },
+        { path: '/settings/restore', label: 'Restore Database', icon: Lucide.ArchiveRestore },
       ],
     },
     {
@@ -90,8 +91,8 @@ export default function SettingsLayout() {
                       className={clx(
                         'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
                         location.pathname === tab.path
-                          ? 'bg-sidebar-primary/50 font-medium text-sidebar-foreground'
-                          : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'
+                          ? 'bg-sidebar-primary/80 font-medium text-sidebar-foreground'
+                          : 'text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground'
                       )}
                     >
                       <tab.icon className="size-4" />
@@ -103,16 +104,13 @@ export default function SettingsLayout() {
             ))}
           </nav>
 
-          {/* Version Information */}
+          {/* Version Information as Dialog */}
           <div className="mt-auto pt-4 text-sidebar-foreground/50 text-xs">
             <div className="flex items-center justify-between pr-2 pl-1">
-              <div className="flex items-center gap-1">
-                <Lucide.Info className="size-3" />
-                <span>v{pkg.version}</span>
-              </div>
+              <AboutDialog />
               <Link
                 href={pkg.homepage}
-                className="flex items-center gap-1 transition-colors hover:text-sidebar-foreground"
+                className="flex items-center gap-1 text-muted-foreground transition-colors hover:text-sidebar-foreground"
                 newTab
               >
                 <Lucide.Github className="size-3" />

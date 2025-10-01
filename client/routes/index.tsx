@@ -33,6 +33,7 @@ const Settings = {
 const Database = {
   SchemaDiagram: React.lazy(() => import('#/routes/protected/schema-diagram/page')),
   SqlConsole: React.lazy(() => import('#/routes/protected/sql-console/page')),
+  SqlTemplates: React.lazy(() => import('#/routes/protected/sql-console/templates/page')),
   TableEditor: React.lazy(() => import('#/routes/protected/table-editor/page')),
 }
 
@@ -70,7 +71,13 @@ const routes: RouteObject[] = [
     children: [
       { path: '/', element: <Dashboard /> },
       { path: '/schema-diagram', element: <Database.SchemaDiagram /> },
-      { path: '/sql-console', element: <Database.SqlConsole /> },
+      {
+        path: '/sql-console',
+        children: [
+          { path: '', element: <Database.SqlConsole /> },
+          { path: 'templates', element: <Database.SqlTemplates /> },
+        ],
+      },
       { path: '/table-editor', element: <Database.TableEditor /> },
       {
         path: 'collections',

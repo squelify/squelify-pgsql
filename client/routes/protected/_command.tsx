@@ -301,24 +301,24 @@ export default function AppCommand({ open, setOpen }: AppCommandProps) {
         {
           id: 'backup-collections',
           icon: Lucide.Archive,
-          label: 'Backup Collections',
-          keywords: ['backup', 'export', 'save', 'collections', 'data'],
+          label: 'Backup Database',
+          keywords: ['backup', 'export', 'save', 'collections', 'data', 'database'],
           onSelect: () => {
             navigate('/settings/backup')
             setOpen(false)
           },
-          shortcut: 'b c', // backup collections
+          shortcut: 'b c', // backup database
         },
         {
           id: 'restore-collections',
           icon: Lucide.ArchiveRestore,
-          label: 'Restore Collections',
-          keywords: ['restore', 'import', 'load', 'collections', 'data'],
+          label: 'Restore Database',
+          keywords: ['restore', 'import', 'load', 'collections', 'data', 'database'],
           onSelect: () => {
             navigate('/settings/restore')
             setOpen(false)
           },
-          shortcut: 'r c', // restore collections
+          shortcut: 'r c', // restore database
         },
       ],
       showSeparator: true,

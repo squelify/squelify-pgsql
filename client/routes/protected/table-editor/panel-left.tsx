@@ -105,17 +105,11 @@ export function LeftPanel({
                     <ListboxValue placeholder="Choose a schema" />
                   </ListboxTrigger>
                   <ListboxContent>
-                    <ListboxItem className="py-1.5" value="auth">
-                      auth
+                    <ListboxItem className="py-1.5" value="internal">
+                      internal
                     </ListboxItem>
                     <ListboxItem className="py-1.5" value="public">
                       public
-                    </ListboxItem>
-                    <ListboxItem className="py-1.5" value="realtime">
-                      realtime
-                    </ListboxItem>
-                    <ListboxItem className="py-1.5" value="storage">
-                      storage
                     </ListboxItem>
                   </ListboxContent>
                 </Listbox>

@@ -35,13 +35,13 @@ export default function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="size-8 rounded-full">
-          <Avatar className="size-7">
+        <Button variant="ghost" size="icon" className="size-8 rounded-xl">
+          <Avatar className="size-7 rounded-xl">
             <AvatarImage
               src={`https://avatar.vercel.sh/${user?.name || 'user'}`}
               alt={user?.name || 'User'}
             />
-            <AvatarFallback>{user?.name?.charAt(0) || 'U'}</AvatarFallback>
+            <AvatarFallback className="rounded-xl">{user?.name?.charAt(0) || 'U'}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

@@ -2,7 +2,7 @@ import { useSeoMeta } from '@unhead/react'
 import * as Lucide from 'lucide-react'
 
 export default function Page() {
-  useSeoMeta({ title: 'Restore Collections' })
+  useSeoMeta({ title: 'Restore Database' })
 
   return (
     <div className="flex h-auto w-full items-center justify-center py-46">

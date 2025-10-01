@@ -88,7 +88,12 @@ export default function AppSidebar({ openCommand }: AppSidebarProps) {
                 {group.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
-                      data-active={item.url === location.pathname}
+                      data-active={
+                        item.url === '/'
+                          ? location.pathname === '/'
+                          : location.pathname === item.url ||
+                            location.pathname.startsWith(`${item.url}/`)
+                      }
                       tooltip={item.title}
                       asChild
                     >
@@ -112,9 +117,10 @@ export default function AppSidebar({ openCommand }: AppSidebarProps) {
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
                   data-active={
-                    item.url === '/settings'
-                      ? location.pathname.startsWith('/settings')
-                      : item.url === location.pathname
+                    item.url === '/'
+                      ? location.pathname === '/'
+                      : location.pathname === item.url ||
+                        location.pathname.startsWith(`${item.url}/`)
                   }
                   tooltip={item.title}
                   asChild

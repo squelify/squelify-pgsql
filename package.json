@@ -11,7 +11,7 @@
     "bugs": {
         "url": "https://github.com/squelify/squelify/issues"
     },
-    "homepage": "https://github.com/squelify/squelify",
+    "homepage": "https://www.squelify.com",
     "config": {
         "productName": "Squelify",
         "image": "ghcr.io/squelify/squelify"
