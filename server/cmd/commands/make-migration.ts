@@ -127,8 +127,7 @@ export default defineCommand({
 // Down migrations are optional. you can safely delete this function.
 
 import { type Kysely, sql } from 'kysely'
-import { createTriggerUpdatedAt, dropTriggerUpdatedAt } from '~/database/db.helper'
-import { addColumnTimestamps, createColumnIndex, dropColumnIndex } from '~/database/db.helper'
+import * as dbHelper from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export const up = async (database: Kysely<Database>): Promise<void> => {
@@ -139,24 +138,24 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
     .createTable('${tableName}')
     .addColumn('id', 'text', (col) => col.primaryKey())
     // ----- Add columns here -----
-    .$call(addColumnTimestamps) // [created_at, updated_at]
+    .$call(dbHelper.addColumnTimestamps) // [created_at, updated_at]
     .modifyEnd(sql\`USING heap\`)
     .ifNotExists()
     .execute()
 
   // Create required indexes and auto-update trigger
-  await createTriggerUpdatedAt('${tableName}', '${args.schema}').execute(db)
-  await createColumnIndex(db, '${tableName}', 'id').execute()
-  await createColumnIndex(db, '${tableName}', 'created_at').execute()
-  await createColumnIndex(db, '${tableName}', 'updated_at').execute()
+  await dbHelper.createTriggerUpdatedAt('${tableName}', '${args.schema}').execute(db)
+  await dbHelper.createColumnIndex(db, '${tableName}', 'id').execute()
+  await dbHelper.createColumnIndex(db, '${tableName}', 'created_at').execute()
+  await dbHelper.createColumnIndex(db, '${tableName}', 'updated_at').execute()
 }
 
 export const down = async (database: Kysely<Database>): Promise<void> => {
   const db = database.withSchema('${args.schema}')
-  await dropColumnIndex(db, '${tableName}', 'id').execute()
-  await dropColumnIndex(db, '${tableName}', 'created_at').execute()
-  await dropColumnIndex(db, '${tableName}', 'updated_at').execute()
-  await dropTriggerUpdatedAt('${tableName}', '${args.schema}').execute(db)
+  await dbHelper.dropColumnIndex(db, '${tableName}', 'id').execute()
+  await dbHelper.dropColumnIndex(db, '${tableName}', 'created_at').execute()
+  await dbHelper.dropColumnIndex(db, '${tableName}', 'updated_at').execute()
+  await dbHelper.dropTriggerUpdatedAt('${tableName}', '${args.schema}').execute(db)
   await db.schema.dropTable('${tableName}').ifExists().execute()
 }`
 

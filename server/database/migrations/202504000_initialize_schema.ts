@@ -14,6 +14,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
   await sql`SET timezone = 'UTC'`.execute(db) /* Set to UTC timezone */
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`.execute(db)
   await sql`CREATE EXTENSION IF NOT EXISTS "pg_trgm";`.execute(db)
+  await sql`CREATE EXTENSION IF NOT EXISTS "pgcrypto";`.execute(db)
+  await sql`CREATE EXTENSION IF NOT EXISTS "btree_gin";`.execute(db)
 
   if (ADDITIONAL_SCHEMAS.length > 0) {
     // This is optional, recomended if you want to separate your schema.
@@ -26,12 +28,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
   // Create auto-update function, fill updated_at column automatically.
   // CURRENT_TIMESTAMP similar to timezone('utc'::text, now())::timestamptz
   await sql`CREATE OR REPLACE FUNCTION internal.fn_updated_at_value()
-    RETURNS TRIGGER AS $$
-    BEGIN
-      NEW.updated_at = CURRENT_TIMESTAMP;
-      RETURN NEW;
-    END;
-    $$ LANGUAGE plpgsql;
+    RETURNS TRIGGER AS $$ BEGIN NEW.updated_at = CURRENT_TIMESTAMP; RETURN NEW; END; $$
+    LANGUAGE plpgsql;
   `.execute(db)
 }
 
@@ -46,7 +44,9 @@ export const down = async (db: Kysely<Database>): Promise<void> => {
     }
   }
 
-  // Drop extension last
+  // Drop extensions
   await sql`DROP EXTENSION IF EXISTS "uuid-ossp";`.execute(db)
   await sql`DROP EXTENSION IF EXISTS "pg_trgm";`.execute(db)
+  await sql`DROP EXTENSION IF EXISTS "pgcrypto";`.execute(db)
+  await sql`DROP EXTENSION IF EXISTS "btree_gin";`.execute(db)
 }

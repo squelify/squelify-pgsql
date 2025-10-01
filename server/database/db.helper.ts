@@ -63,11 +63,25 @@ export const createColumnIndex = (
   table: string,
   column: string
 ): CreateIndexBuilder => {
+  return db.schema.createIndex(`idx_${table}_${column}`).on(table).column(column).ifNotExists()
+}
+
+/**
+ * Creates a basic index on multiple columns following project naming convention
+ * @param db Database instance
+ * @param table Table name
+ * @param columns Column names to index
+ * @returns CreateIndexBuilder instance
+ */
+export const createColumnsIndex = (
+  db: Kysely<Database>,
+  table: string,
+  columns: string[]
+): CreateIndexBuilder => {
   return db.schema
-    .createIndex(`idx_${table}_${column}`)
+    .createIndex(`idx_${table}_${columns.join('_')}`)
     .on(table)
-    .column(column)
-    .using('btree')
+    .columns(columns)
     .ifNotExists()
 }
 
@@ -76,5 +90,15 @@ export const dropColumnIndex = (
   table: string,
   column: string
 ): DropIndexBuilder => {
-  return db.schema.dropIndex(`idx_${table}_${column}`).ifExists()
+  const indexName = `idx_${table}_${column}`
+  return db.schema.dropIndex(indexName).ifExists()
+}
+
+export const dropColumnsIndex = (
+  db: Kysely<Database>,
+  table: string,
+  columns: string[]
+): DropIndexBuilder => {
+  const indexName = `idx_${table}_${columns.join('_')}`
+  return db.schema.dropIndex(indexName).ifExists()
 }
