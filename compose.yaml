@@ -4,36 +4,43 @@ name: squelify
 
 services:
   pgsql:
-    image: postgres:${PGSQL_VERSION:-18rc1-alpine}
+    image: postgres:${POSTGRES_VERSION:-18-alpine}
     hostname: postgres
     restart: unless-stopped
     ports: ['5432:5432']
-    volumes: ['pgsql_data:/var/lib/postgresql/data']
+    volumes: ['pgsql_data:/var/lib/postgresql/data:rw']
     environment:
       POSTGRES_DB: squelify
       POSTGRES_USER: pgadmin
       POSTGRES_PASSWORD: securedb
     command: ['postgres', '-c', 'wal_level=logical']
-    # set shared memory limit when using docker-compose
-    shm_size: 128mb
+    shm_size: 128m # set shared memory limit
+    mem_limit: 256m # set memory limit
+    cpus: 1.0 # set CPUs limit
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U pgadmin -d squelify']
-      interval: 30s
-      timeout: 20s
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 3s
+      timeout: 5s
       retries: 3
+    extra_hosts: ['host.docker.internal:host-gateway']
+    networks: ['squelify_network']
 
   pgweb:
     image: sosedoff/pgweb:latest
     restart: unless-stopped
-    ports: ['54321:8081']
+    ports: ['54321:54321']
     environment:
-      PGWEB_SQUELIFY_DATABASE_URL: 'postgresql://pgadmin:securedb@pgsql:5432/squelify?sslmode=disable'
+      PGWEB_DATABASE_URL: 'postgresql://pgadmin:securedb@pgsql:5432/squelify?sslmode=disable'
+    command: ["/usr/bin/pgweb", "--bind=0.0.0.0", "--listen=54321"]
     healthcheck:
-      test: ["CMD", "nc", "-vz", "127.0.0.1", "8081"]
-      interval: 5s
+      test: ["CMD", "nc", "-vz", "127.0.0.1", "54321"]
+      interval: 3s
+      timeout: 5s
+      retries: 3
+    extra_hosts: ['host.docker.internal:host-gateway']
+    networks: ['squelify_network']
     depends_on:
-      pgsql:
-        condition: service_started
+      pgsql: { condition: service_healthy }
 
   mailpit:
     image: axllent/mailpit:latest
@@ -43,26 +50,34 @@ services:
     # @ref: https://github.com/axllent/mailpit/wiki/Runtime-options
     environment:
       TZ: Asia/Jakarta
+    extra_hosts: ['host.docker.internal:host-gateway']
+    networks: ['squelify_network']
 
   # ALLOW_EMPTY_PASSWORD is recommended only for development.
   # For better performance, consider `host` mode instead `port` to avoid docker NAT.
   # Notice: Docker `host` mode is NOT currently supported in Swarm Mode.
-  # @ref: https://docs.docker.com/compose/compose-file/compose-file-v3/#network_mode
-  valkey:
-    image: valkey/valkey:8-alpine
-    hostname: valkey
+  redis:
+    image: redis:${REDIS_VERSION:-8-alpine}
+    hostname: redis
     restart: unless-stopped
     ports: ['6379:6379']
-    # network_mode: "host"
-    volumes: ['valkey_data:/data:rw']
+    volumes: ['redis_data:/data:rw']
     environment:
-      ALLOW_EMPTY_PASSWORD: yes
-      VALKEY_DISABLE_COMMANDS: FLUSHDB,FLUSHALL
+      ALLOW_EMPTY_PASSWORD: 'no'
+      REDIS_DISABLE_COMMANDS: FLUSHDB,FLUSHALL
+    command: '--appendonly yes --appendfsync everysec --requirepass securedb'
+    healthcheck:
+      test: ['CMD-SHELL', 'redis-cli --no-auth-warning -a securedb ping | grep PONG']
+      interval: 1s
+      timeout: 3s
+      retries: 5
     ulimits:
       memlock: -1
       nofile:
         soft: 262144
         hard: 262144
+    extra_hosts: ['host.docker.internal:host-gateway']
+    networks: ['squelify_network']
 
   # @ref: https://github.com/versity/versitygw/wiki/Quickstart
   # export AWS_ACCESS_KEY_ID=myS3AccessKey
@@ -81,6 +96,13 @@ services:
     environment:
       ROOT_ACCESS_KEY: ${SQUELIFY_S3_ACCESS_KEY_ID:-myS3AccessKey}
       ROOT_SECRET_KEY: ${SQUELIFY_S3_SECRET_ACCESS_KEY:-myS3SecretKey}
+    healthcheck:
+      test: ["CMD", "nc", "-vz", "127.0.0.1", "7070"]
+      interval: 3s
+      timeout: 5s
+      retries: 3
+    extra_hosts: ['host.docker.internal:host-gateway']
+    networks: ['squelify_network']
 
   localcdn:
     image: joseluisq/static-web-server:2
@@ -91,11 +113,18 @@ services:
       SERVER_DIRECTORY_LISTING: true
       SERVER_IGNORE_HIDDEN_FILES: true
     volumes: ['./temp/s3data/devbucket:/srv:ro']
+    extra_hosts: ['host.docker.internal:host-gateway']
+    networks: ['squelify_network']
 
 volumes:
   pgsql_data:
     driver: local
   mailpit_data:
     driver: local
-  valkey_data:
+  redis_data:
     driver: local
+
+networks:
+  squelify_network:
+    name: squelify_network
+    driver: bridge
