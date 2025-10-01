@@ -19,7 +19,7 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
       col.primaryKey().notNull().references('users.id').onDelete('cascade')
     )
     .addColumn('password_hash', 'bytea', (col) => col.notNull())
-    .$call(dbHelper.addColumnTimestamps) // created_at, updated_at
+    .$call(dbHelper.addColumnTimestamps)
     .addUniqueConstraint('user_passwords_one_per_user', ['user_id'])
     .modifyEnd(sql`USING heap`)
     .ifNotExists()
@@ -27,18 +27,29 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
 
   // Create required indexes and auto-update trigger
   await dbHelper.createTriggerUpdatedAt(TABLE_NAME, SCHEMA).execute(db)
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'created_at').using('btree').execute()
-  await dbHelper
-    .createColumnIndex(db, TABLE_NAME, 'updated_at')
+
+  await db.schema
+    .createIndex('idx_user_passwords_created_at')
+    .on(TABLE_NAME)
+    .column('created_at')
     .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_user_passwords_updated_at')
+    .on(TABLE_NAME)
+    .column('updated_at')
     .where(sql<boolean>`updated_at IS NOT NULL`)
+    .using('btree')
+    .ifNotExists()
     .execute()
 }
 
 export const down = async (database: Kysely<Database>): Promise<void> => {
   const db = database.withSchema(SCHEMA)
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'updated_at').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'created_at').execute()
+  await db.schema.dropIndex('idx_user_passwords_updated_at').ifExists().execute()
+  await db.schema.dropIndex('idx_user_passwords_created_at').ifExists().execute()
   await dbHelper.dropTriggerUpdatedAt(TABLE_NAME, SCHEMA).execute(db)
   await db.schema.dropTable(TABLE_NAME).ifExists().execute()
 }

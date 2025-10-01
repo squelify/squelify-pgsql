@@ -20,7 +20,7 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
     .addColumn('user_id', 'uuid', (col) => col.notNull().references('users.id').onDelete('cascade'))
     .addColumn('webhook_url', 'text', (col) => col.notNull())
     .addColumn('http_method', 'text', (col) =>
-      col.notNull().check(sql`http_method IN ('GET', 'POST', 'PUT', 'PATCH')`)
+      col.notNull().check(sql`http_method IN ('GET', 'POST', 'PUT', 'PATCH', 'DELETE')`)
     )
     .addColumn('payload_template', 'jsonb', (col) => col.defaultTo(null))
     .addColumn('request_headers', 'jsonb', (col) => col.defaultTo(null))
@@ -43,16 +43,29 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
     .ifNotExists()
     .execute()
 
-  // Create required indexes and auto-update trigger
   await dbHelper.createTriggerUpdatedAt(TABLE_NAME, SCHEMA).execute(db)
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'user_id').using('btree').execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'is_active').using('btree').execute()
+
+  await db.schema
+    .createIndex('idx_webhook_profiles_user_id')
+    .on(TABLE_NAME)
+    .column('user_id')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_webhook_profiles_is_active')
+    .on(TABLE_NAME)
+    .column('is_active')
+    .using('btree')
+    .ifNotExists()
+    .execute()
 }
 
 export const down = async (database: Kysely<Database>): Promise<void> => {
   const db = database.withSchema(SCHEMA)
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'is_active').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'user_id').execute()
+  await db.schema.dropIndex('idx_webhook_profiles_is_active').ifExists().execute()
+  await db.schema.dropIndex('idx_webhook_profiles_user_id').ifExists().execute()
   await dbHelper.dropTriggerUpdatedAt(TABLE_NAME, SCHEMA).execute(db)
   await db.schema.dropTable(TABLE_NAME).ifExists().execute()
 }

@@ -26,8 +26,8 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
     )
     .addColumn('previous_values', 'jsonb', (col) => col.defaultTo(null))
     .addColumn('new_values', 'jsonb', (col) => col.defaultTo(null))
-    .addColumn('client_ip_address', sql`inet`, (col) => col.defaultTo(null))
-    .addColumn('client_user_agent', 'text', (col) => col.defaultTo(null))
+    .addColumn('ip_address', sql`inet`, (col) => col.defaultTo(null))
+    .addColumn('user_agent', 'text', (col) => col.defaultTo(null))
     .addColumn('session_id', 'uuid', (col) =>
       col.references('sessions.id').onDelete('set null').defaultTo(null)
     )
@@ -39,18 +39,45 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
     .ifNotExists()
     .execute()
 
-  // Create required indexes and auto-update trigger
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'user_id').using('btree').execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'audited_resource_type').using('btree').execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'audit_action').using('btree').execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'action_performed_at').using('btree').execute()
+  // Create required indexes
+  await db.schema
+    .createIndex('idx_audit_logs_user_id')
+    .on(TABLE_NAME)
+    .column('user_id')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_audit_logs_audited_resource_type')
+    .on(TABLE_NAME)
+    .column('audited_resource_type')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_audit_logs_audit_action')
+    .on(TABLE_NAME)
+    .column('audit_action')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_audit_logs_action_performed_at')
+    .on(TABLE_NAME)
+    .column('action_performed_at')
+    .using('btree')
+    .ifNotExists()
+    .execute()
 }
 
 export const down = async (database: Kysely<Database>): Promise<void> => {
   const db = database.withSchema(SCHEMA)
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'action_performed_at').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'audit_action').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'audited_resource_type').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'user_id').execute()
+  await db.schema.dropIndex('idx_audit_logs_action_performed_at').ifExists().execute()
+  await db.schema.dropIndex('idx_audit_logs_audit_action').ifExists().execute()
+  await db.schema.dropIndex('idx_audit_logs_audited_resource_type').ifExists().execute()
+  await db.schema.dropIndex('idx_audit_logs_user_id').ifExists().execute()
   await db.schema.dropTable(TABLE_NAME).ifExists().execute()
 }

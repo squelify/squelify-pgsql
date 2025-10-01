@@ -34,38 +34,67 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
   // Create required indexes and auto-update trigger
   await dbHelper.createTriggerUpdatedAt(TABLE_NAME, SCHEMA).execute(db)
 
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'user_id').using('btree').execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'phone_number').using('btree').execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'verified_at').using('btree').execute()
+  await db.schema
+    .createIndex('idx_user_phones_user_id')
+    .on(TABLE_NAME)
+    .column('user_id')
+    .using('btree')
+    .ifNotExists()
+    .execute()
 
-  await dbHelper
-    .createColumnsIndex(db, TABLE_NAME, ['user_id'])
+  await db.schema
+    .createIndex('idx_user_phones_phone_number')
+    .on(TABLE_NAME)
+    .column('phone_number')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_user_phones_verified_at')
+    .on(TABLE_NAME)
+    .column('verified_at')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_user_phones_use_for_mfa')
+    .on(TABLE_NAME)
+    .column('user_id')
     .where(sql<boolean>`use_for_mfa = TRUE`)
     .using('btree')
+    .ifNotExists()
     .execute()
 
-  await dbHelper
-    .createColumnsIndex(db, TABLE_NAME, ['user_id'])
+  await db.schema
+    .createIndex('idx_user_phones_use_for_sign_in')
+    .on(TABLE_NAME)
+    .column('user_id')
     .where(sql<boolean>`use_for_sign_in = TRUE`)
     .using('btree')
+    .ifNotExists()
     .execute()
 
-  await dbHelper
-    .createColumnsIndex(db, TABLE_NAME, ['user_id'])
+  await db.schema
+    .createIndex('idx_user_phones_primary_per_user')
     .unique()
+    .on(TABLE_NAME)
+    .column('user_id')
     .where(sql<boolean>`is_primary = TRUE`)
     .using('btree')
+    .ifNotExists()
     .execute()
 }
 
 export const down = async (database: Kysely<Database>): Promise<void> => {
   const db = database.withSchema(SCHEMA)
-  await dbHelper.dropColumnsIndex(db, TABLE_NAME, ['user_id']).execute()
-  await dbHelper.dropColumnsIndex(db, TABLE_NAME, ['user_id']).execute()
-  await dbHelper.dropColumnsIndex(db, TABLE_NAME, ['user_id']).execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'verified_at').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'phone_number').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'user_id').execute()
+  await db.schema.dropIndex('idx_user_phones_primary_per_user').ifExists().execute()
+  await db.schema.dropIndex('idx_user_phones_use_for_sign_in').ifExists().execute()
+  await db.schema.dropIndex('idx_user_phones_use_for_mfa').ifExists().execute()
+  await db.schema.dropIndex('idx_user_phones_verified_at').ifExists().execute()
+  await db.schema.dropIndex('idx_user_phones_phone_number').ifExists().execute()
+  await db.schema.dropIndex('idx_user_phones_user_id').ifExists().execute()
   await dbHelper.dropTriggerUpdatedAt(TABLE_NAME, SCHEMA).execute(db)
   await db.schema.dropTable(TABLE_NAME).ifExists().execute()
 }

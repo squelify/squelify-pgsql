@@ -29,12 +29,35 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
     .ifNotExists()
     .execute()
   await dbHelper.createTriggerUpdatedAt('roles', SCHEMA).execute(db)
-  await dbHelper.createColumnIndex(db, 'roles', 'name').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'roles', 'slug').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'roles', 'role_type').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'roles', 'is_active').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'roles', 'created_at').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'roles', 'updated_at').using('btree').execute()
+
+  await db.schema
+    .createIndex('idx_roles_name')
+    .on('roles')
+    .column('name')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+  await db.schema
+    .createIndex('idx_roles_slug')
+    .on('roles')
+    .column('slug')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+  await db.schema
+    .createIndex('idx_roles_role_type')
+    .on('roles')
+    .column('role_type')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+  await db.schema
+    .createIndex('idx_roles_is_active')
+    .on('roles')
+    .column('is_active')
+    .using('btree')
+    .ifNotExists()
+    .execute()
 
   // permissions
   await db.schema
@@ -51,13 +74,42 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
     .modifyEnd(sql`USING heap`)
     .ifNotExists()
     .execute()
-  await dbHelper.createColumnIndex(db, 'permissions', 'name').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'permissions', 'slug').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'permissions', 'resource_type').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'permissions', 'action').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'permissions', 'is_active').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'permissions', 'created_at').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'permissions', 'updated_at').using('btree').execute()
+
+  await db.schema
+    .createIndex('idx_permissions_name')
+    .on('permissions')
+    .column('name')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+  await db.schema
+    .createIndex('idx_permissions_slug')
+    .on('permissions')
+    .column('slug')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+  await db.schema
+    .createIndex('idx_permissions_resource_type')
+    .on('permissions')
+    .column('resource_type')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+  await db.schema
+    .createIndex('idx_permissions_action')
+    .on('permissions')
+    .column('action')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+  await db.schema
+    .createIndex('idx_permissions_is_active')
+    .on('permissions')
+    .column('is_active')
+    .using('btree')
+    .ifNotExists()
+    .execute()
 
   // role_permissions
   await db.schema
@@ -72,10 +124,21 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
     .modifyEnd(sql`USING heap`)
     .ifNotExists()
     .execute()
-  await dbHelper.createColumnIndex(db, 'role_permissions', 'role_id').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'role_permissions', 'permission_id').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'role_permissions', 'created_at').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'role_permissions', 'updated_at').using('btree').execute()
+
+  await db.schema
+    .createIndex('idx_role_permissions_role_id')
+    .on('role_permissions')
+    .column('role_id')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+  await db.schema
+    .createIndex('idx_role_permissions_permission_id')
+    .on('role_permissions')
+    .column('permission_id')
+    .using('btree')
+    .ifNotExists()
+    .execute()
 
   // user_roles
   await db.schema
@@ -102,15 +165,35 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
     .modifyEnd(sql`USING heap`)
     .ifNotExists()
     .execute()
-  await dbHelper.createColumnIndex(db, 'user_roles', 'user_id').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'user_roles', 'role_id').using('btree').execute()
-  await dbHelper
-    .createColumnsIndex(db, 'user_roles', ['scope_type', 'scope_id'])
+
+  await db.schema
+    .createIndex('idx_user_roles_user_id')
+    .on('user_roles')
+    .column('user_id')
     .using('btree')
+    .ifNotExists()
     .execute()
-  await dbHelper.createColumnIndex(db, 'user_roles', 'is_active').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'user_roles', 'created_at').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'user_roles', 'updated_at').using('btree').execute()
+  await db.schema
+    .createIndex('idx_user_roles_role_id')
+    .on('user_roles')
+    .column('role_id')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+  await db.schema
+    .createIndex('idx_user_roles_scope')
+    .on('user_roles')
+    .columns(['scope_type', 'scope_id'])
+    .using('btree')
+    .ifNotExists()
+    .execute()
+  await db.schema
+    .createIndex('idx_user_roles_is_active')
+    .on('user_roles')
+    .column('is_active')
+    .using('btree')
+    .ifNotExists()
+    .execute()
 
   // user_permissions
   await db.schema
@@ -139,15 +222,35 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
     .modifyEnd(sql`USING heap`)
     .ifNotExists()
     .execute()
-  await dbHelper.createColumnIndex(db, 'user_permissions', 'user_id').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'user_permissions', 'permission_id').using('btree').execute()
-  await dbHelper
-    .createColumnsIndex(db, 'user_permissions', ['scope_type', 'scope_id'])
+
+  await db.schema
+    .createIndex('idx_user_permissions_user_id')
+    .on('user_permissions')
+    .column('user_id')
     .using('btree')
+    .ifNotExists()
     .execute()
-  await dbHelper.createColumnIndex(db, 'user_permissions', 'is_active').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'user_permissions', 'created_at').using('btree').execute()
-  await dbHelper.createColumnIndex(db, 'user_permissions', 'updated_at').using('btree').execute()
+  await db.schema
+    .createIndex('idx_user_permissions_permission_id')
+    .on('user_permissions')
+    .column('permission_id')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+  await db.schema
+    .createIndex('idx_user_permissions_scope')
+    .on('user_permissions')
+    .columns(['scope_type', 'scope_id'])
+    .using('btree')
+    .ifNotExists()
+    .execute()
+  await db.schema
+    .createIndex('idx_user_permissions_is_active')
+    .on('user_permissions')
+    .column('is_active')
+    .using('btree')
+    .ifNotExists()
+    .execute()
 }
 
 export const down = async (database: Kysely<Database>): Promise<void> => {

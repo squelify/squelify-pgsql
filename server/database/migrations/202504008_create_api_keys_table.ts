@@ -28,25 +28,52 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
       col.defaultTo(null).check(sql`expires_at IS NULL OR expires_at > CURRENT_TIMESTAMP`)
     )
     .addColumn('is_active', 'boolean', (col) => col.notNull().defaultTo(true))
-    .$call(dbHelper.addColumnTimestamps) // [created_at, updated_at]
+    .$call(dbHelper.addColumnTimestamps)
     .modifyEnd(sql`USING heap`)
     .ifNotExists()
     .execute()
 
-  // Create required indexes and auto-update trigger
   await dbHelper.createTriggerUpdatedAt(TABLE_NAME, SCHEMA).execute(db)
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'key_hash').using('btree').execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'user_id').using('btree').execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'expires_at').using('btree').execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'is_active').using('btree').execute()
+
+  await db.schema
+    .createIndex('idx_api_keys_key_hash')
+    .on(TABLE_NAME)
+    .column('key_hash')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_api_keys_user_id')
+    .on(TABLE_NAME)
+    .column('user_id')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_api_keys_expires_at')
+    .on(TABLE_NAME)
+    .column('expires_at')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_api_keys_is_active')
+    .on(TABLE_NAME)
+    .column('is_active')
+    .using('btree')
+    .ifNotExists()
+    .execute()
 }
 
 export const down = async (database: Kysely<Database>): Promise<void> => {
   const db = database.withSchema(SCHEMA)
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'is_active').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'expires_at').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'user_id').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'key_hash').execute()
+  await db.schema.dropIndex('idx_api_keys_is_active').ifExists().execute()
+  await db.schema.dropIndex('idx_api_keys_expires_at').ifExists().execute()
+  await db.schema.dropIndex('idx_api_keys_user_id').ifExists().execute()
+  await db.schema.dropIndex('idx_api_keys_key_hash').ifExists().execute()
   await dbHelper.dropTriggerUpdatedAt(TABLE_NAME, SCHEMA).execute(db)
   await db.schema.dropTable(TABLE_NAME).ifExists().execute()
 }

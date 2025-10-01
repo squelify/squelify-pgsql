@@ -32,28 +32,72 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
     .ifNotExists()
     .execute()
 
-  // Create required indexes and auto-update trigger
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'user_id').using('btree').execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'token_type').using('btree').execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'expires_at').using('btree').execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'created_at').using('btree').execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'updated_at').using('btree').execute()
-  await dbHelper
-    .createColumnsIndex(db, TABLE_NAME, ['relates_to'])
+  // Create required indexes
+  await db.schema
+    .createIndex('idx_one_time_tokens_user_id')
+    .on(TABLE_NAME)
+    .column('user_id')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_one_time_tokens_token_type')
+    .on(TABLE_NAME)
+    .column('token_type')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_one_time_tokens_expires_at')
+    .on(TABLE_NAME)
+    .column('expires_at')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_one_time_tokens_created_at')
+    .on(TABLE_NAME)
+    .column('created_at')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_one_time_tokens_updated_at')
+    .on(TABLE_NAME)
+    .column('updated_at')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_one_time_tokens_relates_to_lower')
+    .on(TABLE_NAME)
     .expression(sql`lower(relates_to)`)
     .using('btree')
+    .ifNotExists()
     .execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'metadata').using('gin').execute()
+
+  await db.schema
+    .createIndex('idx_one_time_tokens_metadata_gin')
+    .on(TABLE_NAME)
+    .using('gin')
+    .column('metadata')
+    .ifNotExists()
+    .execute()
 }
 
 export const down = async (database: Kysely<Database>): Promise<void> => {
   const db = database.withSchema(SCHEMA)
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'metadata').execute()
-  await dbHelper.dropColumnsIndex(db, TABLE_NAME, ['relates_to']).execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'updated_at').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'created_at').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'expires_at').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'token_type').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'user_id').execute()
+  await db.schema.dropIndex('idx_one_time_tokens_metadata_gin').ifExists().execute()
+  await db.schema.dropIndex('idx_one_time_tokens_relates_to_lower').ifExists().execute()
+  await db.schema.dropIndex('idx_one_time_tokens_updated_at').ifExists().execute()
+  await db.schema.dropIndex('idx_one_time_tokens_created_at').ifExists().execute()
+  await db.schema.dropIndex('idx_one_time_tokens_expires_at').ifExists().execute()
+  await db.schema.dropIndex('idx_one_time_tokens_token_type').ifExists().execute()
+  await db.schema.dropIndex('idx_one_time_tokens_user_id').ifExists().execute()
   await db.schema.dropTable(TABLE_NAME).ifExists().execute()
 }

@@ -37,28 +37,64 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
     .execute()
 
   // Create required indexes and auto-update trigger
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'user_id').using('btree').execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'expires_at').using('btree').execute()
-  await dbHelper
-    .createColumnsIndex(db, TABLE_NAME, ['user_id', 'expires_at'])
+  await db.schema
+    .createIndex('idx_sessions_user_id')
+    .on(TABLE_NAME)
+    .column('user_id')
     .using('btree')
+    .ifNotExists()
     .execute()
-  await dbHelper
-    .createColumnIndex(db, TABLE_NAME, 'ip_address')
+
+  await db.schema
+    .createIndex('idx_sessions_expires_at')
+    .on(TABLE_NAME)
+    .column('expires_at')
     .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_sessions_user_id_expires_at')
+    .on(TABLE_NAME)
+    .columns(['user_id', 'expires_at'])
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_sessions_ip_address')
+    .on(TABLE_NAME)
+    .column('ip_address')
     .where(sql<boolean>`ip_address IS NOT NULL`)
+    .using('btree')
+    .ifNotExists()
     .execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'device_fingerprint').using('btree').execute()
-  await dbHelper.createColumnIndex(db, TABLE_NAME, 'token_hash').unique().using('btree').execute()
+
+  await db.schema
+    .createIndex('idx_sessions_device_fingerprint')
+    .on(TABLE_NAME)
+    .column('device_fingerprint')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_sessions_token_hash')
+    .unique()
+    .on(TABLE_NAME)
+    .column('token_hash')
+    .using('btree')
+    .ifNotExists()
+    .execute()
 }
 
 export const down = async (database: Kysely<Database>): Promise<void> => {
   const db = database.withSchema(SCHEMA)
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'ip_address').execute()
-  await dbHelper.dropColumnsIndex(db, TABLE_NAME, ['user_id', 'expires_at']).execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'device_fingerprint').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'expires_at').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'token_hash').execute()
-  await dbHelper.dropColumnIndex(db, TABLE_NAME, 'user_id').execute()
+  await db.schema.dropIndex('idx_sessions_ip_address').ifExists().execute()
+  await db.schema.dropIndex('idx_sessions_user_id_expires_at').ifExists().execute()
+  await db.schema.dropIndex('idx_sessions_device_fingerprint').ifExists().execute()
+  await db.schema.dropIndex('idx_sessions_expires_at').ifExists().execute()
+  await db.schema.dropIndex('idx_sessions_token_hash').ifExists().execute()
+  await db.schema.dropIndex('idx_sessions_user_id').ifExists().execute()
   await db.schema.dropTable(TABLE_NAME).ifExists().execute()
 }

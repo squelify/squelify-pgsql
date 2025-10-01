@@ -143,19 +143,37 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
     .ifNotExists()
     .execute()
 
-  // Create required indexes and auto-update trigger
+  // Create auto-update trigger
   await dbHelper.createTriggerUpdatedAt('${tableName}', '${args.schema}').execute(db)
-  await dbHelper.createColumnIndex(db, '${tableName}', 'id').execute()
-  await dbHelper.createColumnIndex(db, '${tableName}', 'created_at').execute()
-  await dbHelper.createColumnIndex(db, '${tableName}', 'updated_at').execute()
+
+  // Create required indexes
+  await db.schema
+    .createIndex('idx_${tableName}_created_at')
+    .on('${tableName}')
+    .column('created_at')
+    .using('btree')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('idx_${tableName}_updated_at')
+    .on('${tableName}')
+    .column('updated_at')
+    .where(sql<boolean>\`updated_at IS NOT NULL\`)
+    .using('btree')
+    .ifNotExists()
+    .execute()
 }
 
 export const down = async (database: Kysely<Database>): Promise<void> => {
   const db = database.withSchema('${args.schema}')
-  await dbHelper.dropColumnIndex(db, '${tableName}', 'id').execute()
-  await dbHelper.dropColumnIndex(db, '${tableName}', 'created_at').execute()
-  await dbHelper.dropColumnIndex(db, '${tableName}', 'updated_at').execute()
+
+  // Drop trigger and indexes first (reverse order of creation)
   await dbHelper.dropTriggerUpdatedAt('${tableName}', '${args.schema}').execute(db)
+  await db.schema.dropIndex('idx_${tableName}_updated_at').ifExists().execute()
+  await db.schema.dropIndex('idx_${tableName}_created_at').ifExists().execute()
+
+  // Drop table at the end
   await db.schema.dropTable('${tableName}').ifExists().execute()
 }`
 
