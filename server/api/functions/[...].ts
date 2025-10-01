@@ -15,25 +15,27 @@ let routesReady = false
 
 function parseFileName(fileName: string): { routeName: string; method: HttpMethod } {
   const { name, dir } = parse(fileName)
+
+  // Named wildcard: [...param]
+  const namedWildcardMatch = name.match(/^\[\.\.\.([a-zA-Z0-9_]+)\]$/)
+  if (namedWildcardMatch) {
+    const paramName = namedWildcardMatch[1]
+    return {
+      routeName: `${dir ? `${dir}/**:${paramName}` : `**:${paramName}`}`,
+      method: 'get',
+    }
+  }
+
+  // Simple wildcard: [...]
+  if (name === '[...]') {
+    return {
+      routeName: `${dir ? `${dir}/**` : '**'}`,
+      method: 'get',
+    }
+  }
+
+  // Now split by dots for regular parsing
   const parts = name.split('.')
-
-  // Named wildcard: [...param].mjs
-  const namedWildcard = parts.find((p) => /^\[\.\.\.[a-zA-Z0-9_]+\]$/.test(p))
-  if (namedWildcard) {
-    const paramName = namedWildcard.slice(4, -1) // Remove '[...' and ']'
-    return {
-      routeName: `${dir ? `${dir}/` : ''}**:${paramName}`,
-      method: (parts.find((p) => HTTP_METHODS.includes(p as HttpMethod)) as HttpMethod) || 'get',
-    }
-  }
-
-  // Simple wildcard: [...].mjs
-  if (parts.includes('[...]')) {
-    return {
-      routeName: `${dir ? `${dir}/` : ''}**`,
-      method: (parts.find((p) => HTTP_METHODS.includes(p as HttpMethod)) as HttpMethod) || 'get',
-    }
-  }
 
   // Index route
   if (parts[0] === 'index') {
@@ -46,9 +48,11 @@ function parseFileName(fileName: string): { routeName: string; method: HttpMetho
   // Static and named param route
   const methodPart = parts.find((p) => HTTP_METHODS.includes(p as HttpMethod))
   const routeParts = parts
-    .filter((part) => !part.startsWith('[...') && part !== methodPart && part !== '')
+    .filter((part) => part !== methodPart && part !== '')
     .map((part) => {
-      if (part.startsWith('[') && part.endsWith(']')) return `:${part.slice(1, -1)}`
+      if (part.startsWith('[') && part.endsWith(']')) {
+        return `:${part.slice(1, -1)}`
+      }
       return part
     })
 
@@ -64,7 +68,8 @@ async function registerRoutes() {
 
   for (const file of files) {
     const { routeName, method } = parseFileName(file)
-    const routePath = `/api/functions/${routeName}`.replace(/\/+/g, '/').replace(/\/$/, '')
+    const routePath =
+      `/api/functions/${routeName}`.replace(/\/+/g, '/').replace(/\/$/, '') || '/api/functions'
 
     router.add(
       routePath,
