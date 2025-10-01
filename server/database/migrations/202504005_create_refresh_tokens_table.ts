@@ -12,12 +12,14 @@ import {
 } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
+const TABLE_NAME = 'refresh_tokens'
+
 export const up = async (database: Kysely<Database>): Promise<void> => {
   const db = database.withSchema('internal')
 
   // Create table
   await db.schema
-    .createTable('users')
+    .createTable(TABLE_NAME)
     .addColumn('id', 'text', (col) => col.primaryKey())
     // ----- Add columns here -----
     .$call(addColumnTimestamps) // [created_at, updated_at]
@@ -26,17 +28,17 @@ export const up = async (database: Kysely<Database>): Promise<void> => {
     .execute()
 
   // Create required indexes and auto-update trigger
-  await createTriggerUpdatedAt('users', 'internal').execute(db)
-  await createColumnIndex(db, 'users', 'id').execute()
-  await createColumnIndex(db, 'users', 'created_at').execute()
-  await createColumnIndex(db, 'users', 'updated_at').execute()
+  await createTriggerUpdatedAt(TABLE_NAME, 'internal').execute(db)
+  await createColumnIndex(db, TABLE_NAME, 'id').execute()
+  await createColumnIndex(db, TABLE_NAME, 'created_at').execute()
+  await createColumnIndex(db, TABLE_NAME, 'updated_at').execute()
 }
 
 export const down = async (database: Kysely<Database>): Promise<void> => {
   const db = database.withSchema('internal')
-  await dropColumnIndex(db, 'users', 'id').execute()
-  await dropColumnIndex(db, 'users', 'created_at').execute()
-  await dropColumnIndex(db, 'users', 'updated_at').execute()
-  await dropTriggerUpdatedAt('users', 'internal').execute(db)
-  await db.schema.dropTable('users').ifExists().execute()
+  await dropColumnIndex(db, TABLE_NAME, 'id').execute()
+  await dropColumnIndex(db, TABLE_NAME, 'created_at').execute()
+  await dropColumnIndex(db, TABLE_NAME, 'updated_at').execute()
+  await dropTriggerUpdatedAt(TABLE_NAME, 'internal').execute(db)
+  await db.schema.dropTable(TABLE_NAME).ifExists().execute()
 }
