@@ -1,5 +1,5 @@
 import { styleText } from 'node:util'
-import { consola as _console_ } from 'consola'
+import { consola } from 'consola'
 import type { LogLevel, LogType } from 'consola/core'
 import { createConsola, LogLevels } from 'consola/core'
 import Redactyl from 'redactyl.js'
@@ -75,23 +75,30 @@ const formatLogType = (type: LogType): string => {
 
 const getLogLevelNumber = (logType: LogType): LogLevel => LogLevels[logType] as LogLevel
 const LOG_LEVEL = getLogLevelNumber((env.SQUELIFY_LOG_LEVEL as LogType) || 'info')
+const _console_ = consola.create({ level: LOG_LEVEL, formatOptions: { date: false } })
 
 export default createConsola({
-  formatOptions: { compact: true, colors: true, columns: 0, errorLevel: 4 },
+  formatOptions: {
+    compact: true,
+    colors: true,
+    columns: 0,
+    errorLevel: LOG_LEVEL,
+    date: false,
+  },
   defaults: { tag: 'app' },
   level: LOG_LEVEL,
   reporters: [
     {
       log: ({ type, tag, args, date, level }) => {
-        // Redact sensitive data if log level is less than 4 (debug)
         const msg = level < 4 ? redactyl.redact<any>(args) : args
         const logTag = styleText('gray', tag)
         const logTime = formatTimestamp(date)
         const logType = formatLogType(type)
-
-        return isRunningFromCLI()
-          ? _console_.log(logTag, ...args)
-          : _console_.log(logTime, logType, logTag, ...msg)
+        if (isRunningFromCLI()) {
+          _console_.log(logTag, ...args)
+        } else {
+          _console_.log(logTime, logType, logTag, ...msg)
+        }
       },
     },
   ],
