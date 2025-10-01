@@ -11,6 +11,7 @@ import type { IAppSetting } from './schemas/app_setting'
 import type { IAuditLog } from './schemas/audit_log'
 import type { IOneTimeToken } from './schemas/one_time_token'
 import type { IPermission } from './schemas/permission'
+import type { IRateLimit } from './schemas/rate_limit'
 import type { IRefreshToken } from './schemas/refresh_token'
 import type { IRole } from './schemas/role'
 import type { IRolePermission } from './schemas/role_permission'
@@ -28,6 +29,7 @@ interface Internal {
   'internal.audit_logs': IAuditLog
   'internal.one_time_tokens': IOneTimeToken
   'internal.permissions': IPermission
+  'internal.rate_limits': IRateLimit
   'internal.refresh_tokens': IRefreshToken
   'internal.role_permissions': IRolePermission
   'internal.roles': IRole
