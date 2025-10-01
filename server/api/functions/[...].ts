@@ -295,9 +295,10 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    // Timeout handling
+    // Timeout handling for function execution
+    let timeout: NodeJS.Timeout | undefined
     const timeoutPromise = new Promise<never>((_, reject) => {
-      const timeout = setTimeout(() => {
+      timeout = setTimeout(() => {
         logger.error(`Function timeout after ${FUNCTION_TIMEOUT}ms for ${event.node.req.url}`)
         reject(
           createError({
@@ -306,12 +307,16 @@ export default defineEventHandler(async (event) => {
           })
         )
       }, FUNCTION_TIMEOUT)
-
-      return timeout
     })
 
-    const result = await Promise.race([router.handler(event), timeoutPromise])
-    return result
+    try {
+      const result = await Promise.race([router.handler(event), timeoutPromise])
+      if (timeout) clearTimeout(timeout)
+      return result
+    } catch (error) {
+      if (timeout) clearTimeout(timeout)
+      throw error
+    }
   } catch (error: unknown) {
     logger.error('Handler error:', error)
 
