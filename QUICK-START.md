@@ -187,6 +187,107 @@ Push docker image:
 docker push ghcr.io/squelify/squelify:latest
 ```
 
+## 🗂️ Operators
+
+Reference: <https://postgrest.org/en/stable/references/api/tables_views.html#logical-operators>
+
+| Abbreviation | In PostgreSQL      | Meaning                                                                                                                                                                  |
+|--------------|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| eq           | `=`                | equals                                                                                                                                                                   |
+| gt           | `>`                | greater than                                                                                                                                                             |
+| gte          | `>=`               | greater than or equal                                                                                                                                                    |
+| lt           | `<`                | less than                                                                                                                                                                |
+| lte          | `<=`               | less than or equal                                                                                                                                                       |
+| neq          | `<>` or `!=`       | not equal                                                                                                                                                                |
+| like         | `LIKE`             | LIKE operator (to avoid [URL encoding](https://en.wikipedia.org/wiki/Percent-encoding) you can use `*` as an alias of the percent sign `%` for the pattern)              |
+| ilike        | `ILIKE`            | ILIKE operator (to avoid [URL encoding](https://en.wikipedia.org/wiki/Percent-encoding) you can use `*` as an alias of the percent sign `%` for the pattern)             |
+| match        | `~`                | ~ operator, see [Pattern Matching](#pattern-matching)                                                                                                                    |
+| imatch       | `~*`               | ~\* operator, see [Pattern Matching](#pattern-matching)                                                                                                                  |
+| in           | `IN`               | one of a list of values, e.g. `?a=in.(1,2,3)` – also supports commas in quoted strings like `?a=in.("hi,there","yes,you")`                                               |
+| is           | `IS`               | checking for exact equality (null,not\_null,true,false,unknown)                                                                                                          |
+| isdistinct   | `IS DISTINCT FROM` | not equal, treating `NULL` as a comparable value                                                                                                                         |
+| fts          | `@@`               | [Full-Text Search](#full-text-search) using to\_tsquery                                                                                                                  |
+| plfts        | `@@`               | [Full-Text Search](#full-text-search) using plainto\_tsquery                                                                                                             |
+| phfts        | `@@`               | [Full-Text Search](#full-text-search) using phraseto\_tsquery                                                                                                            |
+| wfts         | `@@`               | [Full-Text Search](#full-text-search) using websearch\_to\_tsquery                                                                                                       |
+| cs           | `@>`               | contains e.g. `?tags=cs.{example, new}`                                                                                                                                  |
+| cd           | `<@`               | contained in e.g. `?values=cd.{1,2,3}`                                                                                                                                   |
+| ov           | `&&`               | overlap (have points in common), e.g. `?period=ov.[2017-01-01,2017-06-30]` – also supports array types, use curly braces instead of square brackets e.g. `?arr=ov.{1,3}` |
+| sl           | `<<`               | strictly left of, e.g. `?range=sl.(1,10)`                                                                                                                                |
+| sr           | `>>`               | strictly right of                                                                                                                                                        |
+| nxr          | `&<`               | does not extend to the right of, e.g. `?range=nxr.(1,10)`                                                                                                                |
+| nxl          | `&>`               | does not extend to the left of                                                                                                                                           |
+| adj          | `-\|-`             | is adjacent to, e.g. `?range=adj.(1,10)`                                                                                                                                 |
+| not          | `NOT`              | negates another operator, see [Logical operators](#logical-operators)                                                                                                    |
+| or           | `OR`               | logical `OR`, see [Logical operators](#logical-operators)                                                                                                                |
+| and          | `AND`              | logical `AND`, see [Logical operators](#logical-operators)                                                                                                               |
+| all          | `ALL`              | comparison matches all the values in the list, see [Operator Modifiers](#modifiers)                                                                                      |
+| any          | `ANY`              | comparison matches any value in the list, see [Operator Modifiers](#modifiers)                                                                                           |
+
+### Pattern Matching
+The pattern-matching operators (`like`, `ilike`, `match`, `imatch`) exist to support filtering data using
+patterns instead of concrete strings, as described in the [PostgreSQL docs](https://www.postgresql.org/docs/current/functions-matching.html).
+
+To ensure best performance on larger data sets, an [appropriate index](https://www.postgresql.org/docs/current/pgtrgm.html#PGTRGM-INDEX)
+should be used and even then, it depends on the pattern value and actual data statistics whether an existing
+index will be used by the query planner or not.
+
+### Full-Text Search
+The `fts` operator has a number of options to support flexible textual queries, namely the choice of plain vs
+phrase search and the language used for stemming.
+
+The following examples illustrate the possibilities, assuming column `my_tsv` is of type
+[tsvector](https://www.postgresql.org/docs/current/datatype-textsearch.html).
+
+```sh
+curl --get "http://localhost:3080/api/collections/people" -d "my_tsv=fts(french).amusant"
+
+curl --get "http://localhost:3080/api/collections/people" -d "my_tsv=plfts.The%20Fat%20Cats"
+
+curl --get "http://localhost:3080/api/collections/people" -d "my_tsv=not.phfts(english).The%20Fat%20Cats"
+
+curl --get "http://localhost:3080/api/collections/people" -d "my_tsv=not.wfts(french).amusant"
+```
+
+### Logical operators
+
+Multiple conditions on columns are evaluated using `AND` by default, but you can combine them using `OR`
+with the `or` operator. For example, to return people under 18 or over 21:
+
+```sh
+curl "http://localhost:3080/api/collections/people?or=(age.lt.18,age.gt.21)"
+```
+
+To `negate` any operator, you can prefix it with `not` like `?a=not.eq.2` or `?not.and=(a.gte.0,a.lte.100)`.
+
+You can also apply complex logic to the conditions:
+
+```sh
+# curl "http://localhost:3080/api/collections/people?grade=gte.90&student=is.true&or=(age.eq.14,not.and(age.gte.11,age.lte.17))"
+
+curl --get "http://localhost:3080/api/collections/people" \
+  -d "grade=gte.90" \
+  -d "student=is.true" \
+  -d "or=(age.eq.14,not.and(age.gte.11,age.lte.17))"
+```
+
+### Operator Modifiers
+You may further simplify the logic using the `any/all` modifiers of `eq,like,ilike,gt,gte,lt,lte,match,imatch`.
+
+For instance, to avoid repeating the same column for `or`, use `any` to get people with last names that start with O or P:
+
+```sh
+curl -g "http://localhost:3080/api/collections/people?last_name=like(any).{O*,P*}"
+```
+
+In a similar way, you can use `all` to avoid repeating the same column for `and`. To get the people with last
+names that start with O and end with n:
+
+```sh
+curl -g "http://localhost:3080/api/collections/people?last_name=like(all).{O*,*n}"
+```
+
+
 ## 🚀 Deployment
 
 Read [Deployment Guide](./DEPLOY.md) for detailed documentation.
