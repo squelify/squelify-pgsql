@@ -25,7 +25,6 @@ node_modules/
 *.db
 
 # Output directory
-_data/
 build/
 dist/
 temp/

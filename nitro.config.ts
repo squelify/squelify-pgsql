@@ -88,7 +88,7 @@ export default defineNitroConfig({
     },
   },
 
-  devServer: { watch: ['server', 'client'] },
+  devServer: { watch: ['server', 'client', 'storage/functions', 'storage/wwwroot'] },
   esbuild: { options: { jsx: 'automatic', target: 'ES2022' } },
   typescript: { strict: true, generateTsConfig: false },
   experimental: { openAPI: !isProduction, tasks: true },

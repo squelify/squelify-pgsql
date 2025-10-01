@@ -119,6 +119,7 @@
         "@biomejs/biome": "^2.2.4",
         "@scalar/api-reference": "^1.36.2",
         "@storybook/addon-a11y": "^9.1.10",
+        "@storybook/addon-docs": "^9.1.10",
         "@storybook/addon-links": "^9.1.10",
         "@storybook/addon-themes": "^9.1.10",
         "@storybook/react-vite": "^9.1.10",
@@ -145,8 +146,7 @@
         "typescript": "^5.9.3",
         "vite": "npm:rolldown-vite@7.1.14",
         "vite-plugin-devtools-json": "^1.0.0",
-        "vite-tsconfig-paths": "^5.1.4",
-        "@storybook/addon-docs": "^9.1.10"
+        "vite-tsconfig-paths": "^5.1.4"
     },
     "packageManager": "pnpm@10.17.1",
     "pnpm": {

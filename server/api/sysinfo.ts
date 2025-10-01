@@ -3,27 +3,10 @@ import status from 'http-status'
 import { sql } from 'kysely'
 import prettyBytes from 'pretty-bytes'
 import { env } from 'std-env'
+import { z } from 'zod'
+import { SysInfoSchema } from '~/orpc/schemas/sysinfo.schema'
 
-interface HealthCheckResponse {
-  status: string
-  timestamp: string
-  uptime: string
-  environment: {
-    mode: string
-    logLevel: string
-    nodeVersion?: string
-  }
-  memory?: {
-    heapUsed: string
-    heapTotal: string
-    external: string
-    residentSetSize: string
-  }
-  database?: {
-    connected: boolean
-    latency: string
-  }
-}
+type HealthCheckResponse = z.infer<typeof SysInfoSchema>
 
 export default eventHandler(async (event): Promise<HealthCheckResponse> => {
   // Extract authorization header
@@ -71,22 +54,18 @@ export default eventHandler(async (event): Promise<HealthCheckResponse> => {
     environment: {
       mode: env.SQUELIFY_APP_MODE ?? 'production',
       logLevel: env.SQUELIFY_LOG_LEVEL ?? 'info',
+      nodeVersion: isAuthenticated ? process.version : '',
     },
-  }
-
-  // Add additional information for authenticated users
-  if (isAuthenticated) {
-    response.environment.nodeVersion = process.version
-    response.memory = {
-      heapUsed: prettyBytes(memoryUsage.heapUsed),
-      heapTotal: prettyBytes(memoryUsage.heapTotal),
-      external: prettyBytes(memoryUsage.external),
-      residentSetSize: prettyBytes(memoryUsage.rss),
-    }
-    response.database = {
-      connected: dbConnected,
+    memory: {
+      heapUsed: isAuthenticated ? prettyBytes(memoryUsage.heapUsed) : '',
+      heapTotal: isAuthenticated ? prettyBytes(memoryUsage.heapTotal) : '',
+      external: isAuthenticated ? prettyBytes(memoryUsage.external) : '',
+      residentSetSize: isAuthenticated ? prettyBytes(memoryUsage.rss) : '',
+    },
+    database: {
+      connected: isAuthenticated ? dbConnected : false,
       latency: dbLatency,
-    }
+    },
   }
 
   return response

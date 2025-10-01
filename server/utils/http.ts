@@ -36,6 +36,16 @@ interface ApiResponse<T = unknown> {
   }
 }
 
+export function createSuccessResponse<T>(
+  event: H3Event,
+  message: string | null = null,
+  data?: T,
+  status = 200
+): ApiResponse<T> {
+  setResponseStatus(event, status)
+  return { status, success: true, message, ...(data && { data }) }
+}
+
 export function createErrorResponse(
   event: H3Event,
   message: string,

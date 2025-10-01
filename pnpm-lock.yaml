@@ -5478,8 +5478,8 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
-  rou3@0.7.5:
-    resolution: {integrity: sha512-bwUHDHw1HSARty7TWNV71R0NZs5fOt74OM+hcMdJyPfchfRktEmxLoMSNa7PwEp6WqJ0a3feKztsIfTUEYhskw==}
+  rou3@0.7.7:
+    resolution: {integrity: sha512-z+6o7c3DarUbuBMLIdhzj2CqJLtUWrGk4fZlf07dIMitX3UpBXeInJ3lMD9huxj9yh9eo1RqtXf9aL0YzkDDUA==}
 
   run-applescript@7.0.0:
     resolution: {integrity: sha512-9by4Ij99JUr/MCFBUkDKLWK3G9HVXmabKz9U5MlIAIuvuzkiOicRYs8XJLxX+xahD+mLiiCYDqF9dKAgtzKP1A==}
@@ -7505,7 +7505,7 @@ snapshots:
       '@orpc/server': 1.9.2(crossws@0.3.5)(ws@8.18.3)
       '@orpc/shared': 1.9.2
       '@orpc/standard-server': 1.9.2
-      rou3: 0.7.5
+      rou3: 0.7.7
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - crossws
@@ -12492,7 +12492,7 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.52.2
       fsevents: 2.3.3
 
-  rou3@0.7.5: {}
+  rou3@0.7.7: {}
 
   run-applescript@7.0.0: {}
 
