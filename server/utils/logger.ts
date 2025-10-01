@@ -27,7 +27,7 @@ function formatTimestamp(date?: Date, localtime = env.TZ !== 'UTC'): string {
   const minutes = String(useUTC ? now.getUTCMinutes() : now.getMinutes()).padStart(2, '0')
   const seconds = String(useUTC ? now.getUTCSeconds() : now.getSeconds()).padStart(2, '0')
 
-  return styleText('gray', `[${year}-${month}-${day} ${hours}:${minutes}:${seconds}]`)
+  return styleText('gray', `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`)
 }
 
 // Instantiate Redactyl with sensitive fields to redact
@@ -41,35 +41,35 @@ const redactyl = new Redactyl({
 const formatLogType = (type: LogType): string => {
   switch (type) {
     case 'fatal':
-      return styleText('redBright', `[${type.toUpperCase()}]`)
+      return styleText('redBright', `${type.toUpperCase()}`)
     case 'error':
-      return styleText('red', `[${type.toUpperCase()}]`)
+      return styleText('red', `${type.toUpperCase()}`)
     case 'warn':
-      return styleText('yellow', `[${type.toUpperCase()}]`)
+      return styleText('yellow', `${type.toUpperCase()}`)
     case 'log':
-      return styleText('white', `[${type.toUpperCase()}]`)
+      return styleText('white', `${type.toUpperCase()}`)
     case 'info':
-      return styleText('blue', `[${type.toUpperCase()}]`)
+      return styleText('blue', `${type.toUpperCase()}`)
     case 'success':
-      return styleText('green', `[${type.toUpperCase()}]`)
+      return styleText('green', `${type.toUpperCase()}`)
     case 'fail':
-      return styleText('magenta', `[${type.toUpperCase()}]`)
+      return styleText('magenta', `${type.toUpperCase()}`)
     case 'ready':
-      return styleText('cyan', `[${type.toUpperCase()}]`)
+      return styleText('cyan', `${type.toUpperCase()}`)
     case 'start':
-      return styleText('blueBright', `[${type.toUpperCase()}]`)
+      return styleText('blueBright', `${type.toUpperCase()}`)
     case 'box':
-      return styleText('whiteBright', `[${type.toUpperCase()}]`)
+      return styleText('whiteBright', `${type.toUpperCase()}`)
     case 'debug':
-      return styleText(['bgGrey', 'white'], `[${type.toUpperCase()}]`)
+      return styleText(['bgGrey', 'white'], `${type.toUpperCase()}`)
     case 'trace':
-      return styleText('gray', `[${type.toUpperCase()}]`)
+      return styleText('gray', `${type.toUpperCase()}`)
     case 'verbose':
-      return styleText('cyanBright', `[${type.toUpperCase()}]`)
+      return styleText('cyanBright', `${type.toUpperCase()}`)
     case 'silent':
-      return styleText('gray', `[${type.toUpperCase()}]`)
+      return styleText('gray', `${type.toUpperCase()}`)
     default:
-      return styleText('white', `[${type}]`)
+      return styleText('white', `${type}`)
   }
 }
 
@@ -85,7 +85,7 @@ export default createConsola({
       log: ({ type, tag, args, date, level }) => {
         // Redact sensitive data if log level is less than 4 (debug)
         const msg = level < 4 ? redactyl.redact<any>(args) : args
-        const logTag = styleText('gray', `[${tag}]`)
+        const logTag = styleText('gray', tag)
         const logTime = formatTimestamp(date)
         const logType = formatLogType(type)
 

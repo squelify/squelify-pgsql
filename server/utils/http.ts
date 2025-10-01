@@ -3,7 +3,7 @@ import { digest } from 'ohash/crypto'
 import { UAParser } from 'ua-parser-js'
 
 export function getClientInfo(event: H3Event) {
-  const clientIpAddress = getRequestIP(event, { xForwardedFor: true })
+  const clientIP = getRequestIP(event, { xForwardedFor: true })
   const clientInfo = event.headers.get('X-Client-Info')
   const userAgent = event.headers.get('User-Agent') || ''
   const userAgentHash = digest(userAgent)
@@ -22,7 +22,7 @@ export function getClientInfo(event: H3Event) {
     }
   }
 
-  return { clientIpAddress, clientIdentifier, userAgent, userAgentHash }
+  return { clientIP, clientIdentifier, userAgent, userAgentHash }
 }
 
 interface ApiResponse<T = unknown> {

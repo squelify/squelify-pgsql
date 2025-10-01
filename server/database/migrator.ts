@@ -36,17 +36,17 @@ export async function runSeeds(): Promise<void> {
 
     if (seeders.length > 0) {
       for (const { name, seeder } of seeders) {
-        logger.withTag('migration:seed').info(`Table ${name} will be populated with seed data.`)
+        logger.withTag('migration').info(`Table ${name} will be populated with seed data.`)
         await seeder.default(migrateDBClient).then(() => {
-          logger.withTag('migration:seed').info(`Table ${name} has been populated with seed data.`)
+          logger.withTag('migration').info(`Table ${name} has been populated with seed data.`)
         })
       }
     } else {
-      logger.withTag('migration:seed').info('No seeders provided. Skipping database seeding.')
+      logger.withTag('migration').info('No seeders provided. Skipping database seeding.')
     }
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : String(error)
-    logger.withTag('migration:seed').error('Database seeding failed:', errMsg)
+    logger.withTag('migration').error('Database seeding failed:', errMsg)
     throw error
   }
 }

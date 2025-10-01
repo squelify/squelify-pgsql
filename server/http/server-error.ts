@@ -43,7 +43,7 @@ const renderTemplate = (props: RenderTemplate) => `<!DOCTYPE html>
           <div class="flex"></div>
           <div class="px-3 py-1 rounded-md bg-zinc-100 dark:bg-zinc-800 text-sm font-mono text-zinc-600 dark:text-zinc-400 flex items-center">
             <span class="mr-2">Status</span>
-            <span class="font-semibold ${props.error.code === 404 ? 'text-amber-500' : 'text-red-500'}">${props.error.code}</span>
+            <span class="font-semibold ${props.error.code === 404 ? 'text-amber-500' : 'text-destructive'}">${props.error.code}</span>
           </div>
         </div>
         <!-- Main content -->
@@ -151,7 +151,7 @@ const renderErrorContent = (error: ErrorInfo, isDev: boolean) => `
   <div class="flex flex-col sm:flex-row sm:items-center gap-5 mb-6">
     <div class="flex-shrink-0 mx-auto sm:mx-0">
       <div class="flex h-16 w-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-        <i data-lucide="server-crash" class="h-8 w-8 text-red-500"></i>
+        <i data-lucide="server-crash" class="h-8 w-8 text-destructive"></i>
       </div>
     </div>
 
@@ -180,7 +180,7 @@ const renderErrorContent = (error: ErrorInfo, isDev: boolean) => `
     <div class="p-4">
       <div class="mb-3 flex items-center gap-2">
         <span class="px-1.5 py-0.5 rounded bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-medium">${error.name}</span>
-        <span class="font-mono text-red-500 dark:text-red-400 text-sm">${error.message}</span>
+        <span class="font-mono text-destructive dark:text-red-400 text-sm">${error.message}</span>
       </div>
       <pre id="error-stack" class="scrollbar-thin max-h-[400px] overflow-auto rounded bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 p-4 text-zinc-700 dark:text-zinc-300 text-sm leading-relaxed font-mono">${error.stack}</pre>
     </div>

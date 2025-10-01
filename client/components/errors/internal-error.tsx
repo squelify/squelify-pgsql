@@ -25,7 +25,7 @@ export function InternalError({ error, reset }: InternalErrorProps) {
           <div className="flex" />
           <div className="flex items-center rounded-md bg-zinc-100 px-3 py-1 font-mono text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
             <span className="mr-2">Status</span>
-            <span className="font-semibold text-red-500">500</span>
+            <span className="font-semibold text-destructive">500</span>
           </div>
         </div>
 
@@ -36,7 +36,7 @@ export function InternalError({ error, reset }: InternalErrorProps) {
             <div className="mb-6 flex flex-col gap-5 sm:flex-row sm:items-center">
               <div className="mx-auto flex-shrink-0 sm:mx-0">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20">
-                  <Lucide.ServerCrash className="h-8 w-8 text-red-500" />
+                  <Lucide.ServerCrash className="h-8 w-8 text-destructive" />
                 </div>
               </div>
 
@@ -72,7 +72,7 @@ export function InternalError({ error, reset }: InternalErrorProps) {
                     <span className="rounded bg-red-100 px-1.5 py-0.5 font-medium text-red-600 text-xs dark:bg-red-900/30 dark:text-red-400">
                       {error.name}
                     </span>
-                    <span className="font-mono text-red-500 text-sm dark:text-red-400">
+                    <span className="font-mono text-destructive text-sm dark:text-red-400">
                       {error.message}
                     </span>
                   </div>

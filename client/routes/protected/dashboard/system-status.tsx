@@ -28,14 +28,14 @@ export default function SystemStatus() {
           {isLoading ? (
             <div className="h-20 w-full animate-pulse rounded bg-muted" />
           ) : error ? (
-            <Text className="text-red-500">Error loading health data</Text>
+            <Text className="text-destructive">Error loading health data</Text>
           ) : (
             <>
               <div className="mt-2 mb-4">
                 {data?.status === 'healthy' ? (
                   <Lucide.CheckCircle className="size-12 text-green-500" strokeWidth={1.5} />
                 ) : (
-                  <Lucide.XCircle className="size-12 text-red-500" strokeWidth={1.5} />
+                  <Lucide.XCircle className="size-12 text-destructive" strokeWidth={1.5} />
                 )}
               </div>
               <Badge variant={data?.status === 'healthy' ? 'success' : 'error'}>
@@ -59,7 +59,7 @@ export default function SystemStatus() {
           {isLoading ? (
             <div className="h-20 w-full animate-pulse rounded bg-muted" />
           ) : error ? (
-            <Text className="text-red-500">Error loading resource data</Text>
+            <Text className="text-destructive">Error loading resource data</Text>
           ) : (
             <div className="space-y-4">
               <div>
@@ -150,7 +150,7 @@ export default function SystemStatus() {
           {isLoading ? (
             <div className="h-20 w-full animate-pulse rounded bg-muted" />
           ) : error ? (
-            <Text className="text-red-500">Error loading environment data</Text>
+            <Text className="text-destructive">Error loading environment data</Text>
           ) : (
             <div className="space-y-4">
               <div className="flex items-center justify-between">

@@ -158,7 +158,7 @@ export default function SystemInformation() {
           {isLoading ? (
             <div className="h-40 w-full animate-pulse rounded bg-muted" />
           ) : error ? (
-            <Text className="text-red-500">Error loading system information</Text>
+            <Text className="text-destructive">Error loading system information</Text>
           ) : (
             <pre className="overflow-auto rounded-md bg-muted p-4 font-mono text-xs">
               {JSON.stringify(data, null, 2)}
