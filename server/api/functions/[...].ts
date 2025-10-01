@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs'
 import { parse, resolve } from 'node:path'
 import { globby } from 'globby'
-import { createRouter, defineEventHandler, eventHandler } from 'h3'
+import { createError, createRouter, defineEventHandler, eventHandler } from 'h3'
 import dbClient from '~/database/db.client'
 
 type HttpMethod = (typeof HTTP_METHODS)[number]
@@ -17,13 +17,25 @@ function parseFileName(fileName: string): { routeName: string; method: HttpMetho
   const { name, dir } = parse(fileName)
   const parts = name.split('.')
 
-  if (parts.includes('[...]')) {
+  // Named wildcard: [...param].mjs
+  const namedWildcard = parts.find((p) => /^\[\.\.\.[a-zA-Z0-9_]+\]$/.test(p))
+  if (namedWildcard) {
+    const paramName = namedWildcard.slice(4, -1) // Remove '[...' and ']'
     return {
-      routeName: `${dir ? `${dir}/` : ''}*`,
+      routeName: `${dir ? `${dir}/` : ''}**:${paramName}`,
       method: (parts.find((p) => HTTP_METHODS.includes(p as HttpMethod)) as HttpMethod) || 'get',
     }
   }
 
+  // Simple wildcard: [...].mjs
+  if (parts.includes('[...]')) {
+    return {
+      routeName: `${dir ? `${dir}/` : ''}**`,
+      method: (parts.find((p) => HTTP_METHODS.includes(p as HttpMethod)) as HttpMethod) || 'get',
+    }
+  }
+
+  // Index route
   if (parts[0] === 'index') {
     return {
       routeName: dir || '',
@@ -31,15 +43,16 @@ function parseFileName(fileName: string): { routeName: string; method: HttpMetho
     }
   }
 
+  // Static and named param route
   const methodPart = parts.find((p) => HTTP_METHODS.includes(p as HttpMethod))
-  const routeParts = parts.map((part) => {
-    if (part === '[...]') return '*'
-    if (part.startsWith('[') && part.endsWith(']')) return `:${part.slice(1, -1)}`
-    return part
-  })
+  const routeParts = parts
+    .filter((part) => !part.startsWith('[...') && part !== methodPart && part !== '')
+    .map((part) => {
+      if (part.startsWith('[') && part.endsWith(']')) return `:${part.slice(1, -1)}`
+      return part
+    })
 
-  const cleanParts = routeParts.filter((part) => part !== methodPart)
-  const routeName = dir ? `${dir}/${cleanParts.join('/')}` : cleanParts.join('/')
+  const routeName = dir ? `${dir}/${routeParts.join('/')}` : routeParts.join('/')
   const method = (methodPart as HttpMethod) || 'get'
 
   return { routeName, method }
@@ -56,12 +69,43 @@ async function registerRoutes() {
     router.add(
       routePath,
       eventHandler(async (event) => {
-        const userFunction = await import(`${functionsDir}/${file}`)
-        const handler = userFunction.default || userFunction
-        // Inject application context into the handler
-        // TODO: protect against malicious user functions especially for the database access
-        const h3Event = { ...event, db: dbClient }
-        return handler(h3Event)
+        try {
+          const userFunction = await import(`${functionsDir}/${file}`)
+          const handler = userFunction.default || userFunction
+
+          if (typeof handler !== 'function') {
+            throw createError({
+              statusCode: 500,
+              statusMessage: `Function ${file} does not export a valid handler`,
+            })
+          }
+
+          const h3Event = { ...event, db: dbClient }
+          return await handler(h3Event)
+        } catch (error: unknown) {
+          logger.error(`Error in function ${file}:`, error)
+
+          // If it's already an H3 error, re-throw it
+          if (error && typeof error === 'object' && 'statusCode' in error) {
+            throw error
+          }
+
+          // Handle Error instances
+          if (error instanceof Error) {
+            throw createError({
+              statusCode: 500,
+              statusMessage: `Function ${file} execution failed`,
+              data: process.env.NODE_ENV === 'development' ? error.message : undefined,
+            })
+          }
+
+          // Handle other types of errors
+          throw createError({
+            statusCode: 500,
+            statusMessage: `Function ${file} execution failed`,
+            data: process.env.NODE_ENV === 'development' ? String(error) : undefined,
+          })
+        }
       }),
       method
     )
@@ -75,14 +119,56 @@ export default defineEventHandler(async (event) => {
   if (!routesReady) await routesPromise
 
   if (!existsSync(functionsDir)) {
-    logger.info('[functions]', 'No user functions folder found')
-    return
+    logger.info('No user functions folder found')
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Functions directory not found',
+    })
   }
 
-  // Router will handle matching and method validation
-  // Params will be injected to event.context.params
-  const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('Function timeout')), FUNCTION_TIMEOUT)
-  )
-  return Promise.race([router.handler(event), timeoutPromise])
+  try {
+    // Create timeout promise that rejects
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      const timeout = setTimeout(() => {
+        logger.error(`Function timeout after ${FUNCTION_TIMEOUT}ms for ${event.node.req.url}`)
+        reject(
+          createError({
+            statusCode: 408,
+            statusMessage: 'Function execution timeout',
+          })
+        )
+      }, FUNCTION_TIMEOUT)
+
+      // Clear timeout if we're done (this won't work in race, but good practice)
+      return timeout
+    })
+
+    // Execute the function with timeout
+    const result = await Promise.race([router.handler(event), timeoutPromise])
+
+    return result
+  } catch (error: unknown) {
+    logger.error('Handler error:', error)
+
+    // If it's already an H3 error, re-throw it
+    if (error && typeof error === 'object' && 'statusCode' in error) {
+      throw error
+    }
+
+    // Handle Error instances
+    if (error instanceof Error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Internal function error',
+        data: process.env.NODE_ENV === 'development' ? error.message : undefined,
+      })
+    }
+
+    // Handle other types of errors
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Internal function error',
+      data: process.env.NODE_ENV === 'development' ? String(error) : undefined,
+    })
+  }
 })
