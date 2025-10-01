@@ -46,7 +46,7 @@ const ReactQueryDevtoolsProduction = React.lazy(() =>
 
 export default function DataProvider({ children }: React.PropsWithChildren) {
   const queryClient = getQueryClient()
-  const { data: hc } = useFetch<any>('/api/healthz')
+  const { data: hc } = useFetch<any>('/api/sysinfo')
 
   return (
     <QueryClientProvider client={queryClient}>

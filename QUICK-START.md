@@ -138,7 +138,7 @@ CREATE INDEX IF NOT EXISTS idx_posts_created_at ON posts(created_at);
 Using [`oha`](https://github.com/hatoo/oha) to perform a simple load testing.
 
 ```sh
-oha -z 10s -m GET http://localhost:3278/api/healthz -c 350 -n 10000
+oha -z 10s -m GET http://localhost:3278/api/sysinfo -c 350 -n 10000
 ```
 
 ## 🐳 Docker Container
