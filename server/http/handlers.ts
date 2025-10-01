@@ -7,7 +7,7 @@ import { createError, sendStream } from 'h3'
 import { handleBypassCache } from '~/utils/cache'
 import { DURATION } from '~/utils/datetime'
 import pkg from '~~/package.json' with { type: 'json' }
-import { guardApiKey } from './guards'
+import { guardApiKey, guardAppSecretKey, guardToken, useJwtAuth } from './guards'
 
 const ALLOWED_DOCS = ['html', 'css', 'json', 'js', 'pdf', 'txt']
 const ALLOWED_IMAGES = ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico']
@@ -233,8 +233,32 @@ export const renderSPAClient = defineCachedFunction(
 
 // Wrapper for defining protected event handlers
 export function defineProtectedEventHandler<T>(
-  handler: (event: H3Event) => Promise<T> | T
+  handler: (event: H3Event) => Promise<T> | T,
+  opts: { guard?: 'publishableKey' | 'appSecretKey' | 'token' | 'jwt' } = {
+    guard: 'publishableKey',
+  }
 ): EventHandler {
+  if (opts.guard === 'jwt') {
+    return defineEventHandler(async (event) => {
+      await useJwtAuth(event)
+      return handler(event)
+    })
+  }
+
+  if (opts.guard === 'token') {
+    return defineEventHandler(async (event) => {
+      await guardToken(event)
+      return handler(event)
+    })
+  }
+
+  if (opts.guard === 'appSecretKey') {
+    return defineEventHandler(async (event) => {
+      await guardAppSecretKey(event)
+      return handler(event)
+    })
+  }
+
   return defineEventHandler(async (event) => {
     await guardApiKey(event)
     return handler(event)

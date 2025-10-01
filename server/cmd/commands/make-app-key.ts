@@ -18,8 +18,8 @@ export default defineCommand({
   run() {
     const _console_ = consola.create({ formatOptions: { date: false } })
     try {
-      const appSecretKey = newAPIKey('SQ_KEY', randomUUID(), Options.With256BitEntropy)
-      const publishableKey = newAPIKey('SQ_PUB', randomUUID(), Options.With128BitEntropy)
+      const appSecretKey = newAPIKey('KEY', randomUUID(), Options.With256BitEntropy)
+      const publishableKey = newAPIKey('PUB', randomUUID(), Options.With128BitEntropy)
       const jwtKeyStr = newAPIKey('JWK', randomUUID(), Options.With160BitEntropy)
 
       _console_.log(`SQUELIFY_APP_SECRET_KEY=${appSecretKey.toString().toLowerCase()}`)
