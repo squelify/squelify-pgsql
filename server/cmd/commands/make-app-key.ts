@@ -6,33 +6,27 @@ import { newAPIKey, Options } from 'uuidkey'
 export default defineCommand({
   meta: {
     name: 'make:app-key',
-    description: 'Create application secret key',
+    description: 'Create application secret keys',
   },
   args: {
-    plain: {
-      type: 'boolean',
-      description: 'Print only the key',
-      default: false,
-    },
     help: {
       type: 'boolean',
       description: 'Print information about the command',
       default: false,
     },
   },
-  run({ args }) {
+  run() {
+    const _console_ = consola.create({ formatOptions: { date: false } })
     try {
-      const generatedKey = newAPIKey('SKEY', randomUUID(), Options.With160BitEntropy)
-      const keyStr = generatedKey.toString().toLowerCase()
+      const appSecretKey = newAPIKey('SQ_KEY', randomUUID(), Options.With256BitEntropy)
+      const publishableKey = newAPIKey('SQ_PUB', randomUUID(), Options.With128BitEntropy)
+      const jwtKeyStr = newAPIKey('JWK', randomUUID(), Options.With160BitEntropy)
 
-      if (args.plain) {
-        consola.log(keyStr)
-        return
-      }
-
-      consola.log(`SQUELIFY_JWT_SECRET_KEY=${keyStr}`)
+      _console_.log(`SQUELIFY_APP_SECRET_KEY=${appSecretKey.toString().toLowerCase()}`)
+      _console_.log(`SQUELIFY_PUBLISHABLE_KEY=${publishableKey.toString().toLowerCase()}`)
+      _console_.log(`SQUELIFY_JWT_SECRET_KEY=${jwtKeyStr.toString().toLowerCase()}`)
     } catch (error) {
-      consola.error(error instanceof Error ? error.message : 'Unknown error occurred')
+      _console_.error(error instanceof Error ? error.message : 'Unknown error occurred')
       process.exit(1)
     }
   },

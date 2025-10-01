@@ -4,11 +4,11 @@ import { globby } from 'globby'
 import * as h3 from 'h3'
 import { createError, createRouter, defineEventHandler, eventHandler } from 'h3'
 import { sql } from 'kysely'
-import { isDevelopment } from 'std-env'
+import { env, isDevelopment } from 'std-env'
 import dbClient from '~/database/db.client'
 import { createRateLimit, getRateLimitInfo } from '~/database/repository/rate_limit.repo'
 import { RATE_LIMIT_CONFIG } from '~/database/schemas/rate_limit'
-import { getClientInfo } from '~/utils/http'
+import { createErrorResponse, getClientInfo } from '~/utils/http'
 
 type HttpMethod = (typeof HTTP_METHODS)[number]
 
@@ -284,6 +284,20 @@ async function registerRoutes() {
 const routesPromise = registerRoutes()
 
 export default defineEventHandler(async (event) => {
+  // Protect the endpoint with API key (header or query parameter)
+  const apiKeyHeader = event.headers.get('X-API-Key')
+  const apiKeyQuery = h3.getQuery(event).apiKey as string | undefined
+  const apiKey = apiKeyHeader || apiKeyQuery
+
+  if (!apiKey) {
+    return createErrorResponse(event, 'Missing API key on request header or query parameter', 401)
+  }
+
+  // TODO: Validate the apiKey against your stored keys, for now we just compare with SQUELIFY_PUBLISHABLE_KEY
+  if (apiKey !== env.SQUELIFY_PUBLISHABLE_KEY) {
+    return createErrorResponse(event, 'Invalid API key, you must provide a valid key', 401)
+  }
+
   if (!routesReady) await routesPromise
 
   if (!existsSync(functionsDir)) {
