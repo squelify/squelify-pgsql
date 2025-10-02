@@ -4,7 +4,7 @@ import { z } from 'zod'
 // User schema with validation rules
 export const UserSchema = z.object({
   id: z.custom<Generated<string>>(),
-  email: z.string().email({ error: 'Invalid email address' }),
+  email: z.email({ error: 'Invalid email address' }),
   username: z
     .string()
     .min(3, { error: 'Username must be at least 3 characters' })
@@ -14,7 +14,7 @@ export const UserSchema = z.object({
     })
     .nullable(),
   displayName: z.string().min(1, { error: 'Display name is required' }),
-  avatarUrl: z.string().url({ error: 'Invalid avatar URL' }).nullable(),
+  avatarUrl: z.url({ error: 'Invalid avatar URL' }).nullable(),
   metadata: z.unknown().nullable(),
   createdAt: z.custom<ColumnType<Date, string | undefined, never>>().optional(),
   updatedAt: z.custom<ColumnType<Date, string | undefined, never>>().nullable(),

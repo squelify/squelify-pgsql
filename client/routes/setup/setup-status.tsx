@@ -55,20 +55,17 @@ export function AlreadyInstalledStatus({ message }: AlreadyInstalledStatusProps)
   )
 }
 
-interface SuccessStatusProps {
-  message?: string
-}
-
-export function SuccessStatus({
-  message = 'Your admin account has been created successfully. You can now log in with your credentials.',
-}: SuccessStatusProps) {
+export function SuccessStatus() {
   return (
     <div className="space-y-4 py-4 text-center">
       <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-success/10">
         <Lucide.CheckCircle className="h-6 w-6 text-success" />
       </div>
       <h3 className="font-medium text-lg">Setup Completed</h3>
-      <p className="text-muted-foreground text-sm">{message}</p>
+      <p className="text-muted-foreground text-sm">
+        Your admin account has been created successfully. <br />
+        You can now log in with your credentials.
+      </p>
       <div className="pt-2">
         <Link
           href="/login"

@@ -6,7 +6,7 @@ export const WebhookSchema = z.object({
   id: z.custom<Generated<string>>(),
   profileName: z.string().min(1, { error: 'Profile name is required' }),
   userId: z.uuid(), // user_id, PK
-  webhookUrl: z.string().url({ error: 'Invalid webhook URL' }),
+  webhookUrl: z.url({ error: 'Invalid webhook URL' }),
   httpMethod: z.enum(['GET', 'POST', 'PUT', 'PATCH', 'DELETE']),
   payloadTemplate: z.unknown().nullable(),
   requestHeaders: z.unknown().nullable(),

@@ -1,11 +1,19 @@
 import type { ColumnType, Generated, Insertable, Selectable, Updateable } from 'kysely'
 import { z } from 'zod'
 
+const oneTimeTokenTypeEnum = z.enum([
+  'setup_application',
+  'email_verification',
+  'email_otp',
+  'email_mfa',
+  'password_reset',
+])
+
 // OneTimeToken schema with validation rules
 export const OneTimeTokenSchema = z.object({
   id: z.custom<Generated<string>>(),
   userId: z.uuid().nullable(),
-  tokenType: z.string().min(1, { error: 'Token type is required' }),
+  tokenType: oneTimeTokenTypeEnum,
   tokenHash: z.string().min(1, { error: 'Token hash is required' }),
   relatesTo: z.string().min(1, { error: 'Relates to is required' }),
   metadata: z.unknown().nullable(),

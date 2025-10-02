@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { z } from 'zod'
 import { Checkbox } from '#/components/checkbox'
 import {
   Form,
@@ -10,64 +11,83 @@ import {
   FormValidityState,
 } from '#/components/form'
 import { Input } from '#/components/input'
-import { AdminUserData, isValidUUID, validateEmail, validatePassword } from './use-setup'
+import { SetupSchema } from '~/orpc/schemas/setup.schema'
 
 interface SetupFormProps {
   token: string | null
-  onSubmit: (userData: AdminUserData) => Promise<void>
+  onSubmit: (userData: Omit<z.infer<typeof SetupSchema>, 'token'>) => Promise<void>
   isLoading: boolean
 }
 
-export default function SetupForm({ token, onSubmit, isLoading }: SetupFormProps) {
+export default function SetupForm({ onSubmit, isLoading }: SetupFormProps) {
   const [formError, setFormError] = useState<string | null>(null)
+  const [formValues, setFormValues] = useState({
+    firstName: '',
+    lastName: '',
+    username: '',
+    email: '',
+    password: '',
+    passwordConfirm: '',
+    subscribeToNewsletter: false,
+  })
 
-  const inputFirstNameRef = useRef<HTMLInputElement>(null)
-  const inputLastNameRef = useRef<HTMLInputElement>(null)
-  const inputUsernameRef = useRef<HTMLInputElement>(null)
-  const inputEmailRef = useRef<HTMLInputElement>(null)
-  const inputPasswordRef = useRef<HTMLInputElement>(null)
-  const inputConfirmPasswordRef = useRef<HTMLInputElement>(null)
+  const inputRefs = {
+    firstName: useRef<HTMLInputElement>(null),
+    lastName: useRef<HTMLInputElement>(null),
+    username: useRef<HTMLInputElement>(null),
+    email: useRef<HTMLInputElement>(null),
+    password: useRef<HTMLInputElement>(null),
+    passwordConfirm: useRef<HTMLInputElement>(null),
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }))
+  }
+
+  const handleCheckboxChange = (checked: boolean) => {
+    setFormValues((prev) => ({
+      ...prev,
+      subscribeToNewsletter: checked,
+    }))
+  }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setFormError(null)
 
-    if (!token || !isValidUUID(token)) {
-      setFormError('Invalid setup token')
+    const {
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      passwordConfirm,
+      subscribeToNewsletter,
+    } = formValues
+
+    // Simple frontend validation (schema will validate on backend)
+    if (!firstName || !lastName || !email || !username || !password || !passwordConfirm) {
+      setFormError('All fields are required')
       return
     }
-
-    const formData = new FormData(event.currentTarget)
-    const username = formData.get('username') as string
-    const email = formData.get('email') as string
-    const firstName = formData.get('firstName') as string
-    const lastName = formData.get('lastName') as string
-    const password = formData.get('password') as string
-    const confirmPassword = formData.get('confirmPassword') as string
-    const newsletter = formData.get('newsletter') === 'on'
-
-    // Validate email
-    const emailValidation = validateEmail(email)
-    if (!emailValidation.isValid) {
-      setFormError(emailValidation.errorMessage || 'Invalid email address')
-      return
-    }
-
-    // Validate passwords
-    const passwordValidation = validatePassword(password, confirmPassword)
-    if (!passwordValidation.isValid) {
-      setFormError(passwordValidation.errorMessage || 'Password validation failed')
+    if (password !== passwordConfirm) {
+      setFormError('Password confirmation does not match')
       return
     }
 
     try {
       await onSubmit({
-        username,
-        email,
         firstName,
         lastName,
+        email,
+        username,
         password,
-        newsletter,
+        passwordConfirm,
+        subscribeToNewsletter,
       })
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred'
@@ -83,19 +103,22 @@ export default function SetupForm({ token, onSubmit, isLoading }: SetupFormProps
         </div>
       )}
 
-      <Form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-4">
-          <FormField name="firstName">
-            <div className="flex items-baseline justify-between">
-              <FormLabel>First Name</FormLabel>
-            </div>
+      <Form onSubmit={handleSubmit} autoComplete="off">
+        <div className="flex gap-4">
+          <FormField name="firstName" className="flex-1">
+            <FormLabel>First Name</FormLabel>
             <FormControl asChild>
               <Input
-                ref={inputFirstNameRef}
-                placeholder="John"
+                ref={inputRefs.firstName}
+                name="firstName"
+                value={formValues.firstName}
+                onChange={handleChange}
+                placeholder="First Name"
                 disabled={isLoading}
                 required
-                autoFocus
+                minLength={1}
+                maxLength={64}
+                autoComplete="given-name"
               />
             </FormControl>
             <FormValidityState name="firstName">
@@ -104,24 +127,41 @@ export default function SetupForm({ token, onSubmit, isLoading }: SetupFormProps
                   {validity?.valueMissing && (
                     <p className="text-destructive">First name is required</p>
                   )}
+                  {validity?.tooLong && (
+                    <p className="text-destructive">
+                      First name must be a maximum of 64 characters
+                    </p>
+                  )}
                   {validity?.valid && <p className="text-success">First name is valid</p>}
                 </div>
               )}
             </FormValidityState>
           </FormField>
 
-          <FormField name="lastName">
-            <div className="flex items-baseline justify-between">
-              <FormLabel>Last Name</FormLabel>
-            </div>
+          <FormField name="lastName" className="flex-1">
+            <FormLabel>Last Name</FormLabel>
             <FormControl asChild>
-              <Input ref={inputLastNameRef} placeholder="Doe" disabled={isLoading} required />
+              <Input
+                ref={inputRefs.lastName}
+                name="lastName"
+                value={formValues.lastName}
+                onChange={handleChange}
+                placeholder="Last Name"
+                disabled={isLoading}
+                required
+                minLength={1}
+                maxLength={64}
+                autoComplete="family-name"
+              />
             </FormControl>
             <FormValidityState name="lastName">
               {(validity) => (
                 <div className="font-medium text-xs">
                   {validity?.valueMissing && (
                     <p className="text-destructive">Last name is required</p>
+                  )}
+                  {validity?.tooLong && (
+                    <p className="text-destructive">Last name must be a maximum of 64 characters</p>
                   )}
                   {validity?.valid && <p className="text-success">Last name is valid</p>}
                 </div>
@@ -131,16 +171,37 @@ export default function SetupForm({ token, onSubmit, isLoading }: SetupFormProps
         </div>
 
         <FormField name="username">
-          <div className="flex items-baseline justify-between">
-            <FormLabel>Username</FormLabel>
-          </div>
+          <FormLabel>Username</FormLabel>
           <FormControl asChild>
-            <Input ref={inputUsernameRef} placeholder="admin" disabled={isLoading} required />
+            <Input
+              ref={inputRefs.username}
+              name="username"
+              value={formValues.username}
+              onChange={handleChange}
+              placeholder="admin"
+              disabled={isLoading}
+              required
+              minLength={3}
+              maxLength={32}
+              pattern="^[a-zA-Z0-9_]+$"
+              autoComplete="username"
+            />
           </FormControl>
           <FormValidityState name="username">
             {(validity) => (
               <div className="font-medium text-xs">
                 {validity?.valueMissing && <p className="text-destructive">Username is required</p>}
+                {validity?.tooShort && (
+                  <p className="text-destructive">Username must be at least 3 characters</p>
+                )}
+                {validity?.tooLong && (
+                  <p className="text-destructive">Username must be a maximum of 32 characters</p>
+                )}
+                {validity?.patternMismatch && (
+                  <p className="text-destructive">
+                    Usernames may only contain letters, numbers and underscores
+                  </p>
+                )}
                 {validity?.valid && <p className="text-success">Username is valid</p>}
               </div>
             )}
@@ -148,16 +209,18 @@ export default function SetupForm({ token, onSubmit, isLoading }: SetupFormProps
         </FormField>
 
         <FormField name="email">
-          <div className="flex items-baseline justify-between">
-            <FormLabel>Email</FormLabel>
-          </div>
+          <FormLabel>Email</FormLabel>
           <FormControl asChild>
             <Input
               type="email"
-              ref={inputEmailRef}
+              ref={inputRefs.email}
+              name="email"
+              value={formValues.email}
+              onChange={handleChange}
               placeholder="admin@example.com"
               disabled={isLoading}
               required
+              autoComplete="email"
             />
           </FormControl>
           <FormValidityState name="email">
@@ -174,18 +237,21 @@ export default function SetupForm({ token, onSubmit, isLoading }: SetupFormProps
         </FormField>
 
         <FormField name="password">
-          <div className="flex items-baseline justify-between">
-            <FormLabel>Password</FormLabel>
-          </div>
+          <FormLabel>Password</FormLabel>
           <FormControl asChild>
             <Input
               type="password"
-              ref={inputPasswordRef}
+              ref={inputRefs.password}
+              name="password"
+              value={formValues.password}
+              onChange={handleChange}
               placeholder="••••••••"
-              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
               disabled={isLoading}
               minLength={8}
+              maxLength={128}
               required
+              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$"
+              autoComplete="new-password"
             />
           </FormControl>
           <FormValidityState name="password">
@@ -204,26 +270,30 @@ export default function SetupForm({ token, onSubmit, isLoading }: SetupFormProps
           </FormValidityState>
         </FormField>
 
-        <FormField name="confirmPassword">
-          <div className="flex items-baseline justify-between">
-            <FormLabel>Confirm Password</FormLabel>
-          </div>
+        <FormField name="passwordConfirm">
+          <FormLabel>Confirm Password</FormLabel>
           <FormControl asChild>
             <Input
               type="password"
-              ref={inputConfirmPasswordRef}
+              ref={inputRefs.passwordConfirm}
+              name="passwordConfirm"
+              value={formValues.passwordConfirm}
+              onChange={handleChange}
               placeholder="••••••••"
               disabled={isLoading}
+              minLength={8}
+              maxLength={128}
               required
+              autoComplete="new-password"
             />
           </FormControl>
           <FormMessage
-            name="confirmPassword"
-            match={(value, formData) => value !== formData.get('password')}
+            name="passwordConfirm"
+            match={(value, allValues) => value !== allValues.get('password')}
           >
-            Passwords do not match
+            Password confirmation does not match
           </FormMessage>
-          <FormValidityState name="confirmPassword">
+          <FormValidityState name="passwordConfirm">
             {(validity) => (
               <div className="font-medium text-xs">
                 {validity?.valueMissing && (
@@ -236,8 +306,14 @@ export default function SetupForm({ token, onSubmit, isLoading }: SetupFormProps
         </FormField>
 
         <div className="flex items-center space-x-2">
-          <Checkbox id="newsletter" name="newsletter" disabled={isLoading} />
-          <label htmlFor="newsletter" className="font-medium text-sm">
+          <Checkbox
+            id="subscribeToNewsletter"
+            name="subscribeToNewsletter"
+            checked={formValues.subscribeToNewsletter}
+            onCheckedChange={handleCheckboxChange}
+            disabled={isLoading}
+          />
+          <label htmlFor="subscribeToNewsletter" className="font-medium text-sm">
             Subscribe to our newsletter to get the latest updates and news.
           </label>
         </div>
