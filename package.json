@@ -91,7 +91,6 @@
         "kysely": "^0.28.7",
         "kysely-postgres-js": "^3.0.0",
         "lucide-react": "^0.544.0",
-        "make-dir": "^5.1.0",
         "nanostores": "^1.0.1",
         "nuqs": "^2.7.0",
         "ofetch": "^1.4.1",

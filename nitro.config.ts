@@ -1,6 +1,6 @@
+import fs from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { createConsola } from 'consola'
-import { makeDirectory } from 'make-dir'
 import { isDevelopment, isProduction } from 'std-env'
 import pkg from './package.json' with { type: 'json' }
 
@@ -37,11 +37,11 @@ export default defineNitroConfig({
     'rollup:before': async (nitro) => {
       _console.info('Creating application data directory')
       await Promise.all([
-        makeDirectory(resolve('storage/backup'), { mode: 0o755 }),
-        makeDirectory(resolve('storage/functions'), { mode: 0o755 }),
-        makeDirectory(resolve('storage/migrations'), { mode: 0o755 }),
-        makeDirectory(resolve('storage/uploads'), { mode: 0o755 }),
-        makeDirectory(resolve('storage/wwwroot'), { mode: 0o755 }),
+        fs.mkdir(resolve('storage/backup'), { recursive: true, mode: 0o755 }),
+        fs.mkdir(resolve('storage/functions'), { recursive: true, mode: 0o755 }),
+        fs.mkdir(resolve('storage/migrations'), { recursive: true, mode: 0o755 }),
+        fs.mkdir(resolve('storage/uploads'), { recursive: true, mode: 0o755 }),
+        fs.mkdir(resolve('storage/wwwroot'), { recursive: true, mode: 0o755 }),
       ])
 
       if (nitro.options.dev) {

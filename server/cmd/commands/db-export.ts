@@ -24,11 +24,11 @@
  */
 
 import { writeFileSync } from 'node:fs'
+import fs from 'node:fs/promises'
 import { resolve } from 'node:path'
 import process from 'node:process'
 import { defineCommand, showUsage } from 'citty'
 import consola from 'consola'
-import { makeDirectory } from 'make-dir'
 import postgres from 'postgres'
 import { env } from 'std-env'
 import { getDatabaseVersion, getSqlHeader, getTimestamp } from '../pgdump/utils'
@@ -64,7 +64,7 @@ export default defineCommand({
     },
   },
   async setup() {
-    await makeDirectory(resolve('storage/backup'), { mode: 0o755 })
+    await fs.mkdir(resolve('storage/backup'), { recursive: true, mode: 0o755 })
   },
   async run({ args, cmd }) {
     if (args.help) {
