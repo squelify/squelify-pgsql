@@ -115,6 +115,8 @@ services:
     volumes: ['./temp/s3data/devbucket:/srv:ro']
     extra_hosts: ['host.docker.internal:host-gateway']
     networks: ['squelify_network']
+    depends_on:
+      locals3: { condition: service_healthy }
 
 volumes:
   pgsql_data:

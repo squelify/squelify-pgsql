@@ -37,24 +37,32 @@ export async function getMigrationItems(): Promise<DatabaseMigration[]> {
       migration: await import('./migrations/202504006_create_one_time_tokens_table'),
     },
     {
-      name: '202504007_create_roles_permissions_tables',
-      migration: await import('./migrations/202504007_create_roles_permissions_tables'),
+      name: '202504007_create_roles_tables',
+      migration: await import('./migrations/202504007_create_roles_tables'),
     },
     {
-      name: '202504008_create_api_keys_table',
-      migration: await import('./migrations/202504008_create_api_keys_table'),
+      name: '202504008_create_permissions_tables',
+      migration: await import('./migrations/202504008_create_permissions_tables'),
     },
     {
-      name: '202504009_create_audit_logs_table',
-      migration: await import('./migrations/202504009_create_audit_logs_table'),
+      name: '202504009_create_api_keys_table',
+      migration: await import('./migrations/202504009_create_api_keys_table'),
     },
     {
-      name: '202504010_create_app_settings_table',
-      migration: await import('./migrations/202504010_create_app_settings_table'),
+      name: '202504010_create_audit_logs_table',
+      migration: await import('./migrations/202504010_create_audit_logs_table'),
     },
     {
-      name: '202504011_create_webhooks_table',
-      migration: await import('./migrations/202504011_create_webhooks_table'),
+      name: '202504011_create_app_settings_table',
+      migration: await import('./migrations/202504011_create_app_settings_table'),
+    },
+    {
+      name: '202504012_create_webhooks_table',
+      migration: await import('./migrations/202504012_create_webhooks_table'),
+    },
+    {
+      name: '202504013_create_rate_limits_table',
+      migration: await import('./migrations/202504013_create_rate_limits_table'),
     },
   ]
 }
