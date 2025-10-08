@@ -1,5 +1,5 @@
-import { join, resolve } from 'node:path'
-import { globby } from 'globby'
+import fs from 'node:fs/promises'
+import { join, relative, resolve } from 'node:path'
 import type { Migration, MigrationProvider } from 'kysely'
 import { env } from 'std-env'
 import { getMigrationItems } from './automigrate'
@@ -20,8 +20,10 @@ export default class NitroMigrator implements MigrationProvider {
   async getMigrations(): Promise<Record<string, Migration>> {
     // ESM File Migration mode
     if (!this.shouldAutoMigrate) {
-      // TODO: improve this, use glob from 'node:fs/promises' (Node 22+)
-      const files = await globby('**/*.ts', { cwd: this.resolvedPath })
+      const files: string[] = [] // Require 'node:fs/promises' (Node 22+)
+      for await (const file of fs.glob(`${this.resolvedPath}/**/*.ts`)) {
+        files.push(relative(this.resolvedPath, file))
+      }
 
       return Object.fromEntries(
         await Promise.all(

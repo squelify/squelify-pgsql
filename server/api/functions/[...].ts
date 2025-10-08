@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs'
-import { parse, resolve } from 'node:path'
-import { globby } from 'globby'
+import fs from 'node:fs/promises'
+import { parse, relative, resolve } from 'node:path'
 import * as h3 from 'h3'
 import { sql } from 'kysely'
 import { isDevelopment } from 'std-env'
@@ -199,7 +199,10 @@ async function checkRateLimit(event: any): Promise<void> {
 async function registerRoutes() {
   if (!existsSync(functionsDir)) return
 
-  const files = await globby('**/*.mjs', { onlyFiles: true, cwd: functionsDir })
+  const files: string[] = []
+  for await (const file of fs.glob(`${functionsDir}/**/*.mjs`)) {
+    files.push(relative(functionsDir, file))
+  }
 
   for (const file of files) {
     // Security: Validate file path to prevent traversal (but allow wildcard syntax)

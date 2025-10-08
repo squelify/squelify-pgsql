@@ -86,7 +86,6 @@
         "codemirror": "^6.0.2",
         "consola": "^3.4.2",
         "date-fns": "^4.1.0",
-        "globby": "^15.0.0",
         "http-status": "^2.1.0",
         "input-otp": "^1.4.2",
         "kysely": "^0.28.7",
