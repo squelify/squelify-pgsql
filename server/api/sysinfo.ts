@@ -1,3 +1,4 @@
+import os from 'node:os'
 import process from 'node:process'
 import status from 'http-status'
 import { sql } from 'kysely'
@@ -7,6 +8,36 @@ import { z } from 'zod'
 import { SysInfoSchema } from '~/orpc/schemas/sysinfo.schema'
 
 type HealthCheckResponse = z.infer<typeof SysInfoSchema>
+
+function buildOsInfo({
+  platform,
+  arch,
+  distro,
+  version,
+}: {
+  platform: string
+  arch: string
+  distro: string
+  version: string
+}) {
+  let result = platform.charAt(0).toUpperCase() + platform.slice(1)
+  if (distro) result += ` (${distro})`
+  result += ` • ${arch}`
+  result += ` • ${version}`
+  return result
+}
+
+async function getLinuxDistro(): Promise<string> {
+  if (os.platform() !== 'linux') return ''
+  try {
+    const fs = await import('node:fs/promises')
+    const osRelease = await fs.readFile('/etc/os-release', 'utf8')
+    const match = osRelease.match(/^PRETTY_NAME="(.+)"$/m)
+    return match ? match[1] : ''
+  } catch {
+    return ''
+  }
+}
 
 export default eventHandler(async (event): Promise<HealthCheckResponse> => {
   // Extract authorization header
@@ -18,17 +49,19 @@ export default eventHandler(async (event): Promise<HealthCheckResponse> => {
   const memoryUsage = process.memoryUsage()
   const db = event.context.db
 
-  // Check database connection with timing
+  // Check database connection and get version with timing
   let dbConnected = false
   let dbLatency = '0ms'
+  let dbVersion = ''
 
   try {
     const startTime = performance.now()
-    const dbStatus = await sql.raw<{ status: number }>(`SELECT 1 as status`).execute(db)
+    const dbStatus = await sql.raw<{ version: string }>(`SELECT version()`).execute(db)
     const endTime = performance.now()
 
     dbLatency = `${Math.round(endTime - startTime)}ms`
-    dbConnected = dbStatus && dbStatus.rows[0].status === 1
+    dbConnected = !!dbStatus && !!dbStatus.rows[0]?.version
+    dbVersion = dbStatus.rows[0]?.version || (isAuthenticated ? 'N/A' : '')
 
     if (!dbConnected) {
       throw createErrorResponse(event, status['503_MESSAGE'], 503)
@@ -46,6 +79,18 @@ export default eventHandler(async (event): Promise<HealthCheckResponse> => {
   const seconds = Math.floor(uptimeSeconds % 60)
   const uptime = `${days}d ${hours}h ${minutes}m ${seconds}s`
 
+  // OS Info (human readable)
+  let osInfo = ''
+  if (isAuthenticated) {
+    const distro = await getLinuxDistro()
+    osInfo = buildOsInfo({
+      platform: process.platform,
+      arch: process.arch,
+      distro,
+      version: os.release(),
+    })
+  }
+
   // Base response for all users
   const response: HealthCheckResponse = {
     status: 'healthy',
@@ -55,6 +100,7 @@ export default eventHandler(async (event): Promise<HealthCheckResponse> => {
       mode: env.SQUELIFY_APP_MODE ?? 'production',
       logLevel: env.SQUELIFY_LOG_LEVEL ?? 'info',
       nodeVersion: isAuthenticated ? process.version : '',
+      osInfo,
     },
     memory: {
       heapUsed: isAuthenticated ? prettyBytes(memoryUsage.heapUsed) : '',
@@ -65,6 +111,7 @@ export default eventHandler(async (event): Promise<HealthCheckResponse> => {
     database: {
       connected: isAuthenticated ? dbConnected : false,
       latency: dbLatency,
+      version: isAuthenticated ? dbVersion : '',
     },
   }
 

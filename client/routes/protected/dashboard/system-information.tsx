@@ -89,6 +89,11 @@ export default function SystemInformation() {
                   <DescriptionDetails className="inline-flex w-full items-center justify-end">
                     {data?.environment?.nodeVersion || 'N/A'}
                   </DescriptionDetails>
+
+                  <DescriptionTerm>OS Information</DescriptionTerm>
+                  <DescriptionDetails className="inline-flex w-full items-center justify-end">
+                    {data?.environment?.osInfo || 'N/A'}
+                  </DescriptionDetails>
                 </DescriptionList>
               </div>
 
@@ -139,6 +144,11 @@ export default function SystemInformation() {
                   <DescriptionTerm>Latency</DescriptionTerm>
                   <DescriptionDetails className="inline-flex w-full items-center justify-end">
                     {data?.database?.latency || 'N/A'}
+                  </DescriptionDetails>
+
+                  <DescriptionTerm>Postgres Version</DescriptionTerm>
+                  <DescriptionDetails className="inline-flex w-full items-center justify-end">
+                    {data?.database?.version || 'N/A'}
                   </DescriptionDetails>
                 </DescriptionList>
               </div>

@@ -9,6 +9,7 @@ export const SysInfoSchema = z.object({
     mode: z.string(),
     logLevel: z.string(),
     nodeVersion: z.string(),
+    osInfo: z.string(),
   }),
   memory: z.object({
     heapUsed: z.string(),
@@ -19,6 +20,7 @@ export const SysInfoSchema = z.object({
   database: z.object({
     connected: z.boolean(),
     latency: z.string(),
+    version: z.string(),
   }),
 })
 
