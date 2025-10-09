@@ -61,7 +61,7 @@ export function AboutDialog() {
         <DialogDescription>
           <div className="mb-3">
             A modern headless CMS and backend-as-a-service platform powered by Nitro, TypeScript,
-            PGLite or Postgres, and Kysely.
+            Postgres, and Kysely.
           </div>
           <div className="mt-4 mb-6">
             <span className="font-semibold">Useful Links:</span>

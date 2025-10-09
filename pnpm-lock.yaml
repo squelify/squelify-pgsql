@@ -47,9 +47,6 @@ importers:
       '@dagrejs/dagre':
         specifier: ^1.1.5
         version: 1.1.5
-      '@electric-sql/pglite':
-        specifier: ^0.3.10
-        version: 0.3.10
       '@glideapps/glide-data-grid':
         specifier: ^6.0.3
         version: 6.0.3(lodash@4.17.21)(marked@4.3.0)(react-dom@19.2.0(react@19.2.0))(react-responsive-carousel@3.2.23)(react@19.2.0)
@@ -92,9 +89,6 @@ importers:
       '@replit/codemirror-indentation-markers':
         specifier: ^6.5.3
         version: 6.5.3(@codemirror/language@6.11.3)(@codemirror/state@6.5.2)(@codemirror/view@6.38.5)
-      '@squelify/kysely-pglite':
-        specifier: ^0.2.0
-        version: 0.2.0(@electric-sql/pglite@0.3.10)(kysely@0.28.7)
       '@tanstack/react-query':
         specifier: ^5.90.2
         version: 5.90.2(react@19.2.0)
@@ -2766,12 +2760,6 @@ packages:
 
   '@speed-highlight/core@1.2.7':
     resolution: {integrity: sha512-0dxmVj4gxg3Jg879kvFS/msl4s9F3T9UXC1InxgOf7t5NvcPD97u/WTA5vL/IxWHMn7qSxBozqrnnE2wvl1m8g==}
-
-  '@squelify/kysely-pglite@0.2.0':
-    resolution: {integrity: sha512-Yh/LQt/ch9DBdI0ZgDKkz4EVkaoFvMHQr7bDPq6f/VKlA2/fc7dKEt9VTZ842RD9AUF8oIQHtuYf9e7uYM2CIg==}
-    peerDependencies:
-      '@electric-sql/pglite': ^0.3.10
-      kysely: 0.x.x
 
   '@standard-schema/spec@1.0.0':
     resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
@@ -7087,7 +7075,8 @@ snapshots:
 
   '@date-fns/tz@1.4.1': {}
 
-  '@electric-sql/pglite@0.3.10': {}
+  '@electric-sql/pglite@0.3.10':
+    optional: true
 
   '@emnapi/core@1.5.0':
     dependencies:
@@ -9490,11 +9479,6 @@ snapshots:
       tslib: 2.8.1
 
   '@speed-highlight/core@1.2.7': {}
-
-  '@squelify/kysely-pglite@0.2.0(@electric-sql/pglite@0.3.10)(kysely@0.28.7)':
-    dependencies:
-      '@electric-sql/pglite': 0.3.10
-      kysely: 0.28.7
 
   '@standard-schema/spec@1.0.0': {}
 

@@ -24,23 +24,23 @@
     <img src="https://img.shields.io/github/languages/top/squelify/squelify" alt="Languages">
   </a>
   <a href="https://github.com/squelify/squelify/pulse">
-    <img src="https://img.shields.io/badge/Contributions-welcome-gray.svg" alt="Contribution">
+    <img src="https://img.shields.io/badge/Contributions-welcome-gray.svg?labelColor=blue" alt="Contribution">
   </a>
 </p>
 
-## Overview
-
-A modern headless CMS and backend-as-a-service platform powered by Nitro, TypeScript, PGLite,
-PostgreSQL, and Kysely. Squelify is a lightweight and developer-friendly headless CMS solution,
-inspired by amazing projects like Supabase, PocketBase, and Strapi.
+---
 
 > [!CAUTION]
-> 🚨🚨🚨
->
 > Squelify is in a _very_ early development preview - expect some bugs and changes along the way.
 > <br/>Please do not use it in production yet, use in production at your own discretion!
->
-> 🚨🚨🚨
+
+---
+
+## Overview
+
+A modern headless CMS and backend-as-a-service platform powered by Nitro, TypeScript, PostgreSQL, and Kysely.
+Squelify is a lightweight and developer-friendly headless CMS solution, inspired by amazing projects like
+Supabase, PocketBase, and Strapi.
 
 [Learn more in our documentation.][squelify-docs]
 
@@ -71,7 +71,7 @@ Built by developers, for developers. Here's what you get:
 - 💪 Technical Stack
   - [Nitro](https://nitro.unjs.io) - Next Generation Server Toolkit.
   - [TypeScript](https://www.typescriptlang.org) - Type-safe development.
-  - [PGLite](https://pglite.dev) - Embeddable Postgres in WASM.
+  - [PostgreSQL][postgresql] - The world's most advanced open source database.
   - [Kysely](https://kysely.dev) - Type-safe SQL query builder.
   - [oRPC](https://orpc.unnoq.com) - Typesafe APIs Made Simple.
 
@@ -118,7 +118,7 @@ For detailed licensing information, see the [LICENSE](./LICENSE.md) file.
 
 - **Inspiration**: Squelify's design draws inspiration from [Supabase][supabase], [Pocketbase][pocketbase] and [Strapi][strapi].
 - **Licensing Model**: We took inspiration from [Sentry][sentry-licensing] and [GitButler][gitbutler-licensing] licensing model.
-- **The Database**: Our database foundation is powered by [PGLite][pglite] and [PostgreSQL][postgresql].
+- **The Database**: Our database foundation is powered by [PostgreSQL][postgresql].
 - **Logo**: The Squelify logo was created with the help of [Canva][canva].
 
 ## 🔰 Support
@@ -129,15 +129,7 @@ word among your peers. It really helps to move the project forward.
 
 ---
 
-<sub>💝 Support this project via [GitHub sponsors][github-sponsors] or by subscribing on Polar.</sub>
-
-<a href="https://polar.sh/squelify" target="_blank" rel="noopener noreferrer">
-  <picture>
-    <source media="(prefers-color-scheme: dark)"
-      srcset="https://polar.sh/embed/subscribe.svg?org=squelify&label=Subscribe&darkmode"><img
-      alt="Subscribe on Polar" src="https://polar.sh/embed/subscribe.svg?org=squelify&label=Subscribe">
-  </picture>
-</a>
+<sub>💝 Support this project via [GitHub sponsors][github-sponsors] or by subscribing on [Polar][polarsh-sponsors].</sub>
 
 <!-- link reference definition -->
 [canva]: https://www.canva.com/
@@ -148,11 +140,11 @@ word among your peers. It really helps to move the project forward.
 [gitbutler-licensing]: https://blog.gitbutler.com/opening-up-gitbutler/
 [github-sponsors]: https://github.com/sponsors/squelify
 [nitro]: https://nitro.unjs.io
-[pglite]: https://pglite.dev/
 [pocketbase]: https://pocketbase.io
+[polarsh-sponsors]: https://polar.sh/squelify
 [postgresql]: https://www.postgresql.org/
-[riipandi-x]: https://x.com/intent/follow?screen_name=riipandi
 [riipandi-github]: https://github.com/riipandi
+[riipandi-x]: https://x.com/intent/follow?screen_name=riipandi
 [sentry-licensing]: https://blog.sentry.io/introducing-the-functional-source-license-freedom-without-free-riding/
 [squelify-docker]: https://github.com/squelify/squelify/pkgs/container/squelify
 [squelify-docs]: https://squelify.com/docs
