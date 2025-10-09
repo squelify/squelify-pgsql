@@ -37,15 +37,14 @@ const PostgresDialect = new PostgresJSDialect({
 })
 
 const getDialect = () => {
-  switch (String(env.SQUELIFY_DATABASE_ENGINE).toLowerCase()) {
+  const dbAdapter = String(env.SQUELIFY_DATABASE_ADAPTER)
+  switch (dbAdapter.toLowerCase()) {
     case 'postgres':
       return PostgresDialect
     case 'pglite':
       return PGliteDialect
     default:
-      logger.warn(
-        `Unknown database engine "${env.SQUELIFY_DATABASE_ENGINE}", falling back to pglite.`
-      )
+      logger.warn(`Unknown database adapter "${dbAdapter}", falling back to pglite.`)
       return PGliteDialect
   }
 }
