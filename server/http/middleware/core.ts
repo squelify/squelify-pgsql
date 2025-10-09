@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import type { Kysely } from 'kysely'
 import db from '~/database/db.client'
 import type { Database } from '~/database/db.schema'
