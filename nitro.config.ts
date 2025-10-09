@@ -80,6 +80,7 @@ export default defineNitroConfig({
         route: '/api-docs',
         layout: 'modern',
         theme: 'purple',
+        showToolbar: 'never',
         tagsSorter: 'alpha',
         hideModels: true,
         telemetry: false,

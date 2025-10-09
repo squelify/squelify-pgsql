@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import { parse, relative, resolve } from 'node:path'
+import type { H3Event } from 'h3'
 import * as h3 from 'h3'
 import { sql } from 'kysely'
 import { isDevelopment } from 'std-env'
@@ -89,12 +90,10 @@ function createSafeH3Context(event: any) {
     createError: h3.createError,
     setHeader: (name: string, value: string) => h3.setHeader(event, name, value),
     getHeader: (name: string) => h3.getHeader(event, name),
-    db: dbClient, // Provide direct access to dbClient
-    sql: sql, // Provide direct access to sql from Kysely
   }
 }
 
-async function checkRateLimit(event: any): Promise<void> {
+async function checkRateLimit(event: H3Event): Promise<void> {
   if (!RATE_LIMIT_CONFIG.enabled) {
     return // Rate limiting is disabled
   }
@@ -218,7 +217,7 @@ async function registerRoutes() {
 
     router.add(
       routePath,
-      h3.eventHandler(async (event) => {
+      h3.eventHandler(async (event: H3Event) => {
         try {
           // Check rate limits first
           await checkRateLimit(event)
@@ -248,6 +247,8 @@ async function registerRoutes() {
           const enhancedEvent = {
             ...event,
             h3: createSafeH3Context(event),
+            db: dbClient, // Provide direct access to dbClient
+            sql: sql, // Provide direct access to sql from Kysely
             context: {
               ...event.context,
               params: event.context.params || {},

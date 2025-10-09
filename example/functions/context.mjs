@@ -1,11 +1,11 @@
 export default async function (event) {
-  const { db, sql } = event.h3
+  const { db, sql } = event
 
   try {
     // Using Kysely's sql template for raw query
     const result = await sql`SELECT version() AS version`.execute(db)
     return {
-      postgres_version: result.rows?.[0]?.version || 'Version query executed',
+      postgres_version: result.rows?.[0]?.version || 'unknown',
       connection_status: 'connected',
     }
   } catch (error) {
