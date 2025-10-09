@@ -43,5 +43,5 @@
         }
     },
     "include": ["**/*.ts", "**/*.tsx", ".nitro/types/nitro.d.ts"],
-    "exclude": ["build", "storage", "temp", "vite*.ts"]
+    "exclude": ["build", "example", "storage", "temp", "types", "vite*.ts"]
 }
